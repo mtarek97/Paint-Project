@@ -11,6 +11,7 @@ public class Rectangle extends MyShape {
 	
 	public Rectangle(double xAxis, double yAxis) {
 		setColor(this.getColor());
+		// center of mass
 		setPosition(this.getPosition());
 		this.properties.put(LENGTH_KEY, xAxis);
 		this.properties.put(WIDTH_KEY, yAxis);
