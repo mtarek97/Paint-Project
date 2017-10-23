@@ -9,7 +9,7 @@ public class Ellipse extends MyShape{
 	public static final String X_KEY = "xAxis";
 	public static final String Y_KEY = "yAxis";
 	
-	public Ellipse(double xAxis, double yAxis){
+	public Ellipse(double xAxis, double yAxis) {
 		setColor(this.getColor());
 		setPosition(this.getPosition());
 		this.properties.put(X_KEY, xAxis);

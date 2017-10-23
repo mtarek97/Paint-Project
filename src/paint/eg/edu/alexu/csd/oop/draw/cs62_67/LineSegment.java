@@ -3,7 +3,7 @@ package paint.eg.edu.alexu.csd.oop.draw.cs62_67;
 import java.awt.Graphics;
 import java.util.Map;
 
-public class LineSegment extends MyShape{
+public class LineSegment extends MyShape {
 	private Map<String, Double> properties = getProperties();
 	public static final String X1_KEY = "x1";
 	public static final String Y1_KEY = "y1";

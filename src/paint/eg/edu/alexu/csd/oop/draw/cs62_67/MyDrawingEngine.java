@@ -6,7 +6,7 @@ import java.util.List;
 import paint.eg.edu.alexu.csd.oop.draw.DrawingEngine;
 import paint.eg.edu.alexu.csd.oop.draw.Shape;
 
-public class MyDrawingEngine implements DrawingEngine{
+public class MyDrawingEngine implements DrawingEngine {
 
 	@Override
 	public void refresh(Graphics canvas) {

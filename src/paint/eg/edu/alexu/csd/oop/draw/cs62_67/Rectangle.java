@@ -4,7 +4,7 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.util.Map;
 
-public class Rectangle extends MyShape{
+public class Rectangle extends MyShape {
 	private Map<String, Double> properties = getProperties();
 	public static final String LENGTH_KEY = "xAxis";
 	public static final String WIDTH_KEY = "yAxis";

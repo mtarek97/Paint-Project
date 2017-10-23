@@ -8,7 +8,7 @@ import paint.eg.edu.alexu.csd.oop.draw.Shape;
 
 //An abstract class that implement the common methods between all shapes
 
-public abstract class MyShape implements Shape {
+public abstract class MyShape implements Shape{
 
 	//common parameters between shapes
 	private Map<String, Double> properties;

@@ -2,7 +2,7 @@ package paint.eg.edu.alexu.csd.oop.draw.cs62_67;
 
 import paint.eg.edu.alexu.csd.oop.draw.Shape;
 
-public class ShapeFactory {
+public class ShapeFactory{
 	MyShape shape = null;
 	public Shape createShape(String shape){
 		if(shape.equals("Circle")){
