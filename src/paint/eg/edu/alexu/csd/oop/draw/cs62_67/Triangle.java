@@ -13,15 +13,15 @@ public class Triangle extends MyShape{
 	public static final String X3_KEY = "x3";
 	public static final String Y3_KEY = "y3";
 	
-	public Triangle(double x1, double y1, double x2, double y2, double x3, double y3) {
+	public Triangle() {
 		setColor(this.getColor());
 		setPosition(this.getPosition());
-		this.properties.put(X1_KEY, x1);
-		this.properties.put(Y1_KEY, y1);
-		this.properties.put(X2_KEY, x2);
-		this.properties.put(Y2_KEY, y2);
-		this.properties.put(X3_KEY, x3);
-		this.properties.put(Y3_KEY, y3);
+		this.properties.put(X1_KEY, 0.0);
+		this.properties.put(Y1_KEY, 0.0);
+		this.properties.put(X2_KEY, 0.0);
+		this.properties.put(Y2_KEY, 0.0);
+		this.properties.put(X3_KEY, 0.0);
+		this.properties.put(Y3_KEY, 0.0);
 		setProperties(this.properties);
 		setFillColor(this.getFillColor());
 	}

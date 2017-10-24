@@ -8,37 +8,38 @@ import paint.eg.edu.alexu.csd.oop.draw.DrawingEngine;
 import paint.eg.edu.alexu.csd.oop.draw.Shape;
 
 public class MyDrawingEngine implements DrawingEngine {
-
+	
+	ShapeFactory shape = new ShapeFactory();
 	ArrayList<Shape> shapes;
 	@Override
 	public void refresh(Graphics canvas) {
-		// TODO Auto-generated method stub
-		
+		Shape [] shapes = getShapes();
+		for(Shape i : shapes){
+			shape.createShape(i).draw(canvas);
+		}
 	}
 
 	@Override
 	public void addShape(Shape shape) {
-		// TODO Auto-generated method stub
 		this.shapes.add(shape);
 		
 	}
 
 	@Override
 	public void removeShape(Shape shape) {
-		// TODO Auto-generated method stub
-		this.shapes.remove(shape);
+				this.shapes.remove(shape);
 	}
 
 	@Override
 	public void updateShape(Shape oldShape, Shape newShape) {
-		// TODO Auto-generated method stub
+		
 		removeShape(oldShape);
 		addShape(newShape);
 	}
 
 	@Override
 	public Shape[] getShapes() {
-		// TODO Auto-generated method stub
+		
 		Shape[] shapesArr = new Shape[this.shapes.size()];
 		int cnt=0;
 		for(Shape i : this.shapes){
@@ -49,19 +50,17 @@ public class MyDrawingEngine implements DrawingEngine {
 
 	@Override
 	public List<Class<? extends Shape>> getSupportedShapes() {
-		// TODO Auto-generated method stub
-		return null;
+				return null;
 	}
 
 	@Override
 	public void undo() {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void redo() {
-		// TODO Auto-generated method stub
+		
 		
 	}
 

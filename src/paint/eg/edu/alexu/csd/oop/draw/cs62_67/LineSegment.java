@@ -13,13 +13,13 @@ public class LineSegment extends MyShape {
 	public static final String Y2_KEY = "y2";
 	
 	//constructor
-	public LineSegment(double x1 , double y1, double x2, double y2) {
+	public LineSegment() {
 		setColor(this.getColor());
 		setPosition(this.getPosition());
-		this.properties.put(X1_KEY, x1);
-		this.properties.put(Y1_KEY, y1);
-		this.properties.put(X2_KEY, x2);
-		this.properties.put(Y2_KEY, y2);
+		this.properties.put(X1_KEY, 0.0);
+		this.properties.put(Y1_KEY, 0.0);
+		this.properties.put(X2_KEY, 0.0);
+		this.properties.put(Y2_KEY, 0.0);
 		setProperties(this.properties);
 		setFillColor(this.getFillColor());
 	}

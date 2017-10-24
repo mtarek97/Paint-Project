@@ -4,7 +4,7 @@ public class Circle extends Ellipse{
 	
 	public static final String RADIUS_KEY = "radius";
 	//Constructor
-	public Circle(double radius){
-		 super(radius, radius);
+	public Circle(){
+		 super();
 	}
 }

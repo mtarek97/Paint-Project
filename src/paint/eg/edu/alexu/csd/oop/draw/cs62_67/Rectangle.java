@@ -9,12 +9,12 @@ public class Rectangle extends MyShape {
 	public static final String LENGTH_KEY = "xAxis";
 	public static final String WIDTH_KEY = "yAxis";
 	
-	public Rectangle(double xAxis, double yAxis) {
+	public Rectangle() {
 		setColor(this.getColor());
 		// center of mass
 		setPosition(this.getPosition());
-		this.properties.put(LENGTH_KEY, xAxis);
-		this.properties.put(WIDTH_KEY, yAxis);
+		this.properties.put(LENGTH_KEY, 0.0);
+		this.properties.put(WIDTH_KEY, 0.0);
 		setProperties(this.properties);
 		setFillColor(this.getFillColor());
 	}

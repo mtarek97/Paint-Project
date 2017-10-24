@@ -9,11 +9,11 @@ public class Ellipse extends MyShape{
 	public static final String X_KEY = "xAxis";
 	public static final String Y_KEY = "yAxis";
 	
-	public Ellipse(double xAxis, double yAxis) {
+	public Ellipse() {
 		setColor(this.getColor());
 		setPosition(this.getPosition());
-		this.properties.put(X_KEY, xAxis);
-		this.properties.put(Y_KEY, yAxis);
+		this.properties.put(X_KEY, 0.0);
+		this.properties.put(Y_KEY, 0.0);
 		setProperties(this.properties);
 		setFillColor(this.getFillColor());
 	}
