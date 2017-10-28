@@ -2,7 +2,10 @@ package paint.eg.edu.alexu.csd.oop.draw.cs62_67;
 
 import java.awt.Graphics;
 import java.awt.Point;
+import java.util.HashMap;
 import java.util.Map;
+
+import paint.eg.edu.alexu.csd.oop.draw.Shape;
 
 public class Rectangle extends MyShape {
 	private Map<String, Double> properties = getProperties();
@@ -26,5 +29,20 @@ public class Rectangle extends MyShape {
 		double width = properties.get(WIDTH_KEY);
 		canvas.drawOval(position.x, position.y, (int)width, (int)length);
 	}
-
+	
+	@Override
+	public Object clone() throws CloneNotSupportedException{
+		Shape clonedShape = new Rectangle();
+        clonedShape.setColor(this.getColor());
+        clonedShape.setFillColor(this.getFillColor());
+        clonedShape.setPosition(this.getPosition());
+        Map<String, Double> newprop = new HashMap<String,Double>();
+        for (Map.Entry s: this.properties.entrySet()){
+            String key = (String) s.getKey(); 
+            Double value = (Double) s.getValue();
+        	newprop.put(key, value);
+        }
+        clonedShape.setProperties(newprop);
+        return clonedShape;	
+    }
 }

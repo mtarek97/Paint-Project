@@ -3,6 +3,10 @@ package paint.eg.edu.alexu.csd.oop.draw.cs62_67;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.util.Map;
+import java.util.HashMap;
+
+
+import paint.eg.edu.alexu.csd.oop.draw.Shape;
 
 public class Ellipse extends MyShape{
 	private Map<String, Double> properties = getProperties();
@@ -25,4 +29,19 @@ public class Ellipse extends MyShape{
 		double y = properties.get(Y_KEY);
 		canvas.drawOval(position.x, position.y, (int)x, (int)y);
 	}
+	@Override
+	public Object clone() throws CloneNotSupportedException{
+		Shape clonedShape = new Ellipse();
+        clonedShape.setColor(this.getColor());
+        clonedShape.setFillColor(this.getFillColor());
+        clonedShape.setPosition(this.getPosition());
+        Map<String, Double> newprop = new HashMap<String,Double>();
+        for (Map.Entry s: this.properties.entrySet()){
+            String key = (String) s.getKey(); 
+            Double value = (Double) s.getValue();
+        	newprop.put(key, value);
+        }
+        clonedShape.setProperties(newprop);
+        return clonedShape;	
+    }
 }

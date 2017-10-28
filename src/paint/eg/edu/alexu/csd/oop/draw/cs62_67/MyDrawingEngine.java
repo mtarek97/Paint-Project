@@ -3,14 +3,19 @@ package paint.eg.edu.alexu.csd.oop.draw.cs62_67;
 import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
+
+import javax.management.RuntimeErrorException;
 
 import paint.eg.edu.alexu.csd.oop.draw.DrawingEngine;
 import paint.eg.edu.alexu.csd.oop.draw.Shape;
 
 public class MyDrawingEngine implements DrawingEngine {
 	
-	ShapeFactory shape = new ShapeFactory();
-	ArrayList<Shape> shapes;
+	private Stack<ICommand> undoActions = new Stack<ICommand>();
+	private Stack<ICommand> redoActions = new Stack();
+	private ShapeFactory shape = new ShapeFactory();
+	private ArrayList<Shape> shapes;
 	@Override
 	public void refresh(Graphics canvas) {
 		Shape [] shapes = getShapes();
@@ -21,20 +26,23 @@ public class MyDrawingEngine implements DrawingEngine {
 
 	@Override
 	public void addShape(Shape shape) {
-		this.shapes.add(shape);
-		
+		AddShape addShape = new AddShape(this.shapes,shape);
+		addShape.execute();
+		undoActions.push(addShape);
 	}
 
 	@Override
 	public void removeShape(Shape shape) {
-				this.shapes.remove(shape);
+		RemoveShape removeShape = new RemoveShape(this.shapes,shape);
+		removeShape.execute();
+		undoActions.push(removeShape);
 	}
 
 	@Override
 	public void updateShape(Shape oldShape, Shape newShape) {
-		
-		removeShape(oldShape);
-		addShape(newShape);
+		UpdateShape updateShape = new UpdateShape(this.shapes, oldShape, newShape);
+		updateShape.execute();
+		undoActions.push(updateShape);
 	}
 
 	@Override
@@ -55,13 +63,24 @@ public class MyDrawingEngine implements DrawingEngine {
 
 	@Override
 	public void undo() {
-		
+		try{
+			ICommand action = undoActions.pop();
+			action.unexecute();
+			redoActions.push(action);
+		}catch (Exception e) {
+			throw new RuntimeException("nothing to undo");
+		}
 	}
 
 	@Override
 	public void redo() {
-		
-		
+		try{
+			ICommand action = redoActions.pop();
+			action.execute();
+			undoActions.push(action);
+		}catch (Exception e) {
+			throw new RuntimeException("nothing to undo");
+		}
 	}
 
 	@Override

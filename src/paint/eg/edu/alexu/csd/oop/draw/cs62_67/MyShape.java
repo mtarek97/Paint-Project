@@ -74,7 +74,7 @@ public abstract class MyShape implements Shape, Cloneable{
 	@Override
 	//common
     public Object clone() throws CloneNotSupportedException{
-		Object cloned = super.clone();
-		return cloned;	
+		return null;
+			
     }
 }

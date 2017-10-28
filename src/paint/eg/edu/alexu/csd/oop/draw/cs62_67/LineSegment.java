@@ -1,7 +1,10 @@
 package paint.eg.edu.alexu.csd.oop.draw.cs62_67;
 
 import java.awt.Graphics;
+import java.util.HashMap;
 import java.util.Map;
+
+import paint.eg.edu.alexu.csd.oop.draw.Shape;
 
 public class LineSegment extends MyShape {
 	// why this ?
@@ -31,5 +34,20 @@ public class LineSegment extends MyShape {
 		canvas.drawLine( properties.get(X1_KEY).intValue(),properties.get(Y1_KEY).intValue()
 				, properties.get(X2_KEY).intValue(), properties.get(Y2_KEY).intValue());
 	}
+	@Override
+	public Object clone() throws CloneNotSupportedException{
+		Shape clonedShape = new LineSegment();
+        clonedShape.setColor(this.getColor());
+        clonedShape.setFillColor(this.getFillColor());
+        clonedShape.setPosition(this.getPosition());
+        Map<String, Double> newprop = new HashMap<String,Double>();
+        for (Map.Entry s: this.properties.entrySet()){
+            String key = (String) s.getKey(); 
+            Double value = (Double) s.getValue();
+        	newprop.put(key, value);
+        }
+        clonedShape.setProperties(newprop);
+        return clonedShape;	
+    }
 	
 }

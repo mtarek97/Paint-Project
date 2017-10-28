@@ -2,7 +2,10 @@ package paint.eg.edu.alexu.csd.oop.draw.cs62_67;
 
 import java.awt.Graphics;
 import java.awt.Point;
+import java.util.HashMap;
 import java.util.Map;
+
+import paint.eg.edu.alexu.csd.oop.draw.Shape;
 
 public class Triangle extends MyShape{
 	private Map<String, Double> properties = getProperties();
@@ -40,5 +43,21 @@ public class Triangle extends MyShape{
 		canvas.drawLine(x2, y2, x3, y3);
 		canvas.drawLine(x3, y3, x2, y1);
 	}
+	
+	@Override
+	public Object clone() throws CloneNotSupportedException{
+		Shape clonedShape = new Triangle();
+        clonedShape.setColor(this.getColor());
+        clonedShape.setFillColor(this.getFillColor());
+        clonedShape.setPosition(this.getPosition());
+        Map<String, Double> newprop = new HashMap<String,Double>();
+        for (Map.Entry s: this.properties.entrySet()){
+            String key = (String) s.getKey(); 
+            Double value = (Double) s.getValue();
+        	newprop.put(key, value);
+        }
+        clonedShape.setProperties(newprop);
+        return clonedShape;	
+    }
 
 }
