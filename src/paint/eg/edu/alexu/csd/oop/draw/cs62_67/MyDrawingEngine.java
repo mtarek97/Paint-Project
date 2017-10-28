@@ -13,7 +13,7 @@ import paint.eg.edu.alexu.csd.oop.draw.Shape;
 public class MyDrawingEngine implements DrawingEngine {
 	
 	private Stack<ICommand> undoActions = new Stack<ICommand>();
-	private Stack<ICommand> redoActions = new Stack();
+	private Stack<ICommand> redoActions = new Stack<ICommand>();
 	private ShapeFactory shape = new ShapeFactory();
 	private ArrayList<Shape> shapes;
 	@Override
