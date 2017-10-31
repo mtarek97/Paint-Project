@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
-import javax.management.RuntimeErrorException;
-
 import paint.eg.edu.alexu.csd.oop.draw.DrawingEngine;
 import paint.eg.edu.alexu.csd.oop.draw.Shape;
 
@@ -84,13 +82,21 @@ public class MyDrawingEngine implements DrawingEngine {
 
 	@Override
 	public void save(String path) {
-		// TODO Auto-generated method stub
+		int dotIndex = path.lastIndexOf('.');
+		String extension =path.substring(dotIndex);
+		if(extension.equals("xml")){
+			XML.save(path, shapes);
+		}
 		
 	}
 
 	@Override
 	public void load(String path) {
-		// TODO Auto-generated method stub
+		int dotIndex = path.lastIndexOf('.');
+		String extension =path.substring(dotIndex);
+		if(extension.equals("xml")){
+			XML.load(path, shapes);
+		}
 		
 	}
 
