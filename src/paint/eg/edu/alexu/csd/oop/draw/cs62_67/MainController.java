@@ -43,7 +43,6 @@ public class MainController{
 	}
 	
 	private class PaintSurface extends JComponent {
-		ArrayList<paint.eg.edu.alexu.csd.oop.draw.Shape> shapes = new ArrayList<paint.eg.edu.alexu.csd.oop.draw.Shape>();
 		private	Point startDrag, endDrag;
 		public PaintSurface() {
 			this.addMouseListener(new MouseAdapter() {
@@ -55,7 +54,7 @@ public class MainController{
 	
 				public void mouseReleased(MouseEvent e) {
 					setProperties(shape,startDrag, e.getPoint());
-				    shapes.add(shape);
+				    engine.addShape(shape);
 				    startDrag = null;
 				    endDrag = null;
 				    repaint();
@@ -72,10 +71,7 @@ public class MainController{
 		  
 		public void paint(Graphics g) {
 			Graphics2D g2 = (Graphics2D) g;
-		    for (paint.eg.edu.alexu.csd.oop.draw.Shape s : shapes) {
-		    	g2.setPaint(Color.BLACK);
-		        s.draw(g2);
-		    }
+		    engine.refresh(g2);
 		    if (startDrag != null && endDrag != null) {
 		        g2.setPaint(Color.LIGHT_GRAY);
 		        setProperties(dragedShape, startDrag, endDrag);

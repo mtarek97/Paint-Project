@@ -14,13 +14,12 @@ public class MyDrawingEngine implements DrawingEngine {
 	
 	private Stack<ICommand> undoActions = new Stack<ICommand>();
 	private Stack<ICommand> redoActions = new Stack<ICommand>();
-	private ShapeFactory shape = new ShapeFactory();
-	private ArrayList<Shape> shapes;
+	private ArrayList<Shape> shapes = new ArrayList<>();
 	@Override
 	public void refresh(Graphics canvas) {
 		Shape [] shapes = getShapes();
 		for(Shape i : shapes){
-			shape.createShape(i).draw(canvas);
+			i.draw(canvas);
 		}
 	}
 
