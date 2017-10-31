@@ -2,6 +2,7 @@ package paint.eg.edu.alexu.csd.oop.draw.cs62_67;
 
 import java.awt.Color;
 import java.awt.Point;
+import java.util.HashMap;
 import java.util.Map;
 
 import paint.eg.edu.alexu.csd.oop.draw.Shape;
@@ -11,7 +12,7 @@ import paint.eg.edu.alexu.csd.oop.draw.Shape;
 public abstract class MyShape implements Shape, Cloneable{
 
 	//common parameters between shapes
-	private Map<String, Double> properties;
+	private Map<String, Double> properties = new HashMap<>();
 	private Point position;
 	private Color color;
 	private Color fillColor;

@@ -9,7 +9,7 @@ import java.util.HashMap;
 import paint.eg.edu.alexu.csd.oop.draw.Shape;
 
 public class Ellipse extends MyShape{
-	private Map<String, Double> properties = getProperties();
+	private Map<String, Double> properties = new HashMap<>();
 	public static final String X_KEY = "xAxis";
 	public static final String Y_KEY = "yAxis";
 	

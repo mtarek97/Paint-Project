@@ -27,7 +27,7 @@ public class Rectangle extends MyShape {
 		Point position = getPosition();
 		double length = properties.get(LENGTH_KEY);
 		double width = properties.get(WIDTH_KEY);
-		canvas.drawOval(position.x, position.y, (int)width, (int)length);
+		canvas.drawRect(position.x, position.y, (int)width, (int)length);
 	}
 	
 	@Override
