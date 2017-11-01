@@ -13,6 +13,19 @@ public class MyDrawingEngine implements DrawingEngine {
 	private Stack<ICommand> undoActions = new Stack<ICommand>();
 	private Stack<ICommand> redoActions = new Stack<ICommand>();
 	private ArrayList<Shape> shapes = new ArrayList<>();
+	private List<Class<? extends Shape>> supportedShapes = new ArrayList<Class<? extends Shape>>();
+	
+	public MyDrawingEngine(){
+		JavaClassLoader classLoader = new JavaClassLoader();
+		String packageBinName = "paint.eg.edu.alexu.csd.oop.draw.cs62_67.";
+		this.addPlugin((Class<? extends Shape>) classLoader.loadExtraClass(packageBinName + "Ellipse"));
+		this.addPlugin((Class<? extends Shape>) classLoader.loadExtraClass(packageBinName + "Circle"));
+		this.addPlugin((Class<? extends Shape>) classLoader.loadExtraClass(packageBinName + "LineSegment"));
+		this.addPlugin((Class<? extends Shape>) classLoader.loadExtraClass(packageBinName + "Rectangle"));
+		this.addPlugin((Class<? extends Shape>) classLoader.loadExtraClass(packageBinName + "Square"));
+		this.addPlugin((Class<? extends Shape>) classLoader.loadExtraClass(packageBinName + "Triangle"));
+	}
+	
 	@Override
 	public void refresh(Graphics canvas) {
 		Shape [] shapes = getShapes();
@@ -55,8 +68,13 @@ public class MyDrawingEngine implements DrawingEngine {
 
 	@Override
 	public List<Class<? extends Shape>> getSupportedShapes() {
-				return null;
+		return this.supportedShapes;
 	}
+	
+	public void addPlugin(Class<? extends Shape> myClass){
+		this.supportedShapes.add(myClass);
+	}
+
 
 	@Override
 	public void undo() {
@@ -86,6 +104,8 @@ public class MyDrawingEngine implements DrawingEngine {
 		String extension =path.substring(dotIndex);
 		if(extension.equals("xml")){
 			XML.save(path, shapes);
+		}else{
+			throw new RuntimeException("unexpected extension");
 		}
 		
 	}
@@ -96,8 +116,10 @@ public class MyDrawingEngine implements DrawingEngine {
 		String extension =path.substring(dotIndex);
 		if(extension.equals("xml")){
 			XML.load(path, shapes);
+		}else{
+			throw new RuntimeException("unexpected extension");
 		}
 		
 	}
-
+	
 }

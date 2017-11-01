@@ -10,7 +10,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
-import java.util.ArrayList;
 import java.util.Map;
 
 import javax.swing.JComponent;
@@ -46,12 +45,14 @@ public class MainController{
 		private	Point startDrag, endDrag;
 		public PaintSurface() {
 			this.addMouseListener(new MouseAdapter() {
-			    public void mousePressed(MouseEvent e) {
+			    @Override
+				public void mousePressed(MouseEvent e) {
 			    	startDrag = new Point(e.getX(), e.getY());
 			        endDrag = startDrag;
 			        repaint();
 			    }
 	
+				@Override
 				public void mouseReleased(MouseEvent e) {
 					setProperties(shape,startDrag, e.getPoint());
 				    engine.addShape(shape);
@@ -62,6 +63,7 @@ public class MainController{
 			});
 
 			this.addMouseMotionListener(new MouseMotionAdapter() {
+				@Override
 				public void mouseDragged(MouseEvent e) {
 			    	endDrag = new Point(e.getX(), e.getY());
 			        repaint();
@@ -69,6 +71,7 @@ public class MainController{
 			});
 		}
 		  
+		@Override
 		public void paint(Graphics g) {
 			Graphics2D g2 = (Graphics2D) g;
 		    engine.refresh(g2);
@@ -82,20 +85,20 @@ public class MainController{
 			shape.setPosition(startDrag);
 			Map<String, Double> prep = shape.getProperties();
 			if(shape instanceof Circle){	
-				prep.put("xAxis", (double) end.getX() - start.getX());
-				prep.put("yAxis", (double) end.getX() - start.getX());
+				prep.put("xAxis", end.getX() - start.getX());
+				prep.put("yAxis", end.getX() - start.getX());
 			}
 			else if(shape instanceof Square){	
-				prep.put("xAxis", (double) end.getX() - start.getX());
-				prep.put("yAxis", (double) end.getX() - start.getX());
+				prep.put("xAxis", end.getX() - start.getX());
+				prep.put("yAxis", end.getX() - start.getX());
 			}
 			else if(shape instanceof Rectangle){	
-					prep.put("xAxis", (double) end.getY() - start.getY());
-					prep.put("yAxis", (double) end.getX() - start.getX());
+					prep.put("xAxis", end.getY() - start.getY());
+					prep.put("yAxis", end.getX() - start.getX());
 			}
 			else if(shape instanceof Ellipse){	
-				prep.put("xAxis", (double) end.getX() - start.getX());
-				prep.put("yAxis", (double) end.getY() - start.getY());
+				prep.put("xAxis", end.getX() - start.getX());
+				prep.put("yAxis", end.getY() - start.getY());
 			}
 			else if(shape instanceof LineSegment){
 				prep.put("x1", end.getX());
