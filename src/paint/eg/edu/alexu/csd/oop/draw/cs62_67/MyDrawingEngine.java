@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
+import javax.management.RuntimeErrorException;
+
 import paint.eg.edu.alexu.csd.oop.draw.DrawingEngine;
 import paint.eg.edu.alexu.csd.oop.draw.Shape;
 
@@ -14,7 +16,6 @@ public class MyDrawingEngine implements DrawingEngine {
 	private Stack<ICommand> redoActions = new Stack<ICommand>();
 	private ArrayList<Shape> shapes = new ArrayList<>();
 	private List<Class<? extends Shape>> supportedShapes = new ArrayList<Class<? extends Shape>>();
-	
 	public MyDrawingEngine(){
 		JavaClassLoader classLoader = new JavaClassLoader();
 		String packageBinName = "paint.eg.edu.alexu.csd.oop.draw.cs62_67.";
@@ -70,12 +71,9 @@ public class MyDrawingEngine implements DrawingEngine {
 	public List<Class<? extends Shape>> getSupportedShapes() {
 		return this.supportedShapes;
 	}
-	
 	public void addPlugin(Class<? extends Shape> myClass){
 		this.supportedShapes.add(myClass);
 	}
-
-
 	@Override
 	public void undo() {
 		try{
@@ -121,5 +119,5 @@ public class MyDrawingEngine implements DrawingEngine {
 		}
 		
 	}
-	
+
 }

@@ -7,7 +7,6 @@ public class startProgram {
 	public static void main(String[] args){
 		DrawingEngine engine = new MyDrawingEngine();
 		ShapeFactory factory = new ShapeFactory();
-		Shape shape;
 		GUI Paint = new GUI();
 		MainController main = new MainController(engine, factory, Paint);
 		Paint.setVisible(true);

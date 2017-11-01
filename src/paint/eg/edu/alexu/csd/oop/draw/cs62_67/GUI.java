@@ -1,13 +1,16 @@
 package paint.eg.edu.alexu.csd.oop.draw.cs62_67;
 
 import java.awt.BorderLayout;
-
-
+import java.awt.Color;
+import java.awt.Toolkit;
 
 import javax.swing.JFrame;
 import javax.swing.JButton;
+import javax.swing.JColorChooser;
+
 import java.awt.event.ActionListener;
 import javax.swing.JPanel;
+import javax.swing.KeyStroke;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
@@ -35,25 +38,36 @@ public class GUI extends JFrame {
 	private final JMenuItem mntmCopy = new JMenuItem("Copy");
 	private final JMenuItem mntmPaste = new JMenuItem("Paste");
 	private final JMenuItem mntmDelete = new JMenuItem("Delete");
+	private final JMenuItem mntmExit = new JMenuItem("Exit");
 	public GUI() {
+		getContentPane().setBackground(Color.WHITE);
 		this.setSize(553, 553);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		getContentPane().setLayout(new BorderLayout(0, 0));
 		JPanel panel = new JPanel();
-		
-		
+		panel.setBackground(Color.WHITE);
+		//Color newColor = JColorChooser.showDialog(null, "Choose a color", Color.RED);
+		mntmNew.setAccelerator(KeyStroke.getKeyStroke('N', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
+		mntmSave.setAccelerator(KeyStroke.getKeyStroke('S', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
+		mntmLoad.setAccelerator(KeyStroke.getKeyStroke('O', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
+		mntmUndo.setAccelerator(KeyStroke.getKeyStroke('Z', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
+		mntmRedo.setAccelerator(KeyStroke.getKeyStroke('Y', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
+		mntmCut.setAccelerator(KeyStroke.getKeyStroke('X', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
+		mntmCopy.setAccelerator(KeyStroke.getKeyStroke('C', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
+		mntmPaste.setAccelerator(KeyStroke.getKeyStroke('V', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
 		GroupLayout gl_panel = new GroupLayout(panel);
 		gl_panel.setHorizontalGroup(
 			gl_panel.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_panel.createSequentialGroup()
 					.addGap(8)
-					.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
-						.addComponent(TriangleButton)
-						.addComponent(EllipseButton)
-						.addComponent(RectangleButton)
-						.addComponent(SquareButton)
-						.addComponent(lineButton)
-						.addComponent(circleButton))
+					.addGroup(gl_panel.createParallelGroup(Alignment.LEADING, false)
+						.addComponent(RectangleButton, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+						.addComponent(circleButton, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+						.addComponent(lineButton, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+						.addComponent(SquareButton, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+						.addComponent(EllipseButton, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+						.addComponent(TriangleButton, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+						
 					.addContainerGap())
 		);
 		gl_panel.setVerticalGroup(
@@ -86,6 +100,8 @@ public class GUI extends JFrame {
 		
 		mnFile.add(mntmLoad);
 		
+		mnFile.add(mntmExit);
+		
 		menuBar.add(mnEdit);
 		
 		mnEdit.add(mntmUndo);
@@ -105,7 +121,6 @@ public class GUI extends JFrame {
 	void addCircleListner(ActionListener listenforCircleButton){
 		circleButton.addActionListener(listenforCircleButton);
 	}
-	
 	void addLineListner(ActionListener listenforLineButton){
 		lineButton.addActionListener(listenforLineButton);
 	}
@@ -117,5 +132,20 @@ public class GUI extends JFrame {
 	}
 	void addEllipseListner(ActionListener listenforEllipseButton){
 		EllipseButton.addActionListener(listenforEllipseButton);
+	}
+	void addTriangleListner(ActionListener listenforTriangleButton){
+		TriangleButton.addActionListener(listenforTriangleButton);
+	}
+	void addExitListener(ActionListener listenforExit){
+		mntmExit.addActionListener(listenforExit);
+	}
+	void addUndoListener(ActionListener listenforUndo){
+		mntmUndo.addActionListener(listenforUndo);
+	}
+	void addRedoListener(ActionListener listenforRedo){
+		mntmRedo.addActionListener(listenforRedo);
+	}
+	void addNewListener(ActionListener listenforNew){
+		mntmNew.addActionListener(listenforNew);
 	}
 }

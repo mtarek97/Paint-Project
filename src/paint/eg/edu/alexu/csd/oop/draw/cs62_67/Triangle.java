@@ -41,7 +41,7 @@ public class Triangle extends MyShape{
 		
 		canvas.drawLine(x1, y1, x2, y2);
 		canvas.drawLine(x2, y2, x3, y3);
-		canvas.drawLine(x3, y3, x2, y1);
+		canvas.drawLine(x3, y3, x1, y1);
 	}
 	
 	@Override
