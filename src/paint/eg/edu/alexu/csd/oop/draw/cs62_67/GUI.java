@@ -3,19 +3,17 @@ package paint.eg.edu.alexu.csd.oop.draw.cs62_67;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Toolkit;
-
-import javax.swing.JFrame;
-import javax.swing.JButton;
-import javax.swing.JColorChooser;
-
 import java.awt.event.ActionListener;
-import javax.swing.JPanel;
-import javax.swing.KeyStroke;
-import javax.swing.JMenuBar;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
+
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.KeyStroke;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
 public class GUI extends JFrame {
@@ -40,6 +38,7 @@ public class GUI extends JFrame {
 	private final JMenuItem mntmDelete = new JMenuItem("Delete");
 	private final JMenuItem mntmExit = new JMenuItem("Exit");
 	public GUI() {
+		setTitle("Paint");
 		getContentPane().setBackground(Color.WHITE);
 		this.setSize(553, 553);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

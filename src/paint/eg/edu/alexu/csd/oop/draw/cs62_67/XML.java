@@ -31,7 +31,7 @@ import paint.eg.edu.alexu.csd.oop.draw.Shape;
 public class XML {
 
 	
-	public static void save(String path, ArrayList<Shape> shapes){
+	public void save(String path, ArrayList<Shape> shapes){
 		 DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
 		 try {
 			DocumentBuilder builder = builderFactory.newDocumentBuilder();
@@ -56,24 +56,19 @@ public class XML {
 			tr.transform(new DOMSource(dom),new StreamResult(new FileOutputStream(path)));
 			
 		} catch (ParserConfigurationException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (TransformerConfigurationException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (TransformerFactoryConfigurationError e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (TransformerException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 		 
-		public static void load(String path, ArrayList<Shape> shapes){
+		public void load(String path, ArrayList<Shape> shapes){
 			Document dom;
 			DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
 			try {
@@ -108,13 +103,10 @@ public class XML {
 				
 				
 			} catch (ParserConfigurationException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (SAXException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}	
 	}
