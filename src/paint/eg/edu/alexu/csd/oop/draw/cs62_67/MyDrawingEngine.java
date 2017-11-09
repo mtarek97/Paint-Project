@@ -37,6 +37,7 @@ public class MyDrawingEngine implements DrawingEngine {
 		AddShape addShape = new AddShape(this.shapes,shape);
 		addShape.execute();
 		undoActions.add(addShape);
+		redoActions.clear();
                 if(undoActions.size()>20) {
 				undoActions.remove(0);
 			}

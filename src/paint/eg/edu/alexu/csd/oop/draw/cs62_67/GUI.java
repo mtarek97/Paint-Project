@@ -41,7 +41,6 @@ public class GUI extends JFrame {
 		setTitle("Paint");
 		getContentPane().setBackground(Color.WHITE);
 		this.setSize(553, 553);
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		getContentPane().setLayout(new BorderLayout(0, 0));
 		JPanel panel = new JPanel();
 		panel.setBackground(Color.WHITE);

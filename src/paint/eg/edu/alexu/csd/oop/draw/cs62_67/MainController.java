@@ -13,6 +13,7 @@ import java.awt.event.MouseMotionAdapter;
 import java.util.Map;
 
 import javax.swing.JComponent;
+import javax.swing.JFrame;
 
 import paint.eg.edu.alexu.csd.oop.draw.DrawingEngine;
 import paint.eg.edu.alexu.csd.oop.draw.Shape;
@@ -25,11 +26,12 @@ public class MainController{
     private Shape dragedShape;
     private GUI Paint;
     private PaintSurface surface = new PaintSurface();
-    private startProgram s;
+    private startProgram newPrgram;
 	public MainController(DrawingEngine engine,ShapeFactory factory,GUI Paint){
 		this.engine = engine;
 		this.factory = factory;
 		this.Paint = Paint;
+		this.Paint.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.Paint.getContentPane().add(surface, BorderLayout.CENTER);
 		this.Paint.addCircleListner(new CircleListner());
 		this.Paint.addLineListner(new LineListner());
@@ -225,8 +227,8 @@ public class MainController{
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			s = new startProgram();
-			s.main(null);
+			newPrgram = new startProgram();
+			newPrgram.main(null);
 		}
 		
 	}
