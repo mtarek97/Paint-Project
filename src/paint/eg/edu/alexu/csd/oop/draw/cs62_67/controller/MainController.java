@@ -10,12 +10,19 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Map;
 
 import javax.swing.JComponent;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 
+import paint.eg.edu.alexu.csd.oop.draw.cs62_67.controller.MainController.jsonSaveListener;
+import paint.eg.edu.alexu.csd.oop.draw.cs62_67.controller.MainController.loadListener;
+import paint.eg.edu.alexu.csd.oop.draw.cs62_67.controller.MainController.xmlSaveListener;
 import paint.eg.edu.alexu.csd.oop.draw.DrawingEngine;
 import paint.eg.edu.alexu.csd.oop.draw.Shape;
 import paint.eg.edu.alexu.csd.oop.draw.cs62_67.startProgram;
@@ -55,13 +62,14 @@ public class MainController{
 		nameslist.add(new JScrollPane());
 		this.Paint.getContentPane().add(shapesCreationPanel, BorderLayout.WEST);
 		this.Paint.getContentPane().add(nameslist, BorderLayout.EAST);
-
-
 		this.Paint.getContentPane().add(surface, BorderLayout.CENTER);
 		this.Paint.addExitListener(new ExitListener());
 		this.Paint.addUndoListener(new UndoListener());
 		this.Paint.addRedoListener(new RedoListener());
 		this.Paint.addNewListener(new NewListener());
+		this.Paint.saveJsonListener(new jsonSaveListener());
+		this.Paint.saveXmlListener(new xmlSaveListener());
+		this.Paint.loadListener(new loadListener());
 	}
 	
 	public void orderShape(String type){
@@ -87,7 +95,7 @@ public class MainController{
 			    		counter++;
 			    		if (counter % 3 == 0){
 			    			orderShape(DragedShapeName);
-			    			setProperties(dragedShape, startDrag, endDrag);
+			    			setProperties(dragedShape, Coordinates[0], endDrag);
 						    engine.addShape(dragedShape);
 						    nameslist.updateShapeNameList(engine.getShapes());
 			    			counter = 0;
@@ -129,7 +137,7 @@ public class MainController{
 		     }
 		}
 		public void setProperties(Shape shape,Point start, Point end){
-			shape.setPosition(startDrag);
+			shape.setPosition(start);
 			Map<String, Double> prep = shape.getProperties();
 			if(shape instanceof Circle){	
 				prep.put("xAxis", end.getX() - start.getX());
@@ -221,5 +229,48 @@ public class MainController{
 			newPrgram.main(null);
 		}
 		
+	}
+	class xmlSaveListener implements ActionListener{
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			JFileChooser chooser = new JFileChooser();
+		    int retrival = chooser.showSaveDialog(null);
+		    if (retrival == JFileChooser.APPROVE_OPTION) {
+		    	Path path = Paths.get(chooser.getCurrentDirectory() + "/" + chooser.getSelectedFile().getName());
+		    	
+		    	engine.save(path.toString().concat(".Xml"));
+		    }
+		}
+		
+	}
+	class jsonSaveListener implements ActionListener{
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			JFileChooser chooser = new JFileChooser();
+		    int retrival = chooser.showSaveDialog(null);
+		    if (retrival == JFileChooser.APPROVE_OPTION) {
+		    	Path path = Paths.get(chooser.getCurrentDirectory() + "/" + chooser.getSelectedFile().getName());
+		    	
+		    	engine.save(path.toString().concat(".JsOn"));
+		    }
+		}
+		
+	}
+	class loadListener implements ActionListener{
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			String filename = File.separator+"tmp";
+			JFileChooser fc = new JFileChooser(new File(filename));
+			int result = fc.showOpenDialog(null);
+			String selectedFilePath = fc.getSelectedFile().getPath().toString();
+			if(result == JFileChooser.APPROVE_OPTION)
+			{
+				engine.load(selectedFilePath);
+				surface.repaint();
+			}
+		}	
 	}
 }

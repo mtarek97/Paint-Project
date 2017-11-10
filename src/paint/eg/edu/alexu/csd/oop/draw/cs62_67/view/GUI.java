@@ -17,7 +17,6 @@ public class GUI extends JFrame {
 	private final JMenuBar menuBar = new JMenuBar();
 	private final JMenu mnFile = new JMenu("File");
 	private final JMenuItem mntmNew = new JMenuItem("New");
-	private final JMenuItem mntmSave = new JMenuItem("Save");
 	private final JMenuItem mntmLoad = new JMenuItem("Load");
 	private final JMenu mnEdit = new JMenu("Edit");
 	private final JMenuItem mntmUndo = new JMenuItem("Undo");
@@ -27,6 +26,10 @@ public class GUI extends JFrame {
 	private final JMenuItem mntmPaste = new JMenuItem("Paste");
 	private final JMenuItem mntmDelete = new JMenuItem("Delete");
 	private final JMenuItem mntmExit = new JMenuItem("Exit");
+	private final JMenu mnSave = new JMenu("Save");
+	private final JMenuItem mntmSaveXml = new JMenuItem("save xml");
+	private final JMenuItem mntmSaveJson = new JMenuItem("save json");
+
 	public GUI() {
 		setTitle("Paint");
 		getContentPane().setBackground(Color.WHITE);
@@ -36,7 +39,6 @@ public class GUI extends JFrame {
 		panel.setBackground(Color.WHITE);
 		//Color newColor = JColorChooser.showDialog(null, "Choose a color", Color.RED);
 		mntmNew.setAccelerator(KeyStroke.getKeyStroke('N', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
-		mntmSave.setAccelerator(KeyStroke.getKeyStroke('S', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
 		mntmLoad.setAccelerator(KeyStroke.getKeyStroke('O', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
 		mntmUndo.setAccelerator(KeyStroke.getKeyStroke('Z', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
 		mntmRedo.setAccelerator(KeyStroke.getKeyStroke('Y', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
@@ -44,15 +46,19 @@ public class GUI extends JFrame {
 		mntmCopy.setAccelerator(KeyStroke.getKeyStroke('C', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
 		mntmPaste.setAccelerator(KeyStroke.getKeyStroke('V', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
 			
-		setJMenuBar(menuBar);
+setJMenuBar(menuBar);
 		
 		menuBar.add(mnFile);
 		
 		mnFile.add(mntmNew);
 		
-		mnFile.add(mntmSave);
-		
 		mnFile.add(mntmLoad);
+		
+		mnFile.add(mnSave);
+		
+		mnSave.add(mntmSaveXml);
+		
+		mnSave.add(mntmSaveJson);
 		
 		mnFile.add(mntmExit);
 		
@@ -83,5 +89,14 @@ public class GUI extends JFrame {
 	}
 	public void addNewListener(ActionListener listenforNew){
 		mntmNew.addActionListener(listenforNew);
+	}
+	public void saveXmlListener(ActionListener listenforSaveXml){
+		mntmSaveXml.addActionListener(listenforSaveXml);
+	}
+	public void saveJsonListener(ActionListener listenforSaveJson){
+		mntmSaveJson.addActionListener(listenforSaveJson);
+	}
+	public void loadListener(ActionListener listenforLoad){
+		mntmLoad.addActionListener(listenforLoad);
 	}
 }
