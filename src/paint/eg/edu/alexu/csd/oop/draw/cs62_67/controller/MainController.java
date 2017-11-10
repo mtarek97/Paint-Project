@@ -14,6 +14,7 @@ import java.util.Map;
 
 import javax.swing.JComponent;
 import javax.swing.JFrame;
+import javax.swing.JScrollPane;
 
 import paint.eg.edu.alexu.csd.oop.draw.DrawingEngine;
 import paint.eg.edu.alexu.csd.oop.draw.Shape;
@@ -28,6 +29,7 @@ import paint.eg.edu.alexu.csd.oop.draw.cs62_67.model.Triangle;
 import paint.eg.edu.alexu.csd.oop.draw.cs62_67.view.GUI;
 import paint.eg.edu.alexu.csd.oop.draw.cs62_67.view.ShapeCreationBtn;
 import paint.eg.edu.alexu.csd.oop.draw.cs62_67.view.ShapeCreationButtonsPanel;
+import paint.eg.edu.alexu.csd.oop.draw.cs62_67.view.ShapeNameList;
 
 public class MainController{
     
@@ -35,10 +37,11 @@ public class MainController{
     private ShapeFactory factory;
     private GUI Paint;
     
-    private Shape shape;
+    private String DragedShapeName;
     private Shape dragedShape;
     private PaintSurface surface = new PaintSurface();
     private ShapeCreationButtonsPanel shapesCreationPanel;
+    private ShapeNameList nameslist;
     private startProgram newPrgram;
     
 	public MainController(DrawingEngine engine,ShapeFactory factory,GUI Paint){
@@ -48,14 +51,13 @@ public class MainController{
 		this.Paint.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		shapesCreationPanel = new ShapeCreationButtonsPanel(engine.getSupportedShapes());
 		shapesCreationPanel.addButtonsListeners(new ShapeCreationBtnListner());
+		nameslist = new ShapeNameList(engine.getShapes());
+		nameslist.add(new JScrollPane());
 		this.Paint.getContentPane().add(shapesCreationPanel, BorderLayout.WEST);
+		this.Paint.getContentPane().add(nameslist, BorderLayout.EAST);
+
+
 		this.Paint.getContentPane().add(surface, BorderLayout.CENTER);
-		//this.Paint.addCircleListner(new CircleListner());
-		//this.Paint.addLineListner(new LineListner());
-		//this.Paint.addSquareListner(new SquareListner());
-		//this.Paint.addRectangleListener(new RectangleListner());
-		//this.Paint.addEllipseListner(new EllipseListner());
-		//this.Paint.addTriangleListner(new TriangleListner());
 		this.Paint.addExitListener(new ExitListener());
 		this.Paint.addUndoListener(new UndoListener());
 		this.Paint.addRedoListener(new RedoListener());
@@ -63,7 +65,6 @@ public class MainController{
 	}
 	
 	public void orderShape(String type){
-		this.shape = factory.createShape(type);
 		this.dragedShape = factory.createShape(type);
 	}
 	
@@ -76,17 +77,19 @@ public class MainController{
 			this.addMouseListener(new MouseAdapter() {
 			    @Override
 				public void mousePressed(MouseEvent e) {
-			    	if(!(shape instanceof Triangle)){
+			    	if(!(DragedShapeName.equals("Triangle"))){
+			    		orderShape(DragedShapeName);
 				    	startDrag = new Point(e.getX(), e.getY());
 				        endDrag = startDrag;
 			    	}
 			    	else{
-			    		Shape currentShape = factory.createShape(shape);
 			    		Coordinates[counter] = e.getPoint();
 			    		counter++;
 			    		if (counter % 3 == 0){
-			    			setProperties(currentShape, startDrag, endDrag);
-						    engine.addShape(currentShape);
+			    			orderShape(DragedShapeName);
+			    			setProperties(dragedShape, startDrag, endDrag);
+						    engine.addShape(dragedShape);
+						    nameslist.updateShapeNameList(engine.getShapes());
 			    			counter = 0;
 			    		}
 			    	}
@@ -95,10 +98,10 @@ public class MainController{
 	
 				@Override
 				public void mouseReleased(MouseEvent e) {
-					if(!(shape instanceof Triangle)) {
-						Shape currentShape = factory.createShape(shape);
-						setProperties(currentShape,startDrag, e.getPoint());
-					    engine.addShape(currentShape);
+					if(!(DragedShapeName.equals("Triangle"))) {
+						setProperties(dragedShape,startDrag, e.getPoint());
+					    engine.addShape(dragedShape);
+					    nameslist.updateShapeNameList(engine.getShapes());
 					    startDrag = null;
 					    endDrag = null;
 				    	repaint();
@@ -165,62 +168,13 @@ public class MainController{
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			System.out.println("NOT DONE");
 			ShapeCreationBtn source = (ShapeCreationBtn) e.getSource();
-			orderShape(source.getText());
-			System.out.println("DONE");
+			DragedShapeName = source.getText();
+			//orderShape(source.getText());
 		}
 		
 	}
-	/*
-	class CircleListner implements ActionListener{
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			orderShape("Circle");
-		}
-		
-	}
-	class LineListner implements ActionListener{
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			orderShape("LineSegment");
-		}
-		
-	}
-	class SquareListner implements ActionListener{
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			orderShape("Square");
-			
-		}
-		
-	}
-	class RectangleListner implements ActionListener{
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			orderShape("Rectangle");
-		}
-	}
-	class EllipseListner implements ActionListener{
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			orderShape("Ellipse");
-		}
-		
-	}
-	class TriangleListner implements ActionListener{
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			orderShape("Triangle");
-		}
-		
-	}*/
+	
 	class ExitListener implements ActionListener{
 
 		@Override
@@ -236,6 +190,7 @@ public class MainController{
 		public void actionPerformed(ActionEvent e) {
 			try{
 				engine.undo();
+				nameslist.updateShapeNameList(engine.getShapes());
 			}catch (Exception e1) {
 				// TODO: handle exception
 			}
@@ -249,6 +204,7 @@ public class MainController{
 		public void actionPerformed(ActionEvent e) {
 			try{
 				engine.redo();
+				nameslist.updateShapeNameList(engine.getShapes());
 			}catch (Exception e1) {
 				// TODO: handle exception
 			}

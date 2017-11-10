@@ -18,7 +18,8 @@ public class ShapeCreationBtn extends JButton{
 	}
 	
 	public void addShapeCreationListner(ActionListener listenForShapeCreationBtn){
+		
 		this.addActionListener(listenForShapeCreationBtn);
-		System.out.println("listen");
+	
 	}
 }

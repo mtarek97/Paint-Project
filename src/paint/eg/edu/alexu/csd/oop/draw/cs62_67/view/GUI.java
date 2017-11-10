@@ -14,12 +14,6 @@ import javax.swing.KeyStroke;
 
 public class GUI extends JFrame {
 	
-	//JButton circleButton = new JButton("Circle");
-	//JButton lineButton = new JButton("Line");
-	//JButton SquareButton = new JButton("Square");
-	//JButton RectangleButton = new JButton("Rectangle");
-	//JButton EllipseButton = new JButton("Ellipse");
-	//JButton TriangleButton = new JButton("Triangle");
 	private final JMenuBar menuBar = new JMenuBar();
 	private final JMenu mnFile = new JMenu("File");
 	private final JMenuItem mntmNew = new JMenuItem("New");
@@ -49,40 +43,7 @@ public class GUI extends JFrame {
 		mntmCut.setAccelerator(KeyStroke.getKeyStroke('X', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
 		mntmCopy.setAccelerator(KeyStroke.getKeyStroke('C', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
 		mntmPaste.setAccelerator(KeyStroke.getKeyStroke('V', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
-		/*GroupLayout gl_panel = new GroupLayout(panel);
-		gl_panel.setHorizontalGroup(
-			gl_panel.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_panel.createSequentialGroup()
-					.addGap(8)
-					.addGroup(gl_panel.createParallelGroup(Alignment.LEADING, false)
-						.addComponent(RectangleButton, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-						.addComponent(circleButton, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-						.addComponent(lineButton, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-						.addComponent(SquareButton, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-						.addComponent(EllipseButton, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-						.addComponent(TriangleButton, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-						
-					.addContainerGap())
-		);
-		gl_panel.setVerticalGroup(
-			gl_panel.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_panel.createSequentialGroup()
-					.addGap(7)
-					.addComponent(circleButton)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(lineButton)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(SquareButton)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(RectangleButton)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(EllipseButton)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(TriangleButton)
-					.addGap(288))
-		);*/
-	
-		
+			
 		setJMenuBar(menuBar);
 		
 		menuBar.add(mnFile);
@@ -110,25 +71,7 @@ public class GUI extends JFrame {
 		mnEdit.add(mntmDelete);
 		this.setVisible(true);
 	}
-	/*
-	public void addCircleListner(ActionListener listenforCircleButton){
-		circleButton.addActionListener(listenforCircleButton);
-	}
-	public void addLineListner(ActionListener listenforLineButton){
-		lineButton.addActionListener(listenforLineButton);
-	}
-	public void addSquareListner(ActionListener listenforSquareButton){
-		SquareButton.addActionListener(listenforSquareButton);
-	}
-	public void addRectangleListener(ActionListener listenforRectangleButton){
-		RectangleButton.addActionListener(listenforRectangleButton);
-	}
-	public void addEllipseListner(ActionListener listenforEllipseButton){
-		EllipseButton.addActionListener(listenforEllipseButton);
-	}
-	public void addTriangleListner(ActionListener listenforTriangleButton){
-		TriangleButton.addActionListener(listenforTriangleButton);
-	}*/
+
 	public void addExitListener(ActionListener listenforExit){
 		mntmExit.addActionListener(listenforExit);
 	}

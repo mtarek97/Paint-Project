@@ -6,10 +6,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import paint.eg.edu.alexu.csd.oop.draw.Shape;
+import paint.eg.edu.alexu.csd.oop.draw.Shape2;
 
 //An abstract class that implement the common methods between all shapes
 
-public abstract class MyShape implements Shape, Cloneable{
+public abstract class MyShape implements Shape, Cloneable, Shape2{
 
 	//common parameters between shapes
 	private static Map<String, Integer> numOfShapes = new HashMap<String, Integer>(){
@@ -90,18 +91,26 @@ public abstract class MyShape implements Shape, Cloneable{
 			
     }
 
+	@Override
+	//common
 	public String getName() {
 		return this.name;
 	}
 
+	@Override
+	//common
 	public void setName(String name) {
 		this.name = name;
 	}
 
+	@Override
+	//common
 	public Integer getNumOfShape(String type) {
 		return this.numOfShapes.get(type);
 	}
 
+	@Override
+	//common
 	public void increaseNumOfShape(String type) {
 		this.numOfShapes.put(type, numOfShapes.get(type) +1);
 	}

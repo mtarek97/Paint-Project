@@ -12,6 +12,7 @@ public class MyDrawingEngine implements DrawingEngine {
 	private List<ICommand> undoActions = new ArrayList<ICommand>();
 	private List<ICommand> redoActions = new ArrayList<ICommand>();
 	private ArrayList<Shape> shapes = new ArrayList<>();
+	private ArrayList<MyShape> myShapes = new ArrayList<>();
 	private List<Class<? extends Shape>> supportedShapes = new ArrayList<Class<? extends Shape>>();
 	public MyDrawingEngine(){
 		JavaClassLoader classLoader = new JavaClassLoader();
