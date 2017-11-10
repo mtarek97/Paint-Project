@@ -1,6 +1,7 @@
 package paint.eg.edu.alexu.csd.oop.draw.cs62_67.model;
 
 import java.awt.Graphics;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -121,7 +122,12 @@ public class MyDrawingEngine implements DrawingEngine {
 			xml.save(path, this.shapes);
 		}else if(extension.equals("json")){
 			Json json = new Json();
-			Json.save(path, this.shapes);
+			try {
+				Json.save(path, this.shapes);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		else{
 			throw new RuntimeException("unexpected extension");
@@ -138,7 +144,12 @@ public class MyDrawingEngine implements DrawingEngine {
 			xml.load(path, this.shapes);
 		}else if(extension.equals("json")){
 			Json json = new Json();
-			Json.load(path, this.shapes);
+			try {
+				Json.load(path, this.shapes);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		else{
 			throw new RuntimeException("unexpected extension");
