@@ -1,4 +1,4 @@
-package paint.eg.edu.alexu.csd.oop.draw.cs62_67;
+package paint.eg.edu.alexu.csd.oop.draw.cs62_67.model;
 
 import paint.eg.edu.alexu.csd.oop.draw.Shape;
 

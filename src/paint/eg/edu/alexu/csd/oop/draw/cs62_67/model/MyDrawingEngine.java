@@ -1,4 +1,4 @@
-package paint.eg.edu.alexu.csd.oop.draw.cs62_67;
+package paint.eg.edu.alexu.csd.oop.draw.cs62_67.model;
 
 import java.awt.Graphics;
 import java.util.ArrayList;
@@ -15,7 +15,7 @@ public class MyDrawingEngine implements DrawingEngine {
 	private List<Class<? extends Shape>> supportedShapes = new ArrayList<Class<? extends Shape>>();
 	public MyDrawingEngine(){
 		JavaClassLoader classLoader = new JavaClassLoader();
-		String packageBinName = "paint.eg.edu.alexu.csd.oop.draw.cs62_67.";
+		String packageBinName = "paint.eg.edu.alexu.csd.oop.draw.cs62_67.model.";
 		this.addPlugin(classLoader.loadExtraClass(packageBinName + "Ellipse"));
 		this.addPlugin(classLoader.loadExtraClass(packageBinName + "Circle"));
 		this.addPlugin(classLoader.loadExtraClass(packageBinName + "LineSegment"));
@@ -119,7 +119,8 @@ public class MyDrawingEngine implements DrawingEngine {
 			XML xml = new XML();
 			xml.save(path, this.shapes);
 		}else if(extension.equals("json")){
-			
+			Json json = new Json();
+			Json.save(path, this.shapes);
 		}
 		else{
 			throw new RuntimeException("unexpected extension");
@@ -135,7 +136,8 @@ public class MyDrawingEngine implements DrawingEngine {
 			XML xml = new XML();
 			xml.load(path, this.shapes);
 		}else if(extension.equals("json")){
-			
+			Json json = new Json();
+			Json.load(path, this.shapes);
 		}
 		else{
 			throw new RuntimeException("unexpected extension");

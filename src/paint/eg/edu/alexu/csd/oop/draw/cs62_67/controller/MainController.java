@@ -1,4 +1,4 @@
-package paint.eg.edu.alexu.csd.oop.draw.cs62_67;
+package paint.eg.edu.alexu.csd.oop.draw.cs62_67.controller;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -17,28 +17,45 @@ import javax.swing.JFrame;
 
 import paint.eg.edu.alexu.csd.oop.draw.DrawingEngine;
 import paint.eg.edu.alexu.csd.oop.draw.Shape;
+import paint.eg.edu.alexu.csd.oop.draw.cs62_67.startProgram;
+import paint.eg.edu.alexu.csd.oop.draw.cs62_67.model.Circle;
+import paint.eg.edu.alexu.csd.oop.draw.cs62_67.model.Ellipse;
+import paint.eg.edu.alexu.csd.oop.draw.cs62_67.model.LineSegment;
+import paint.eg.edu.alexu.csd.oop.draw.cs62_67.model.Rectangle;
+import paint.eg.edu.alexu.csd.oop.draw.cs62_67.model.ShapeFactory;
+import paint.eg.edu.alexu.csd.oop.draw.cs62_67.model.Square;
+import paint.eg.edu.alexu.csd.oop.draw.cs62_67.model.Triangle;
+import paint.eg.edu.alexu.csd.oop.draw.cs62_67.view.GUI;
+import paint.eg.edu.alexu.csd.oop.draw.cs62_67.view.ShapeCreationBtn;
+import paint.eg.edu.alexu.csd.oop.draw.cs62_67.view.ShapeCreationButtonsPanel;
 
 public class MainController{
     
 	private DrawingEngine engine;
     private ShapeFactory factory;
+    private GUI Paint;
+    
     private Shape shape;
     private Shape dragedShape;
-    private GUI Paint;
     private PaintSurface surface = new PaintSurface();
+    private ShapeCreationButtonsPanel shapesCreationPanel;
     private startProgram newPrgram;
+    
 	public MainController(DrawingEngine engine,ShapeFactory factory,GUI Paint){
 		this.engine = engine;
 		this.factory = factory;
 		this.Paint = Paint;
 		this.Paint.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		shapesCreationPanel = new ShapeCreationButtonsPanel(engine.getSupportedShapes());
+		shapesCreationPanel.addButtonsListeners(new ShapeCreationBtnListner());
+		this.Paint.getContentPane().add(shapesCreationPanel, BorderLayout.WEST);
 		this.Paint.getContentPane().add(surface, BorderLayout.CENTER);
-		this.Paint.addCircleListner(new CircleListner());
-		this.Paint.addLineListner(new LineListner());
-		this.Paint.addSquareListner(new SquareListner());
-		this.Paint.addRectangleListener(new RectangleListner());
-		this.Paint.addEllipseListner(new EllipseListner());
-		this.Paint.addTriangleListner(new TriangleListner());
+		//this.Paint.addCircleListner(new CircleListner());
+		//this.Paint.addLineListner(new LineListner());
+		//this.Paint.addSquareListner(new SquareListner());
+		//this.Paint.addRectangleListener(new RectangleListner());
+		//this.Paint.addEllipseListner(new EllipseListner());
+		//this.Paint.addTriangleListner(new TriangleListner());
 		this.Paint.addExitListener(new ExitListener());
 		this.Paint.addUndoListener(new UndoListener());
 		this.Paint.addRedoListener(new RedoListener());
@@ -46,9 +63,10 @@ public class MainController{
 	}
 	
 	public void orderShape(String type){
-		shape = factory.createShape(type);
-		dragedShape = factory.createShape(type);
+		this.shape = factory.createShape(type);
+		this.dragedShape = factory.createShape(type);
 	}
+	
 	
 	private class PaintSurface extends JComponent {
 		private	Point startDrag, endDrag;
@@ -56,7 +74,8 @@ public class MainController{
 		private int counter = 0;
 		public PaintSurface() {
 			this.addMouseListener(new MouseAdapter() {
-			    public void mousePressed(MouseEvent e) {
+			    @Override
+				public void mousePressed(MouseEvent e) {
 			    	if(!(shape instanceof Triangle)){
 				    	startDrag = new Point(e.getX(), e.getY());
 				        endDrag = startDrag;
@@ -74,6 +93,7 @@ public class MainController{
 			    	repaint();
 			    }
 	
+				@Override
 				public void mouseReleased(MouseEvent e) {
 					if(!(shape instanceof Triangle)) {
 						Shape currentShape = factory.createShape(shape);
@@ -87,6 +107,7 @@ public class MainController{
 			});
 
 			this.addMouseMotionListener(new MouseMotionAdapter() {
+				@Override
 				public void mouseDragged(MouseEvent e) {
 			    	endDrag = new Point(e.getX(), e.getY());
 			        repaint();
@@ -94,6 +115,7 @@ public class MainController{
 			});
 		}
 		  
+		@Override
 		public void paint(Graphics g) {
 			Graphics2D g2 = (Graphics2D) g;
 		    engine.refresh(g2);
@@ -107,28 +129,28 @@ public class MainController{
 			shape.setPosition(startDrag);
 			Map<String, Double> prep = shape.getProperties();
 			if(shape instanceof Circle){	
-				prep.put("xAxis", (double) end.getX() - start.getX());
-				prep.put("yAxis", (double) end.getX() - start.getX());
+				prep.put("xAxis", end.getX() - start.getX());
+				prep.put("yAxis", end.getX() - start.getX());
 			}
 			else if(shape instanceof Triangle){	
-				prep.put("x1", (double) Coordinates[0].getX());
-				prep.put("y1", (double) Coordinates[0].getY());
-				prep.put("x2", (double) Coordinates[1].getX());
-				prep.put("y2", (double) Coordinates[1].getY());
-				prep.put("x3", (double) Coordinates[2].getX());
-				prep.put("y3", (double) Coordinates[2].getY());
+				prep.put("x1", Coordinates[0].getX());
+				prep.put("y1", Coordinates[0].getY());
+				prep.put("x2", Coordinates[1].getX());
+				prep.put("y2", Coordinates[1].getY());
+				prep.put("x3", Coordinates[2].getX());
+				prep.put("y3", Coordinates[2].getY());
 			}
 			else if(shape instanceof Square){	
-				prep.put("xAxis", (double) end.getX() - start.getX());
-				prep.put("yAxis", (double) end.getX() - start.getX());
+				prep.put("xAxis", end.getX() - start.getX());
+				prep.put("yAxis", end.getX() - start.getX());
 			}
 			else if(shape instanceof Rectangle){	
-					prep.put("xAxis", (double) end.getY() - start.getY());
-					prep.put("yAxis", (double) end.getX() - start.getX());
+					prep.put("xAxis", end.getY() - start.getY());
+					prep.put("yAxis", end.getX() - start.getX());
 			}
 			else if(shape instanceof Ellipse){	
-				prep.put("xAxis", (double) end.getX() - start.getX());
-				prep.put("yAxis", (double) end.getY() - start.getY());
+				prep.put("xAxis", end.getX() - start.getX());
+				prep.put("yAxis", end.getY() - start.getY());
 			}
 			else if(shape instanceof LineSegment){
 				prep.put("x1", end.getX());
@@ -139,6 +161,18 @@ public class MainController{
 			shape.setProperties(prep);
 		}
 	}
+	public class ShapeCreationBtnListner implements ActionListener{
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			System.out.println("NOT DONE");
+			ShapeCreationBtn source = (ShapeCreationBtn) e.getSource();
+			orderShape(source.getText());
+			System.out.println("DONE");
+		}
+		
+	}
+	/*
 	class CircleListner implements ActionListener{
 
 		@Override
@@ -186,7 +220,7 @@ public class MainController{
 			orderShape("Triangle");
 		}
 		
-	}
+	}*/
 	class ExitListener implements ActionListener{
 
 		@Override
@@ -212,7 +246,7 @@ public class MainController{
 	class RedoListener implements ActionListener{
 
 		@Override
-		public void actionPerformed(ActionEvent arg0) {
+		public void actionPerformed(ActionEvent e) {
 			try{
 				engine.redo();
 			}catch (Exception e1) {

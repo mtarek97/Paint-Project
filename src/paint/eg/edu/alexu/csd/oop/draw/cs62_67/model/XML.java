@@ -1,4 +1,4 @@
-package paint.eg.edu.alexu.csd.oop.draw.cs62_67;
+package paint.eg.edu.alexu.csd.oop.draw.cs62_67.model;
 import java.awt.Color;
 import java.awt.Point;
 import java.io.FileNotFoundException;

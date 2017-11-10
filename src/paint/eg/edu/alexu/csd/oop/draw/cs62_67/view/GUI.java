@@ -1,29 +1,25 @@
-package paint.eg.edu.alexu.csd.oop.draw.cs62_67;
+package paint.eg.edu.alexu.csd.oop.draw.cs62_67.view;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Toolkit;
 import java.awt.event.ActionListener;
 
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
-import javax.swing.LayoutStyle.ComponentPlacement;
 
 public class GUI extends JFrame {
 	
-	JButton circleButton = new JButton("Circle");
-	JButton lineButton = new JButton("Line");
-	JButton SquareButton = new JButton("Square");
-	JButton RectangleButton = new JButton("Rectangle");
-	JButton EllipseButton = new JButton("Ellipse");
-	JButton TriangleButton = new JButton("Triangle");
+	//JButton circleButton = new JButton("Circle");
+	//JButton lineButton = new JButton("Line");
+	//JButton SquareButton = new JButton("Square");
+	//JButton RectangleButton = new JButton("Rectangle");
+	//JButton EllipseButton = new JButton("Ellipse");
+	//JButton TriangleButton = new JButton("Triangle");
 	private final JMenuBar menuBar = new JMenuBar();
 	private final JMenu mnFile = new JMenu("File");
 	private final JMenuItem mntmNew = new JMenuItem("New");
@@ -40,7 +36,7 @@ public class GUI extends JFrame {
 	public GUI() {
 		setTitle("Paint");
 		getContentPane().setBackground(Color.WHITE);
-		this.setSize(553, 553);
+		this.setSize(800, 600);
 		getContentPane().setLayout(new BorderLayout(0, 0));
 		JPanel panel = new JPanel();
 		panel.setBackground(Color.WHITE);
@@ -53,7 +49,7 @@ public class GUI extends JFrame {
 		mntmCut.setAccelerator(KeyStroke.getKeyStroke('X', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
 		mntmCopy.setAccelerator(KeyStroke.getKeyStroke('C', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
 		mntmPaste.setAccelerator(KeyStroke.getKeyStroke('V', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
-		GroupLayout gl_panel = new GroupLayout(panel);
+		/*GroupLayout gl_panel = new GroupLayout(panel);
 		gl_panel.setHorizontalGroup(
 			gl_panel.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_panel.createSequentialGroup()
@@ -84,9 +80,8 @@ public class GUI extends JFrame {
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(TriangleButton)
 					.addGap(288))
-		);
-		panel.setLayout(gl_panel);
-		getContentPane().add(panel, BorderLayout.WEST);
+		);*/
+	
 		
 		setJMenuBar(menuBar);
 		
@@ -115,35 +110,35 @@ public class GUI extends JFrame {
 		mnEdit.add(mntmDelete);
 		this.setVisible(true);
 	}
-	
-	void addCircleListner(ActionListener listenforCircleButton){
+	/*
+	public void addCircleListner(ActionListener listenforCircleButton){
 		circleButton.addActionListener(listenforCircleButton);
 	}
-	void addLineListner(ActionListener listenforLineButton){
+	public void addLineListner(ActionListener listenforLineButton){
 		lineButton.addActionListener(listenforLineButton);
 	}
-	void addSquareListner(ActionListener listenforSquareButton){
+	public void addSquareListner(ActionListener listenforSquareButton){
 		SquareButton.addActionListener(listenforSquareButton);
 	}
-	void addRectangleListener(ActionListener listenforRectangleButton){
+	public void addRectangleListener(ActionListener listenforRectangleButton){
 		RectangleButton.addActionListener(listenforRectangleButton);
 	}
-	void addEllipseListner(ActionListener listenforEllipseButton){
+	public void addEllipseListner(ActionListener listenforEllipseButton){
 		EllipseButton.addActionListener(listenforEllipseButton);
 	}
-	void addTriangleListner(ActionListener listenforTriangleButton){
+	public void addTriangleListner(ActionListener listenforTriangleButton){
 		TriangleButton.addActionListener(listenforTriangleButton);
-	}
-	void addExitListener(ActionListener listenforExit){
+	}*/
+	public void addExitListener(ActionListener listenforExit){
 		mntmExit.addActionListener(listenforExit);
 	}
-	void addUndoListener(ActionListener listenforUndo){
+	public void addUndoListener(ActionListener listenforUndo){
 		mntmUndo.addActionListener(listenforUndo);
 	}
-	void addRedoListener(ActionListener listenforRedo){
+	public void addRedoListener(ActionListener listenforRedo){
 		mntmRedo.addActionListener(listenforRedo);
 	}
-	void addNewListener(ActionListener listenforNew){
+	public void addNewListener(ActionListener listenforNew){
 		mntmNew.addActionListener(listenforNew);
 	}
 }

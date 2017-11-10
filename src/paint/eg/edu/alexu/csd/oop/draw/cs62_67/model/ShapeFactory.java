@@ -1,11 +1,35 @@
-package paint.eg.edu.alexu.csd.oop.draw.cs62_67;
+package paint.eg.edu.alexu.csd.oop.draw.cs62_67.model;
 
 import paint.eg.edu.alexu.csd.oop.draw.Shape;
 
 public class ShapeFactory {
 	private MyShape shape = null;
-	
+	private MyDrawingEngine engine;
+
+	public ShapeFactory() {
+	};
+
+	public ShapeFactory(MyDrawingEngine engine) {
+		this.engine = engine;
+	}
+
 	public Shape createShape(String shape) {
+		/*
+		 * for (Class<? extends Shape> i : engine
+		 * .getSupportedShapes()) { if
+		 * (shape.equals(i.getSimpleName())) {
+		 * 
+		 * try { this.shape = (MyShape) i.newInstance();
+		 * return this.shape;
+		 * 
+		 * } catch (InstantiationException e) {
+		 * e.printStackTrace(); } catch
+		 * (IllegalAccessException e) { e.printStackTrace();
+		 * } } } return null
+		 * 
+		 * }
+		 */
+
 		if (shape.equals("Circle")) {
 			this.shape = new Circle();
 			return this.shape;
@@ -28,7 +52,27 @@ public class ShapeFactory {
 			return null;
 		}
 	}
-	public Shape createShape(Shape shape) {
+
+	public Shape createShape(
+	Shape shape) {/*
+					 * for (Class<? extends Shape> i :
+					 * engine .getSupportedShapes()) { if
+					 * (shape.equals(i)) {
+					 * 
+					 * try { this.shape = (MyShape)
+					 * i.newInstance(); return this.shape;
+					 * 
+					 * } catch (InstantiationException e) {
+					 * e.printStackTrace(); } catch
+					 * (IllegalAccessException e) {
+					 * e.printStackTrace(); } } } return
+					 * null;
+					 * 
+					 * }
+					 * 
+					 * }
+					 */
+
 		if (shape instanceof Circle) {
 			this.shape = new Circle();
 			return this.shape;
