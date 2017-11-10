@@ -16,12 +16,12 @@ import paint.eg.edu.alexu.csd.oop.draw.Shape;
 
 public class Json {
 
+	static StringBuilder builder = new StringBuilder();
 	private static BufferedWriter bw = null;
 	private static BufferedReader br = null;
 	
-	public static void save(String path, ArrayList<Shape> shapes){
-		try {
-			bw = new BufferedWriter(new FileWriter(path.toString()));
+	public static void save(String path, ArrayList<Shape> shapes) throws IOException{
+			bw = new BufferedWriter(new FileWriter(path));
 			bw.write("{\n");
 			bw.write("\"shapes\": [\n");
 			for(Shape shape : shapes){
@@ -30,45 +30,52 @@ public class Json {
 			bw.write("]\n");
 			bw.write("}");
 			bw.close();
-		}catch (Exception e) {
-			// TODO: handle exception
-		}
+		
 	}
 	
-	public static void load(String path, ArrayList<Shape> shapes){
+	public static void load(String path, ArrayList<Shape> shapes) throws IOException{
 		try{
 			ShapeFactory factory = new ShapeFactory();
 			Point position = new Point();
 			Map<String,Double> properties = new HashMap<String,Double>();
 			br = new BufferedReader(new FileReader(path));
 			String currentLine = new String();
+			
 			for(int i = 0; i < 2; i++){
-				br.readLine();
+				builder.append(br.readLine());
 			}
-			while(!((currentLine = br.readLine()).equals("]"))){
-				Shape shape = factory.createShape(getValue(br.readLine()));
-				shape.setColor(new Color(Integer.parseInt(getValue(br.readLine()))));
-				shape.setFillColor(new Color(Integer.parseInt(getValue(br.readLine()))));
-				Double positionX = Double.parseDouble(getValue(br.readLine()));
-				Double positionY = Double.parseDouble(getValue(br.readLine()));
-				position.setLocation(positionX, positionY);
-				shape.setPosition(position);
-				String property = br.readLine();
-				while(true){
-					property = br.readLine();
-					if((property.equals("}"))) {
-						break;
+			if(!builder.toString().equals("nullnull")){
+				while(!((currentLine = br.readLine()).equals("]"))){
+					currentLine = br.readLine();
+					Shape shape = factory.createShape(getValue(currentLine));
+					currentLine = br.readLine();
+					shape.setColor(new Color(Integer.parseInt(getValue(currentLine))));
+					currentLine = br.readLine();
+					shape.setFillColor(new Color(Integer.parseInt(getValue(currentLine))));
+					currentLine = br.readLine();
+					Double positionX = Double.parseDouble(getValue(currentLine));
+					currentLine = br.readLine();
+					Double positionY = Double.parseDouble(getValue(currentLine));
+					position.setLocation(positionX, positionY);
+					shape.setPosition(position);
+					String property = br.readLine();
+					while(true){
+						property = br.readLine();
+						if((property.equals("}"))) {
+							break;
+						}
+						String key = getKey(property);
+						String value = getValue(property);
+						properties.put(key, Double.parseDouble(value));
 					}
-					String key = getKey(property);
-					String value = getValue(property);
-					properties.put(key, Double.parseDouble(value));
+					shape.setProperties(properties);
+					shapes.add(shape);
+					currentLine = br.readLine();
 				}
-				shape.setProperties(properties);
-				shapes.add(shape);
-				br.readLine();
 			}
+			br.close();
 		}catch (Exception e) {
-			// TODO: handle exception
+			throw new RuntimeException("error");
 		}
 	}
 	
@@ -78,11 +85,11 @@ public class Json {
 		bw.write(",\n");
 		writeKeyValue("Color",String.valueOf(shape.getColor().getRGB()));
 		bw.write(",\n");
-		writeKeyValue("FillColor",String.valueOf(shape.getFillColor().getRGB()));
-		bw.write(",\n");
 		writeKeyValue("PositionX",String.valueOf(shape.getPosition().getX()));
 		bw.write(",\n");
 		writeKeyValue("PositionY",String.valueOf(shape.getPosition().getY()));
+		bw.write(",\n");
+		writeKeyValue("FillColor",String.valueOf(shape.getFillColor().getRGB()));
 		bw.write(",\n");
 		bw.write("\"properties\": {\n");
 		Map<String,Double> properties = shape.getProperties();
@@ -100,8 +107,13 @@ public class Json {
 		bw.write("}\n");
 	}
 	
-	private static void writeKeyValue(String key,String value) throws IOException{
-		bw.write("\"" + key + "\":" + "\"" + value + "\"");
+	private static void writeKeyValue(String key,String value){
+		try {
+			bw.write("\"" + key + "\":" + "\"" + value + "\"");
+		} catch (IOException e) {
+			
+			throw new RuntimeException("error");
+		}
 	}
 	
 	private static String kindOfShape(Shape shape){
@@ -140,4 +152,11 @@ public class Json {
 		value = value.substring(1, value.length()-2);
 		return value;
 	}
+	/*private static String fileReader(String path) throws IOException{
+		StringBuilder builder = new StringBuilder();
+		br = new BufferedReader(new FileReader(path));
+		builder.append(br.readLine());
+		builder.append("\n");
+		return builder.toString();
+	}*/
 }

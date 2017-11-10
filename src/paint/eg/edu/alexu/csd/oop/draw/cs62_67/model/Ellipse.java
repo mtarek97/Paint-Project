@@ -30,6 +30,7 @@ public class Ellipse extends MyShape{
 		double x = properties.get(X_KEY);
 		double y = properties.get(Y_KEY);
 		canvas.drawOval(position.x, position.y, (int)x, (int)y);
+		
 	}
 	@Override
 	public Object clone() throws CloneNotSupportedException{
