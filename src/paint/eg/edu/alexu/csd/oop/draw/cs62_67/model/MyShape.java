@@ -56,13 +56,13 @@ public abstract class MyShape implements Shape, Cloneable, Shape2{
 	@Override
 	//common
 	public void setProperties(Map<String, Double> properties) {
-		this.properties = properties;	
+			
 	}
 
 	@Override
 	//common
 	public Map<String, Double> getProperties() {
-		return this.properties;
+		return null;
 	}
 
 	@Override

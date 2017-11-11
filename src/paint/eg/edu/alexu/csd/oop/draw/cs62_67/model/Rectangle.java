@@ -10,7 +10,7 @@ import java.util.Map;
 import paint.eg.edu.alexu.csd.oop.draw.Shape;
 
 public class Rectangle extends MyShape {
-	private Map<String, Double> properties = getProperties();
+	private Map<String, Double> properties = new HashMap<>();
 	public static final String LENGTH_KEY = "xAxis";
 	public static final String WIDTH_KEY = "yAxis";
 	
@@ -26,7 +26,16 @@ public class Rectangle extends MyShape {
 		setFillColor(this.getFillColor());
 		System.out.println(this.getName());
 	}
-	
+	public void setProperties(Map<String, Double> properties) {
+		this.properties = properties;
+	}
+
+	@Override
+	//common
+	public Map<String, Double> getProperties() {
+		return this.properties;
+	}
+
 	@Override
 	public void draw(Graphics canvas) {
 		Graphics2D g2 = (Graphics2D) canvas;

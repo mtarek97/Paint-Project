@@ -10,7 +10,7 @@ import java.util.Map;
 import paint.eg.edu.alexu.csd.oop.draw.Shape;
 
 public class Triangle extends MyShape{
-	private Map<String, Double> properties = getProperties();
+	private Map<String, Double> properties = new HashMap<>();
 	public static final String X1_KEY = "x1";
 	public static final String Y1_KEY = "y1";
 	public static final String X2_KEY = "x2";
@@ -33,7 +33,16 @@ public class Triangle extends MyShape{
 		setFillColor(this.getFillColor());
 		System.out.println(this.getName());
 	}
-	
+	public void setProperties(Map<String, Double> properties) {
+		this.properties = properties;
+	}
+
+	@Override
+	//common
+	public Map<String, Double> getProperties() {
+		return this.properties;
+	}
+
 	@Override
 	public void draw(Graphics canvas) {
 		Graphics2D g2 = (Graphics2D) canvas;

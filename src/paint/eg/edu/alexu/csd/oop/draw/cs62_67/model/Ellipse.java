@@ -10,7 +10,7 @@ import java.util.Map;
 import paint.eg.edu.alexu.csd.oop.draw.Shape;
 
 public class Ellipse extends MyShape{
-	private Map<String, Double> properties = new HashMap<>();
+	private Map<String, Double> properties =  new HashMap<>();
 	public static final String X_KEY = "xAxis";
 	public static final String Y_KEY = "yAxis";
 	
@@ -25,7 +25,16 @@ public class Ellipse extends MyShape{
 		setFillColor(this.getFillColor());
 		System.out.println(this.getName());
 	}
-	
+	public void setProperties(Map<String, Double> properties) {
+		this.properties = properties;
+	}
+
+	@Override
+	//common
+	public Map<String, Double> getProperties() {
+		return this.properties;
+	}
+
 	@Override
 	public void draw(Graphics canvas) {
 		Graphics2D g2 = (Graphics2D) canvas;
