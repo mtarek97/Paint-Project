@@ -74,8 +74,8 @@ implements DrawingEngine, DrawingEngine2 {
 	@Override
 	public void updateShape(Shape oldShape,
 	Shape newShape) {
-		 UpdateShape updateShape =
-		 new UpdateShape(this.shapes, oldShape, newShape);
+		UpdateShape updateShape =
+		new UpdateShape(this.shapes, oldShape, newShape);
 		updateShape.execute();
 		undoActions.add(updateShape);
 		if (undoActions.size() > 20) {
@@ -138,6 +138,7 @@ implements DrawingEngine, DrawingEngine2 {
 	public void save(String path) {
 		int dotIndex = path.lastIndexOf('.');
 		String extension = path.substring(dotIndex + 1);
+
 		if (extension.equals("XmL")) {
 			XML xml = new XML();
 			xml.save(path, this.shapes);

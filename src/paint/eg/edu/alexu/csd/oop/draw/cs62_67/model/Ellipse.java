@@ -31,6 +31,7 @@ public class Ellipse extends MyShape{
 		Graphics2D g2 = (Graphics2D) canvas;
 		g2.setStroke(new BasicStroke(6.0f));
 		Point position = getPosition();
+
 		double x = getProperties().get(X_KEY);
 		double y = getProperties().get(Y_KEY);
 		g2.setColor(getColor());

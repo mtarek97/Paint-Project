@@ -10,6 +10,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+
 import java.awt.geom.Rectangle2D;
 import java.io.File;
 import java.nio.file.Path;
@@ -85,8 +86,10 @@ public class MainController {
 		this.Paint.saveJsonListener(new jsonSaveListener());
 		this.Paint.saveXmlListener(new xmlSaveListener());
 		this.Paint.loadListener(new loadListener());
+
 		this.Paint.colorListener(new colorLestener());
 		this.Paint.fillColorListener(new fillColorLestener());
+
 	}
 
 	public void orderShape(String type) {
@@ -94,7 +97,6 @@ public class MainController {
 	}
 
 	private class PaintSurface extends JComponent {
-		
 		private Point startDrag, endDrag;
 		private Point[] Coordinates = new Point[3];
 		private int counter = 0;
@@ -359,6 +361,7 @@ public class MainController {
 			}
 		}
 	}
+
 	class colorLestener implements ActionListener{
 		Shape updatedShape;
 		@Override
