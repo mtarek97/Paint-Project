@@ -1,6 +1,8 @@
 package paint.eg.edu.alexu.csd.oop.draw.cs62_67.model;
 
+import java.awt.BasicStroke;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Point;
 import java.util.HashMap;
 import java.util.Map;
@@ -26,10 +28,16 @@ public class Ellipse extends MyShape{
 	
 	@Override
 	public void draw(Graphics canvas) {
+		Graphics2D g2 = (Graphics2D) canvas;
+		g2.setStroke(new BasicStroke(6.0f));
 		Point position = getPosition();
-		double x = properties.get(X_KEY);
-		double y = properties.get(Y_KEY);
-		canvas.drawOval(position.x, position.y, (int)x, (int)y);
+		double x = getProperties().get(X_KEY);
+		double y = getProperties().get(Y_KEY);
+		g2.setColor(getColor());
+		g2.drawOval(position.x, position.y, (int)x, (int)y);
+		g2.setColor(getFillColor());
+		g2.fillOval(position.x, position.y, (int)x, (int)y);
+		
 	}
 	@Override
 	public Object clone() throws CloneNotSupportedException{

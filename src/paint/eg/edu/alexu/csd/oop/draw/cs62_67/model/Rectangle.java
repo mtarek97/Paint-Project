@@ -1,6 +1,8 @@
 package paint.eg.edu.alexu.csd.oop.draw.cs62_67.model;
 
+import java.awt.BasicStroke;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Point;
 import java.util.HashMap;
 import java.util.Map;
@@ -27,10 +29,15 @@ public class Rectangle extends MyShape {
 	
 	@Override
 	public void draw(Graphics canvas) {
+		Graphics2D g2 = (Graphics2D) canvas;
+		g2.setStroke(new BasicStroke(6.0f));
 		Point position = getPosition();
-		double length = properties.get(LENGTH_KEY);
-		double width = properties.get(WIDTH_KEY);
-		canvas.drawRect(position.x, position.y, (int)width, (int)length);
+		double length = getProperties().get(LENGTH_KEY);
+		double width = getProperties().get(WIDTH_KEY);
+		g2.setColor(getColor());
+		g2.drawRect(position.x, position.y, (int)width, (int)length);
+		g2.setColor(getFillColor());
+		g2.fillRect(position.x, position.y, (int)width, (int)length);
 	}
 	
 	@Override

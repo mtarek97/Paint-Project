@@ -5,8 +5,8 @@ import java.awt.Point;
 import java.util.HashMap;
 import java.util.Map;
 
-import paint.eg.edu.alexu.csd.oop.draw.Shape;
 import paint.eg.edu.alexu.csd.oop.draw.Shape2;
+import paint.eg.edu.alexu.csd.oop.draw.Shape;
 
 //An abstract class that implement the common methods between all shapes
 
@@ -24,10 +24,10 @@ public abstract class MyShape implements Shape, Cloneable, Shape2{
 		}
 	};
 	private Map<String, Double> properties = new HashMap<>();
-	private Point position;
+	private Point position = new Point(13, 12);
 	private String name;
-	private Color color;
-	private Color fillColor;
+	private Color color = Color.black;
+	private Color fillColor = color.white;
 	
 	@Override
 	//common

@@ -1,6 +1,8 @@
 package paint.eg.edu.alexu.csd.oop.draw.cs62_67.model;
 
+import java.awt.BasicStroke;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,10 +34,13 @@ public class LineSegment extends MyShape {
 	
 	@Override
 	public void draw(Graphics canvas) {
+		Graphics2D g2 = (Graphics2D) canvas;
 		Map<String, Double> properties = getProperties();
+		g2.setStroke(new BasicStroke(5.0f));
 		// I got it
-		canvas.drawLine( properties.get(X1_KEY).intValue(),properties.get(Y1_KEY).intValue()
-				, properties.get(X2_KEY).intValue(), properties.get(Y2_KEY).intValue());
+		canvas.setColor(getColor());
+		canvas.drawLine( getProperties().get(X1_KEY).intValue(),getProperties().get(Y1_KEY).intValue()
+				, getProperties().get(X2_KEY).intValue(), getProperties().get(Y2_KEY).intValue());
 	}
 	@Override
 	public Object clone() throws CloneNotSupportedException{

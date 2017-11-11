@@ -1,6 +1,8 @@
 package paint.eg.edu.alexu.csd.oop.draw.cs62_67.model;
 
+import java.awt.BasicStroke;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Point;
 import java.util.HashMap;
 import java.util.Map;
@@ -34,17 +36,20 @@ public class Triangle extends MyShape{
 	
 	@Override
 	public void draw(Graphics canvas) {
-		Point position = getPosition();
-		int x1 = properties.get(X1_KEY).intValue();
-		int y1 = properties.get(Y1_KEY).intValue();
-		int x2 = properties.get(X2_KEY).intValue();
-		int y2 = properties.get(Y2_KEY).intValue();
-		int x3 = properties.get(X3_KEY).intValue();
-		int y3 = properties.get(Y3_KEY).intValue();
-		
-		canvas.drawLine(x1, y1, x2, y2);
-		canvas.drawLine(x2, y2, x3, y3);
-		canvas.drawLine(x3, y3, x1, y1);
+		Graphics2D g2 = (Graphics2D) canvas;
+		g2.setStroke(new BasicStroke(6.0f));
+		int[] x = new int[3];
+		int[] y = new int[3];
+		x[0] = getProperties().get(X1_KEY).intValue();
+		y[0] = getProperties().get(Y1_KEY).intValue();
+		x[1] = getProperties().get(X2_KEY).intValue();
+		y[1] = getProperties().get(Y2_KEY).intValue();
+		x[2] = getProperties().get(X3_KEY).intValue();
+		y[2] = getProperties().get(Y3_KEY).intValue();
+		g2.setColor(getColor());
+		g2.drawPolygon(x, y, 3);
+		g2.setColor(getFillColor());
+		g2.fillPolygon(x, y, 3);
 	}
 	
 	@Override
