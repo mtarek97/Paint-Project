@@ -51,8 +51,8 @@ public class MainController {
 	private Shape dragedShape;
 	private PaintSurface surface = new PaintSurface();
 	private ShapeCreationButtonsPanel shapesCreationPanel;
-	//private Color color = Color.black;
-	//private Color fillColor = Color.WHITE;
+	private Color color = Color.black;
+	private Color fillColor = Color.WHITE;
 	private ShapeNameList namesList;
 	private startProgram newPrgram;
 	public MainController(DrawingEngine engine,
@@ -166,6 +166,8 @@ public class MainController {
 
 		public void setProperties(Shape shape, Point start,
 		Point end) {
+			shape.setColor(color);
+			shape.setFillColor(fillColor);
 			shape.setPosition(start);
 			Map<String, Double> prep =
 			shape.getProperties();
@@ -363,30 +365,28 @@ public class MainController {
 	class colorLestener implements ActionListener{
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			 Color c = JColorChooser.showDialog(null, "Choose a Color", selectedShape.getColor());
+			color = JColorChooser.showDialog(null, "Choose a Color", color);
 		      if (selectedShape != null) {
-		    	  selectedShape.setColor(c);
-			}
-		      	
-		      	engine.updateShape(selectedShape, selectedShape);
-		      	namesList
-				.updateShapeNameList(engine.getShapes());
-		      	surface.repaint();
+		    	  selectedShape.setColor(color);
+		    	  engine.updateShape(selectedShape, selectedShape);
+			      	namesList
+					.updateShapeNameList(engine.getShapes());
+			      	surface.repaint();
+		     }	
 		}
 			
 	}
 	class fillColorLestener implements ActionListener{
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			Color c = JColorChooser.showDialog(null, "Choose a Color", selectedShape.getFillColor());
+			fillColor = JColorChooser.showDialog(null, "Choose a Color", fillColor);
 		      if (selectedShape != null) {
-		    	  selectedShape.setFillColor(c);
-			}
-		      	
-		      	engine.updateShape(selectedShape, selectedShape);
-		      	namesList
-				.updateShapeNameList(engine.getShapes());
-		      	surface.repaint();
+		    	  selectedShape.setFillColor(fillColor);
+		    	  engine.updateShape(selectedShape, selectedShape);
+			      	namesList
+					.updateShapeNameList(engine.getShapes());
+			      	surface.repaint();
+		      }      	
 		}
 			
 	}
