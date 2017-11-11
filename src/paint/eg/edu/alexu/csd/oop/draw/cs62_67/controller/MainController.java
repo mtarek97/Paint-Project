@@ -359,6 +359,8 @@ public class MainController {
 			fc.getSelectedFile().getPath().toString();
 			if (result == JFileChooser.APPROVE_OPTION) {
 				engine.load(selectedFilePath);
+				namesList
+				.updateShapeNameList(engine.getShapes());
 				surface.repaint();
 			}
 		}

@@ -13,6 +13,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import paint.eg.edu.alexu.csd.oop.draw.cs62_67.model.Circle;
+import paint.eg.edu.alexu.csd.oop.draw.cs62_67.model.Ellipse;
+import paint.eg.edu.alexu.csd.oop.draw.cs62_67.model.LineSegment;
+import paint.eg.edu.alexu.csd.oop.draw.cs62_67.model.Rectangle;
+import paint.eg.edu.alexu.csd.oop.draw.cs62_67.model.ShapeFactory;
+import paint.eg.edu.alexu.csd.oop.draw.cs62_67.model.Square;
+import paint.eg.edu.alexu.csd.oop.draw.cs62_67.model.Triangle;
 import paint.eg.edu.alexu.csd.oop.draw.Shape;
 
 public class Json {
@@ -35,10 +42,10 @@ public class Json {
 	}
 	
 	public static void load(String path, ArrayList<Shape> shapes) throws IOException{
-		
+			int counter = 0;
 			ShapeFactory factory = new ShapeFactory();
 			Point position = new Point();
-			Map<String,Double> properties = new HashMap<String,Double>();
+			
 			br = new BufferedReader(new FileReader(path));
 			String currentLine = new String();
 			
@@ -49,60 +56,89 @@ public class Json {
 				while(!((currentLine = br.readLine()).equals("]"))){
 					currentLine = br.readLine();
 					Shape shape = factory.createShape(getValue(currentLine));
-					currentLine = br.readLine();
-					shape.setColor(new Color(Integer.parseInt(getValue(currentLine))));
-					currentLine = br.readLine();
-					Double positionX = Double.parseDouble(getValue(currentLine));
-					currentLine = br.readLine();
-					Double positionY = Double.parseDouble(getValue(currentLine));
-					position.setLocation(positionX, positionY);
-					shape.setPosition(position);
-					currentLine = br.readLine();
-					shape.setFillColor(new Color(Integer.parseInt(getValue(currentLine))));
-					String property = br.readLine();
-					while(true){
-						property = br.readLine();
-						if((property.equals("}"))) {
-							break;
+					if(shape != null){
+						currentLine = br.readLine();
+						int x = Integer.parseInt(getValue(currentLine));
+						Color c = new Color(x);
+						try{
+							shape.setColor(c);
+						}catch (Exception e) {
+							
 						}
-						String key = getKey(property);
-						String value = getValue(property);
-						properties.put(key, Double.parseDouble(value));
+						currentLine = br.readLine();
+						Double positionX = Double.parseDouble(getValue(currentLine));
+						currentLine = br.readLine();
+						Double positionY = Double.parseDouble(getValue(currentLine));
+						currentLine = br.readLine();
+						position.setLocation(positionX, positionY);
+						shape.setPosition(position);
+						shape.setFillColor(new Color(Integer.parseInt(getValue(currentLine))));
+						String property = br.readLine();
+						Map<String,Double> properties = new HashMap<String,Double>();
+						while(true){
+							property = br.readLine();
+							if((property.equals("}"))) {
+								break;
+							}
+							String key = getKey(property);
+							String value = getValue(property);
+							properties.put(key, Double.parseDouble(value));
+						}
+						shape.setProperties(properties);
+						shapes.add(shape);
+						currentLine = br.readLine();
 					}
-					shape.setProperties(properties);
-					shapes.add(shape);
-					currentLine = br.readLine();
+					else if(shape == null && counter == 0){
+						shapes.add(shape);
+						counter = 1;
+					}
 				}
 			}
 			br.close();
-		
 	}
 	
 	private static void writeProperties(Shape shape) throws IOException{
 		bw.write("{\n");
 		writeKeyValue("Kind",kindOfShape(shape));
 		bw.write(",\n");
-		writeKeyValue("Color",String.valueOf(shape.getColor().getRGB()));
+		try{
+			writeKeyValue("Color",String.valueOf(shape.getColor().getRGB()));
+		}catch (Exception e) {
+			shape.setColor(Color.black);
+			writeKeyValue("Color",String.valueOf(shape.getColor().getRGB()));
+		}
 		bw.write(",\n");
-		writeKeyValue("PositionX",String.valueOf(shape.getPosition().getX()));
+		try{
+			writeKeyValue("PositionX",String.valueOf(shape.getPosition().getX()));
+		}catch (Exception e) {
+			shape.setPosition(new Point(0, 0));
+			writeKeyValue("PositionX",String.valueOf(shape.getPosition().getX()));
+		}
 		bw.write(",\n");
 		writeKeyValue("PositionY",String.valueOf(shape.getPosition().getY()));
 		bw.write(",\n");
-		writeKeyValue("FillColor",String.valueOf(shape.getFillColor().getRGB()));
-		bw.write(",\n");
-		bw.write("\"properties\": {\n");
-		Map<String,Double> properties = shape.getProperties();
-		Set<String> keys = properties.keySet();
-		int counter = 0;
-		for(String key : keys){
-			counter++;
-			writeKeyValue(key, "" + properties.get(key));
-			if(counter != keys.size()){
-				bw.write(",\n");
-			}
+		try{
+			writeKeyValue("FillColor",String.valueOf(shape.getFillColor().getRGB()));
+		}catch (Exception e) {
+			shape.setFillColor(Color.WHITE);
+			writeKeyValue("FillColor",String.valueOf(shape.getFillColor().getRGB()));
 		}
-		bw.write("\n");
-		bw.write("}\n");
+		Map<String,Double> properties = shape.getProperties();
+		if(properties != null){
+			bw.write(",\n");
+			bw.write("\"properties\": {\n");
+			Set<String> keys = properties.keySet();
+			int counter = 0;
+			for(String key : keys){
+				counter++;
+				writeKeyValue(key, "" + properties.get(key));
+				if(counter != keys.size()){
+					bw.write(",\n");
+				}
+			}
+			bw.write("\n");
+			bw.write("}\n");
+		}
 		bw.write("}\n");
 	}
 	
