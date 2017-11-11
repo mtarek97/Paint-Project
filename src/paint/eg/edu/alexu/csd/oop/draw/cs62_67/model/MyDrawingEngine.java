@@ -75,7 +75,7 @@ implements DrawingEngine, DrawingEngine2 {
 	public void updateShape(Shape oldShape,
 	Shape newShape) {
 		 UpdateShape updateShape =
-		new UpdateShape(this.shapes, oldShape, newShape);
+		 new UpdateShape(this.shapes, oldShape, newShape);
 		updateShape.execute();
 		undoActions.add(updateShape);
 		if (undoActions.size() > 20) {
