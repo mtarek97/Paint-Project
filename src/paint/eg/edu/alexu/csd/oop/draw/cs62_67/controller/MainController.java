@@ -41,7 +41,8 @@ import paint.eg.edu.alexu.csd.oop.draw.cs62_67.view.ShapeCreationButtonsPanel;
 import paint.eg.edu.alexu.csd.oop.draw.cs62_67.view.ShapeNameList;
 
 public class MainController {
-
+	private int copyFlage = 0;
+	private Shape copiedShape;
 	private DrawingEngine engine;
 	private ShapeFactory factory;
 	private GUI Paint;
@@ -86,7 +87,8 @@ public class MainController {
 		this.Paint.loadListener(new loadListener());
 		this.Paint.colorListener(new colorLestener());
 		this.Paint.fillColorListener(new fillColorLestener());
-
+		this.Paint.copyListener(new copyListener());
+		this.Paint.pasteListener(new pasteListener());
 	}
 
 	public void orderShape(String type) {
@@ -102,6 +104,7 @@ public class MainController {
 			this.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mousePressed(MouseEvent e) {
+					
 					if (!(dragedShapeName
 					.equals("Triangle"))) {
 						orderShape(dragedShapeName);
@@ -320,7 +323,7 @@ public class MainController {
 				.get(chooser.getCurrentDirectory() + "/"
 				+ chooser.getSelectedFile().getName());
 
-				engine.save(path.toString().concat(".Xml"));
+				engine.save(path.toString().concat(".XmL"));
 			}
 		}
 
@@ -390,6 +393,41 @@ public class MainController {
 		      }      	
 		}
 			
+	}
+	class copyListener implements ActionListener{
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			
+			if (selectedShape != null){
+				try {
+					copiedShape = (Shape) selectedShape.clone();
+					copyFlage = 1;
+				} catch (CloneNotSupportedException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+			
+		}
+		
+	}
+	class pasteListener implements ActionListener{
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if(copyFlage == 1){
+				Point point = selectedShape.getPosition();
+				copiedShape.setPosition(new Point(point.x + 20, point.y));
+				engine.addShape(copiedShape);
+				namesList
+				.updateShapeNameList(engine.getShapes());
+				surface.repaint();
+				copyFlage = 0;
+			}
+			
+		}
+		
 	}
 		
 }

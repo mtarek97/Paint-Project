@@ -128,11 +128,11 @@ public class GUI extends JFrame {
 		.setAccelerator(KeyStroke.getKeyStroke('X', Toolkit
 		.getDefaultToolkit().getMenuShortcutKeyMask()));
 		mntmCopy
-		.setAccelerator(KeyStroke.getKeyStroke('C', Toolkit
-		.getDefaultToolkit().getMenuShortcutKeyMask()));
+		.setAccelerator(KeyStroke.getKeyStroke('D', Toolkit
+				.getDefaultToolkit().getMenuShortcutKeyMask()));
 		mntmPaste
-		.setAccelerator(KeyStroke.getKeyStroke('V', Toolkit
-		.getDefaultToolkit().getMenuShortcutKeyMask()));
+		.setAccelerator(KeyStroke.getKeyStroke('F', Toolkit
+				.getDefaultToolkit().getMenuShortcutKeyMask()));
 
 		setJMenuBar(menuBar);
 
@@ -209,5 +209,11 @@ public class GUI extends JFrame {
 	}
 	public void fillColorListener(ActionListener listenForFillColor) {
 		btnFillColor.addActionListener(listenForFillColor);
+	}
+	public void copyListener(ActionListener listenForCopy) {
+		mntmCopy.addActionListener(listenForCopy);
+	}
+	public void pasteListener(ActionListener listenForPaste) {
+		mntmPaste.addActionListener(listenForPaste);
 	}
 }

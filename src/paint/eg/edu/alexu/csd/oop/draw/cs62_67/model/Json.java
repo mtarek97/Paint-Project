@@ -35,7 +35,7 @@ public class Json {
 	}
 	
 	public static void load(String path, ArrayList<Shape> shapes) throws IOException{
-		try{
+		
 			ShapeFactory factory = new ShapeFactory();
 			Point position = new Point();
 			Map<String,Double> properties = new HashMap<String,Double>();
@@ -52,13 +52,13 @@ public class Json {
 					currentLine = br.readLine();
 					shape.setColor(new Color(Integer.parseInt(getValue(currentLine))));
 					currentLine = br.readLine();
-					shape.setFillColor(new Color(Integer.parseInt(getValue(currentLine))));
-					currentLine = br.readLine();
 					Double positionX = Double.parseDouble(getValue(currentLine));
 					currentLine = br.readLine();
 					Double positionY = Double.parseDouble(getValue(currentLine));
 					position.setLocation(positionX, positionY);
 					shape.setPosition(position);
+					currentLine = br.readLine();
+					shape.setFillColor(new Color(Integer.parseInt(getValue(currentLine))));
 					String property = br.readLine();
 					while(true){
 						property = br.readLine();
@@ -75,9 +75,7 @@ public class Json {
 				}
 			}
 			br.close();
-		}catch (Exception e) {
-			throw new RuntimeException("error");
-		}
+		
 	}
 	
 	private static void writeProperties(Shape shape) throws IOException{
@@ -150,7 +148,7 @@ public class Json {
 	private static String getKey(String string){
 		String[] splited = string.split(":");
 		String value = splited[0];
-		value = value.substring(1, value.length()-2);
+		value = value.substring(1, value.length()-1);
 		return value;
 	}
 	/*private static String fileReader(String path) throws IOException{
