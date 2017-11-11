@@ -84,7 +84,6 @@ public class MainController {
 		this.Paint.saveJsonListener(new jsonSaveListener());
 		this.Paint.saveXmlListener(new xmlSaveListener());
 		this.Paint.loadListener(new loadListener());
-
 		this.Paint.colorListener(new colorLestener());
 		this.Paint.fillColorListener(new fillColorLestener());
 
@@ -366,6 +365,7 @@ public class MainController {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			color = JColorChooser.showDialog(null, "Choose a Color", color);
+			Paint.btnColor.setBackground(color);
 		      if (selectedShape != null) {
 		    	  selectedShape.setColor(color);
 		    	  engine.updateShape(selectedShape, selectedShape);
@@ -380,6 +380,7 @@ public class MainController {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			fillColor = JColorChooser.showDialog(null, "Choose a Color", fillColor);
+			Paint.btnFillColor.setBackground(fillColor);
 		      if (selectedShape != null) {
 		    	  selectedShape.setFillColor(fillColor);
 		    	  engine.updateShape(selectedShape, selectedShape);

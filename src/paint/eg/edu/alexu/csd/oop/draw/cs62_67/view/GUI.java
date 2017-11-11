@@ -49,8 +49,8 @@ public class GUI extends JFrame {
 	new JMenuItem("save xml");
 	private final JMenuItem mntmSaveJson =
 	new JMenuItem("save json");
-	private final JButton btnColor = new JButton("Outer Color");
-	private final JButton btnFillColor = new JButton("Fill Color");
+	public final JButton btnColor = new JButton("Outer Color");
+	public final JButton btnFillColor = new JButton("Fill Color");
 
 	public GUI() {
 		setTitle("Paint");
