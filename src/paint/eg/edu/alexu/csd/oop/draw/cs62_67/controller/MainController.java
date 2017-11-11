@@ -45,16 +45,16 @@ public class MainController {
 	private DrawingEngine engine;
 	private ShapeFactory factory;
 	private GUI Paint;
-
 	private String selectedShapeName;
 	private Shape selectedShape;
 	private String dragedShapeName;
 	private Shape dragedShape;
 	private PaintSurface surface = new PaintSurface();
 	private ShapeCreationButtonsPanel shapesCreationPanel;
+	//private Color color = Color.black;
+	//private Color fillColor = Color.WHITE;
 	private ShapeNameList namesList;
 	private startProgram newPrgram;
-
 	public MainController(DrawingEngine engine,
 	ShapeFactory factory, GUI Paint) {
 		this.engine = engine;
@@ -361,20 +361,14 @@ public class MainController {
 	}
 
 	class colorLestener implements ActionListener{
-		Shape updatedShape;
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			Color c = JColorChooser.showDialog(null, "Choose a Color", selectedShape.getColor());
-		      if (c != null || selectedShape != null) {
-				try {
-					updatedShape = (Shape) selectedShape.clone();
-				} catch (CloneNotSupportedException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
+			 Color c = JColorChooser.showDialog(null, "Choose a Color", selectedShape.getColor());
+		      if (selectedShape != null) {
+		    	  selectedShape.setColor(c);
 			}
-		      	updatedShape.setColor(c);
-		      	engine.updateShape(selectedShape, updatedShape);
+		      	
+		      	engine.updateShape(selectedShape, selectedShape);
 		      	namesList
 				.updateShapeNameList(engine.getShapes());
 		      	surface.repaint();
@@ -382,20 +376,14 @@ public class MainController {
 			
 	}
 	class fillColorLestener implements ActionListener{
-		Shape updatedShape;
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			Color c = JColorChooser.showDialog(null, "Choose a Color", selectedShape.getFillColor());
-		      if (c != null || selectedShape != null) {
-				try {
-					updatedShape = (Shape) selectedShape.clone();
-				} catch (CloneNotSupportedException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
+		      if (selectedShape != null) {
+		    	  selectedShape.setFillColor(c);
 			}
-		      	updatedShape.setFillColor(c);
-		      	engine.updateShape(selectedShape, updatedShape);
+		      	
+		      	engine.updateShape(selectedShape, selectedShape);
 		      	namesList
 				.updateShapeNameList(engine.getShapes());
 		      	surface.repaint();
