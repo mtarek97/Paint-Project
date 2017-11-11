@@ -10,8 +10,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
-
-import java.awt.geom.Rectangle2D;
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -235,7 +233,7 @@ public class MainController {
 		public void actionPerformed(ActionEvent e) {
 			ShapeCreationBtn source =
 			(ShapeCreationBtn) e.getSource();
-			dragedShapeName = source.getText();
+			dragedShapeName = source.getToolTipText();
 		}
 
 	}
@@ -367,13 +365,14 @@ public class MainController {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			Color c = JColorChooser.showDialog(null, "Choose a Color", selectedShape.getColor());
-		      if (c != null || selectedShape != null)
+		      if (c != null || selectedShape != null) {
 				try {
 					updatedShape = (Shape) selectedShape.clone();
 				} catch (CloneNotSupportedException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
+			}
 		      	updatedShape.setColor(c);
 		      	engine.updateShape(selectedShape, updatedShape);
 		      	namesList
@@ -387,13 +386,14 @@ public class MainController {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			Color c = JColorChooser.showDialog(null, "Choose a Color", selectedShape.getFillColor());
-		      if (c != null || selectedShape != null)
+		      if (c != null || selectedShape != null) {
 				try {
 					updatedShape = (Shape) selectedShape.clone();
 				} catch (CloneNotSupportedException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
+			}
 		      	updatedShape.setFillColor(c);
 		      	engine.updateShape(selectedShape, updatedShape);
 		      	namesList

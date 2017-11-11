@@ -5,16 +5,20 @@ import java.awt.Font;
 import java.awt.SystemColor;
 import java.awt.event.ActionListener;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
 public class ShapeCreationBtn extends JButton{
 	
 	public ShapeCreationBtn(String shapeName){
-		super(shapeName);
+		super();
 		this.setName(shapeName+"CreationBtn");
 		this.setForeground(new Color(0, 0, 0));
 	  	this.setFont(new Font("Comic Sans MS", Font.PLAIN, 14));
 	  	this.setBackground(SystemColor.activeCaption);
+	  	String iconPath = "/assets/".concat(shapeName).concat(".png");
+	  	this.setIcon(new ImageIcon(GUI.class.getResource(iconPath)));
+	  	this.setToolTipText(shapeName);
 	}
 	
 	public void addShapeCreationListner(ActionListener listenForShapeCreationBtn){
