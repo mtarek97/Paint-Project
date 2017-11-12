@@ -10,34 +10,23 @@ import paint.eg.edu.alexu.csd.oop.draw.DrawingEngine2;
 import paint.eg.edu.alexu.csd.oop.draw.Shape;
 import paint.eg.edu.alexu.csd.oop.draw.Shape2;
 
-public class MyDrawingEngine
-implements DrawingEngine, DrawingEngine2 {
+public class MyDrawingEngine implements DrawingEngine, DrawingEngine2 {
 
-	private List<ICommand> undoActions =
-	new ArrayList<ICommand>();
-	private List<ICommand> redoActions =
-	new ArrayList<ICommand>();
+	private List<ICommand> undoActions = new ArrayList<ICommand>();
+	private List<ICommand> redoActions = new ArrayList<ICommand>();
 	private ArrayList<Shape> shapes = new ArrayList<>();
 	private ArrayList<MyShape> myShapes = new ArrayList<>();
-	private List<Class<? extends Shape>> supportedShapes =
-	new ArrayList<Class<? extends Shape>>();
+	private List<Class<? extends Shape>> supportedShapes = new ArrayList<Class<? extends Shape>>();
 
 	public MyDrawingEngine() {
 		JavaClassLoader classLoader = new JavaClassLoader();
-		String packageBinName =
-		"paint.eg.edu.alexu.csd.oop.draw.cs62_67.model.";
-		this.addPlugin(classLoader
-		.loadExtraClass(packageBinName + "Ellipse"));
-		this.addPlugin(classLoader
-		.loadExtraClass(packageBinName + "Circle"));
-		this.addPlugin(classLoader
-		.loadExtraClass(packageBinName + "LineSegment"));
-		this.addPlugin(classLoader
-		.loadExtraClass(packageBinName + "Rectangle"));
-		this.addPlugin(classLoader
-		.loadExtraClass(packageBinName + "Square"));
-		this.addPlugin(classLoader
-		.loadExtraClass(packageBinName + "Triangle"));
+		String packageBinName = "paint.eg.edu.alexu.csd.oop.draw.cs62_67.model.";
+		this.addPlugin(classLoader.loadExtraClass(packageBinName + "Ellipse"));
+		this.addPlugin(classLoader.loadExtraClass(packageBinName + "Circle"));
+		this.addPlugin(classLoader.loadExtraClass(packageBinName + "LineSegment"));
+		this.addPlugin(classLoader.loadExtraClass(packageBinName + "Rectangle"));
+		this.addPlugin(classLoader.loadExtraClass(packageBinName + "Square"));
+		this.addPlugin(classLoader.loadExtraClass(packageBinName + "Triangle"));
 	}
 
 	@Override
@@ -50,8 +39,7 @@ implements DrawingEngine, DrawingEngine2 {
 
 	@Override
 	public void addShape(Shape shape) {
-		AddShape addShape =
-		new AddShape(this.shapes, shape);
+		AddShape addShape = new AddShape(this.shapes, shape);
 		addShape.execute();
 		undoActions.add(addShape);
 		redoActions.clear();
@@ -62,8 +50,7 @@ implements DrawingEngine, DrawingEngine2 {
 
 	@Override
 	public void removeShape(Shape shape) {
-		RemoveShape removeShape =
-		new RemoveShape(this.shapes, shape);
+		RemoveShape removeShape = new RemoveShape(this.shapes, shape);
 		removeShape.execute();
 		undoActions.add(removeShape);
 		if (undoActions.size() > 20) {
@@ -72,10 +59,8 @@ implements DrawingEngine, DrawingEngine2 {
 	}
 
 	@Override
-	public void updateShape(Shape oldShape,
-	Shape newShape) {
-		UpdateShape updateShape =
-		new UpdateShape(this.shapes, oldShape, newShape);
+	public void updateShape(Shape oldShape, Shape newShape) {
+		UpdateShape updateShape = new UpdateShape(this.shapes, oldShape, newShape);
 		updateShape.execute();
 		undoActions.add(updateShape);
 		if (undoActions.size() > 20) {
@@ -95,8 +80,7 @@ implements DrawingEngine, DrawingEngine2 {
 	}
 
 	@Override
-	public List<Class<? extends Shape>>
-	getSupportedShapes() {
+	public List<Class<? extends Shape>> getSupportedShapes() {
 		return this.supportedShapes;
 	}
 
@@ -107,8 +91,7 @@ implements DrawingEngine, DrawingEngine2 {
 	@Override
 	public void undo() {
 		try {
-			ICommand action =
-			undoActions.remove(undoActions.size() - 1);
+			ICommand action = undoActions.remove(undoActions.size() - 1);
 			action.unexecute();
 			redoActions.add(action);
 			if (redoActions.size() > 20) {
@@ -122,8 +105,7 @@ implements DrawingEngine, DrawingEngine2 {
 	@Override
 	public void redo() {
 		try {
-			ICommand action =
-			redoActions.remove(redoActions.size() - 1);
+			ICommand action = redoActions.remove(redoActions.size() - 1);
 			action.execute();
 			undoActions.add(action);
 			if (undoActions.size() > 20) {
@@ -151,8 +133,7 @@ implements DrawingEngine, DrawingEngine2 {
 				e.printStackTrace();
 			}
 		} else {
-			throw new RuntimeException(
-			"unexpected extension");
+			throw new RuntimeException("unexpected extension");
 		}
 
 	}
@@ -173,8 +154,7 @@ implements DrawingEngine, DrawingEngine2 {
 				e.printStackTrace();
 			}
 		} else {
-			throw new RuntimeException(
-			"unexpected extension");
+			throw new RuntimeException("unexpected extension");
 		}
 
 	}
