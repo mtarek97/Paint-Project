@@ -104,7 +104,7 @@ public class XML {
 						NodeList propNodes = shapeNode.getChildNodes();
 						Map<String,Double> prop = shape.getProperties();
 						for(int j=0;j<propNodes.getLength();j++){
-							Node probNode = propNodes.item(i);
+							Node probNode = propNodes.item(j);
 							Element probElement = (Element) probNode;
 							prop.put(probElement.getNodeName(), Double.valueOf(probElement.getTextContent()));
 						}
