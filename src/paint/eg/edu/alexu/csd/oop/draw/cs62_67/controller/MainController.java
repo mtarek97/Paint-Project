@@ -41,6 +41,7 @@ import paint.eg.edu.alexu.csd.oop.draw.cs62_67.view.ShapeCreationButtonsPanel;
 import paint.eg.edu.alexu.csd.oop.draw.cs62_67.view.ShapeNameList;
 
 public class MainController {
+	private Shape updatedShape;
 	private int copyFlage = 0;
 	private Shape copiedShape;
 	private DrawingEngine engine;
@@ -367,13 +368,19 @@ public class MainController {
 	}
 
 	class colorLestener implements ActionListener{
+		
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			color = JColorChooser.showDialog(null, "Choose a Color", color);
 			Paint.btnColor.setBackground(color);
 		      if (selectedShape != null) {
-		    	  selectedShape.setColor(color);
-		    	  engine.updateShape(selectedShape, selectedShape);
+		    	  try {
+					updatedShape = (Shape) selectedShape.clone();
+					updatedShape.setColor(color);
+				} catch (CloneNotSupportedException e1) {
+					e1.printStackTrace();
+				}
+		    	  engine.updateShape(selectedShape,updatedShape);
 			      	namesList
 					.updateShapeNameList(engine.getShapes());
 			      	surface.repaint();
@@ -387,8 +394,13 @@ public class MainController {
 			fillColor = JColorChooser.showDialog(null, "Choose a Color", fillColor);
 			Paint.btnFillColor.setBackground(fillColor);
 		      if (selectedShape != null) {
-		    	  selectedShape.setFillColor(fillColor);
-		    	  engine.updateShape(selectedShape, selectedShape);
+		    	  try {
+					updatedShape = (Shape) selectedShape.clone();
+					updatedShape.setFillColor(fillColor);
+				} catch (CloneNotSupportedException e1) {
+					e1.printStackTrace();
+				}
+		    	  engine.updateShape(selectedShape, updatedShape);
 			      	namesList
 					.updateShapeNameList(engine.getShapes());
 			      	surface.repaint();
