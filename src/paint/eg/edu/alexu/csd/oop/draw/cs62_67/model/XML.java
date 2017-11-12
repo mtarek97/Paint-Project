@@ -1,15 +1,22 @@
 package paint.eg.edu.alexu.csd.oop.draw.cs62_67.model;
 import java.awt.Color;
 import java.awt.Point;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -22,9 +29,9 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import paint.eg.edu.alexu.csd.oop.draw.cs62_67.model.ShapeFactory;
 import paint.eg.edu.alexu.csd.oop.draw.Shape;
 
 
@@ -32,11 +39,12 @@ import paint.eg.edu.alexu.csd.oop.draw.Shape;
 public class XML {
 
 	
-	public void save(String path, ArrayList<Shape> shapes){
+	public void save(String path, ArrayList<Shape> shapes) throws Exception{
 		 DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
-		 try {
+		 
 			DocumentBuilder builder = builderFactory.newDocumentBuilder();
 			Document dom = builder.newDocument();
+			
 			Element root = dom.createElement("shapes");
 			for(Shape i : shapes){
 				Element e = dom.createElement(i.getClass().getSimpleName());
@@ -72,27 +80,36 @@ public class XML {
 			dom.appendChild(root);
 			
 			Transformer tr = TransformerFactory.newInstance().newTransformer();
+			tr.setOutputProperty(OutputKeys.ENCODING,"ISO-8859-1" );
 			tr.transform(new DOMSource(dom),new StreamResult(new FileOutputStream(path)));
 			
-		} catch (ParserConfigurationException e) {
-			e.printStackTrace();
-		} catch (TransformerConfigurationException e) {
-			e.printStackTrace();
-		} catch (TransformerFactoryConfigurationError e) {
-			e.printStackTrace();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (TransformerException e) {
-			e.printStackTrace();
-		}
+		
 	}
 		 
 		public void load(String path, ArrayList<Shape> shapes){
 			Document dom;
+			File file = new File(path);
+			InputStream inputStream;
+			Reader reader = null;
+			try {
+				inputStream = new FileInputStream(file);
+				try {
+					reader = new InputStreamReader(inputStream, "ISO-8859-1");
+				} catch (UnsupportedEncodingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			} catch (FileNotFoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			InputSource is = new InputSource(reader);
+			is.setEncoding("ISO-8859-1");
+			
 			DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
 			try {
 				DocumentBuilder builder = builderFactory.newDocumentBuilder();
-				dom = builder.parse(path);
+				dom = builder.parse(is);
 				
 				Element root = dom.getDocumentElement();
 				NodeList shapesNodes = root.getChildNodes();

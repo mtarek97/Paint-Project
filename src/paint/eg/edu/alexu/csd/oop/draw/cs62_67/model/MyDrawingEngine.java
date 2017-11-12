@@ -123,11 +123,16 @@ public class MyDrawingEngine implements DrawingEngine, DrawingEngine2 {
 
 		if (extension.equals("XmL")) {
 			XML xml = new XML();
-			xml.save(path, this.shapes);
+			try {
+				xml.save(path, this.shapes);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		} else if (extension.equals("JsOn")) {
 			Json json = new Json();
 			try {
-				Json.save(path, this.shapes);
+				json.save(path, this.shapes);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -140,6 +145,8 @@ public class MyDrawingEngine implements DrawingEngine, DrawingEngine2 {
 
 	@Override
 	public void load(String path) {
+		this.shapes.clear();
+		
 		int dotIndex = path.lastIndexOf('.');
 		String extension = path.substring(dotIndex + 1);
 		if (extension.equals("XmL")) {
@@ -148,7 +155,7 @@ public class MyDrawingEngine implements DrawingEngine, DrawingEngine2 {
 		} else if (extension.equals("JsOn")) {
 			Json json = new Json();
 			try {
-				Json.load(path, this.shapes);
+				json.load(path, this.shapes);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

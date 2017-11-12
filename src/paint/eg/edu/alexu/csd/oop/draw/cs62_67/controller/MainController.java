@@ -1,26 +1,35 @@
 package paint.eg.edu.alexu.csd.oop.draw.cs62_67.controller;
 
+import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Map;
 
+import javax.swing.ImageIcon;
 import javax.swing.JColorChooser;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
+import javax.swing.SwingUtilities;
+import javax.swing.Timer;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -62,22 +71,16 @@ public class MainController {
 		this.engine = engine;
 		this.factory = factory;
 		this.Paint = Paint;
-		this.Paint
-		.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.Paint.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		shapesCreationPanel = new ShapeCreationButtonsPanel(
 		engine.getSupportedShapes());
-		shapesCreationPanel
-		.addButtonsListeners(new ShapeCreationBtnListner());
+		shapesCreationPanel.addButtonsListeners(new ShapeCreationBtnListner());
 		namesList = new ShapeNameList(engine.getShapes());
-		namesList
-		.addSelectShapeListner(new SelectShapeListener());
-		this.Paint.getContentPane()
-		.add(new JScrollPane(namesList), BorderLayout.EAST);
-		this.Paint.getContentPane().add(shapesCreationPanel,
-		BorderLayout.WEST);
+		namesList.addSelectShapeListner(new SelectShapeListener());
+		this.Paint.getContentPane().add(new JScrollPane(namesList), BorderLayout.EAST);
+		this.Paint.getContentPane().add(shapesCreationPanel,BorderLayout.WEST);
 
-		this.Paint.getContentPane().add(surface,
-		BorderLayout.CENTER);
+		this.Paint.getContentPane().add(surface,BorderLayout.CENTER);
 		this.Paint.addExitListener(new ExitListener());
 		this.Paint.addUndoListener(new UndoListener());
 		this.Paint.addRedoListener(new RedoListener());
@@ -154,6 +157,28 @@ public class MainController {
 				}
 			});
 		}
+		private int diff = 0;
+		int speed = 5;
+		{
+            final Timer timer = new Timer ( 1000 / ( 10 * speed ), null );
+            timer.addActionListener ( new ActionListener ()
+            {
+                public void actionPerformed ( ActionEvent e )
+                {
+                    if ( diff < 20 )
+                    {
+                        diff++;
+                    }
+                    else
+                    {
+                        diff = 0;
+                    }
+                    repaint ();
+                    timer.setDelay ( 1000 / ( 10 * speed ) );
+                }
+            } );
+            timer.start ();
+        }
 
 		@Override
 		public void paint(Graphics g) {
@@ -164,6 +189,16 @@ public class MainController {
 				setProperties(dragedShape, startDrag,
 				endDrag);
 				dragedShape.draw(g2);
+			}
+			if(selectedShape != null){
+				drawHighlightingRectangle(g2, selectedShape);
+				g2.setRenderingHint ( RenderingHints.KEY_ANTIALIASING,
+	                    RenderingHints.VALUE_ANTIALIAS_ON );
+	            g2.setStroke (
+	                    new BasicStroke ( 2f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 1f,
+	                            new float[]{ 10f, 10f }, diff ) );
+	            g2.setPaint ( Color.BLACK );
+	            drawHighlightingRectangle(g2,selectedShape);
 			}
 		}
 
@@ -209,11 +244,104 @@ public class MainController {
 			}
 			shape.setProperties(prep);
 		}
+		
+		public void drawHighlightingRectangle(Graphics2D g2,Shape selectedShape){
+			if(selectedShape instanceof Square || selectedShape instanceof Ellipse){
+	            g2.drawRect( selectedShape.getPosition().x,selectedShape.getPosition().y,
+	            		selectedShape.getProperties().get("xAxis").intValue(),
+	            		selectedShape.getProperties().get("yAxis").intValue() );
+	            }
+	            else if(selectedShape instanceof Rectangle){
+	            	g2.drawRect( selectedShape.getPosition().x,selectedShape.getPosition().y,
+		            		selectedShape.getProperties().get("yAxis").intValue(),
+		            		selectedShape.getProperties().get("xAxis").intValue() );
+	            }
+	            else if(selectedShape instanceof LineSegment){
+	            	Map<String, Double> properties = selectedShape.getProperties();
+	            	int minx;
+	            	int miny;
+	            	int maxx;
+	            	int maxy;
+	            	int x1 = properties.get("x1").intValue();
+	            	minx = x1;
+	            	maxx = x1;
+	            	int y1 = properties.get("y1").intValue();
+	            	miny = y1;
+	            	maxy = y1;
+	            	int x2 = properties.get("x2").intValue();
+	            	if(maxx < x2){
+	            		maxx = x2;
+	            	}
+	            	if(minx > x2){
+	            		minx = x2;
+	            	}
+	            	int y2 = properties.get("y2").intValue();
+	            	if(maxy < y2){
+	            		maxy = y2;
+	            	}
+	            	if(miny > y2){
+	            		miny = y2;
+	            	}
+	            	if(maxx - minx == 0){
+	            		g2.drawRect( minx -5, miny,10, maxy-miny);
+	            	}
+	            	else if(maxy-miny == 0){
+	            		g2.drawRect( minx, miny - 5,maxx-minx, 10);
+	            	}
+	            	else{
+	            	g2.drawRect( minx, miny,maxx-minx, maxy-miny);
+	            	}
+	            }
+	            else{
+	            	int maxX;
+	            	int maxY;
+	            	int minX;
+	            	int minY;
+	            	int[] x = new int[3];
+	        		int[] y = new int[3];
+	        		x[0] = selectedShape.getProperties().get("x1").intValue();
+	        		maxX = x[0];
+	        		minX = maxX;
+	        		y[0] = selectedShape.getProperties().get("y1").intValue();
+	        		maxY = y[0];
+	        		minY = maxY;
+	        		x[1] = selectedShape.getProperties().get("x2").intValue();
+	        		if(maxX < x[1]){
+	        			maxX = x[1];
+	        		}
+	        		if(minX > x[1]){
+	        			minX = x[1];
+	        		}
+	        		y[1] = selectedShape.getProperties().get("y2").intValue();
+	        		if(maxY < y[1]){
+	        			maxY = y[1];
+	        		}
+	        		if(minY > y[1]){
+	        			minY = y[1];
+	        		}
+	        		x[2] = selectedShape.getProperties().get("x3").intValue();
+	        		if(maxX < x[2]){
+	        			maxX = x[2];
+	        		}
+	        		if(minX > x[2]){
+	        			minX = x[2];
+	        		}
+	        		y[2] = selectedShape.getProperties().get("y3").intValue();
+	        		if(maxY < y[2]){
+	        			maxY = y[2];
+	        		}
+	        		if(minY > y[2]){
+	        			minY  = y[2];
+	        		}
+	        		g2.drawRect(minX-2, minY-1,  maxX - minX,maxY - minY + 3);
+	        		
+	            }
+			
+		}
 	}
 
-	public class SelectShapeListener
-	implements ListSelectionListener {
-
+	public class SelectShapeListener implements ListSelectionListener {
+		
 		@Override
 		public void valueChanged(ListSelectionEvent e) {
 			// TODO Auto-generated method stub
@@ -225,14 +353,11 @@ public class MainController {
 				(DrawingEngine2) engine;
 				selectedShape =
 				engine2.getShapeByName(selectedShapeName);
-			}
-
+			}	
 		}
-
 	}
 
-	public class ShapeCreationBtnListner
-	implements ActionListener {
+	public class ShapeCreationBtnListner implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -242,7 +367,7 @@ public class MainController {
 		}
 
 	}
-
+	
 	class ExitListener implements ActionListener {
 
 		@Override
@@ -388,6 +513,7 @@ public class MainController {
 		}
 			
 	}
+	
 	class fillColorLestener implements ActionListener{
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -408,6 +534,7 @@ public class MainController {
 		}
 			
 	}
+	
 	class copyListener implements ActionListener{
 
 		@Override
@@ -426,6 +553,7 @@ public class MainController {
 		}
 		
 	}
+	
 	class pasteListener implements ActionListener{
 
 		@Override
