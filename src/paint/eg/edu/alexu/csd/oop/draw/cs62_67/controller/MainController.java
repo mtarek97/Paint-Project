@@ -49,6 +49,7 @@ import paint.eg.edu.alexu.csd.oop.draw.cs62_67.view.ShapePropertiesPanel;
 
 public class MainController {
 	private Shape updatedShape;
+	private Shape movingShape;
 	private int copyFlage = 0;
 	private Shape copiedShape;
 	private DrawingEngine engine;
@@ -66,6 +67,7 @@ public class MainController {
 	private Color fillColor = Color.WHITE;
 	private ShapeNameList namesList;
 	private startProgram newPrgram;
+	private int movingModeFlag = 0;
 
 	public MainController(DrawingEngine engine, ShapeFactory factory, GUI Paint) {
 		this.engine = engine;
@@ -136,14 +138,24 @@ public class MainController {
 
 				@Override
 				public void mouseReleased(MouseEvent e) {
-					if (!(dragedShapeName.equals("Triangle"))) {
+					if (!(dragedShapeName.equals("Triangle")) && movingShape == null) {
 						setProperties(dragedShape, startDrag, e.getPoint());
 						engine.addShape(dragedShape);
 						namesList.updateShapeNameList(engine.getShapes());
 						startDrag = null;
 						endDrag = null;
-						repaint();
+						System.out.println(selectedShapeName);
+
+					} else {
+						if (movingShape != null) {
+							engine.updateShape(selectedShape, movingShape);
+							movingModeFlag = 0;
+							selectedShape = movingShape;
+							movingShape = null;
+						}
+
 					}
+					repaint();
 				}
 			});
 
@@ -153,6 +165,15 @@ public class MainController {
 					Paint.mouseXlbl.setText("X: ".concat(String.valueOf(e.getX())));
 					Paint.mouseYlbl.setText("Y: ".concat(String.valueOf(e.getY())));
 					endDrag = new Point(e.getX(), e.getY());
+					if (selectedShape != null && movingModeFlag == 1) {
+						try {
+							movingShape = (Shape) selectedShape.clone();
+							movingShape.setPosition(endDrag);
+							movingShape.draw(getGraphics());
+						} catch (CloneNotSupportedException e1) {
+							e1.printStackTrace();
+						}
+					}
 					repaint();
 				}
 
@@ -168,20 +189,22 @@ public class MainController {
 		private int diff = 0;
 		int speed = 5;
 		{
-			final Timer timer = new Timer(1000 / (10 * speed), null);
-			timer.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					if (diff < 20) {
-						diff++;
-					} else {
-						diff = 0;
+			
+				final Timer timer = new Timer(1000 / (10 * speed), null);
+				timer.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						if (diff < 20) {
+							diff++;
+						} else {
+							diff = 0;
+						}
+						repaint();
+						timer.setDelay(1000 / (10 * speed));
 					}
-					repaint();
-					timer.setDelay(1000 / (10 * speed));
-				}
-			});
-			timer.start();
+				});
+				timer.start();
+			
 		}
 
 		@Override
@@ -190,11 +213,14 @@ public class MainController {
 			engine.refresh(g2);
 			if (startDrag != null && endDrag != null) {
 				g2.setPaint(Color.LIGHT_GRAY);
-				setProperties(dragedShape, startDrag, endDrag);
-				dragedShape.draw(g2);
+				if (selectedShape == null) {
+					setProperties(dragedShape, startDrag, endDrag);
+					dragedShape.draw(g2);
+					System.out.println("here");
+				}
 			}
 			if (selectedShape != null) {
-				drawHighlightingRectangle(g2, selectedShape);
+
 				g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 				g2.setStroke(new BasicStroke(2f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 1f,
 						new float[] { 10f, 10f }, diff));
@@ -333,9 +359,12 @@ public class MainController {
 			// TODO Auto-generated method stub
 			if (!e.getValueIsAdjusting()) {
 				JList source = (JList) e.getSource();
-				selectedShapeName = (String) source.getSelectedValue();
-				DrawingEngine2 engine2 = (DrawingEngine2) engine;
-				selectedShape = engine2.getShapeByName(selectedShapeName);
+				if (source != null) {
+					selectedShapeName = (String) source.getSelectedValue();
+					DrawingEngine2 engine2 = (DrawingEngine2) engine;
+					selectedShape = engine2.getShapeByName(selectedShapeName);
+					movingModeFlag = 1;
+				}
 
 				if (selectedShape != null) {
 					shapePropertiesPanel.updateShapePropertiesPanel(selectedShape);
@@ -354,6 +383,7 @@ public class MainController {
 		public void actionPerformed(ActionEvent e) {
 			ShapeCreationBtn source = (ShapeCreationBtn) e.getSource();
 			dragedShapeName = source.getToolTipText();
+			selectedShape = null;
 		}
 
 	}
