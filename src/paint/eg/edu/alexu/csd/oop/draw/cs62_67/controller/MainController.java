@@ -67,8 +67,12 @@ public class MainController {
 	private Color fillColor = Color.WHITE;
 	private ShapeNameList namesList;
 	private startProgram newPrgram;
+	private int createModeFlage = 0;
 	private int movingModeFlag = 0;
-
+	MouseAdapter createAdapter;
+	MouseMotionAdapter createMotion;
+	MouseAdapter moveAdapter;
+	MouseMotionAdapter moveMotion;
 	public MainController(DrawingEngine engine, ShapeFactory factory, GUI Paint) {
 		this.engine = engine;
 		this.factory = factory;
@@ -87,7 +91,6 @@ public class MainController {
 		this.Paint.getContentPane().add(shapesPanel, BorderLayout.EAST);
 		this.Paint.getContentPane().add(shapesCreationPanel, BorderLayout.WEST);
 		this.Paint.getContentPane().add(surface, BorderLayout.CENTER);
-
 		this.Paint.addExitListener(new ExitListener());
 		this.Paint.addUndoListener(new UndoListener());
 		this.Paint.addRedoListener(new RedoListener());
@@ -100,6 +103,7 @@ public class MainController {
 		this.Paint.fillColorListener(new fillColorLestener());
 		this.Paint.copyListener(new copyListener());
 		this.Paint.pasteListener(new pasteListener());
+		this.Paint.moveListener(new moveLestener());
 		shapesCreationPanel.addButtonsListeners(new ShapeCreationBtnListner());
 		namesList.addSelectShapeListner(new SelectShapeListener());
 	}
@@ -114,10 +118,11 @@ public class MainController {
 		private int counter = 0;
 
 		public PaintSurface() {
-			this.addMouseListener(new MouseAdapter() {
+			createAdapter = new MouseAdapter() {
 				@Override
 				public void mousePressed(MouseEvent e) {
-
+					
+					
 					if (!(dragedShapeName.equals("Triangle"))) {
 						orderShape(dragedShapeName);
 						startDrag = new Point(e.getX(), e.getY());
@@ -138,7 +143,7 @@ public class MainController {
 
 				@Override
 				public void mouseReleased(MouseEvent e) {
-					if (!(dragedShapeName.equals("Triangle")) && movingShape == null) {
+					if (!(dragedShapeName.equals("Triangle"))) {
 						setProperties(dragedShape, startDrag, e.getPoint());
 						engine.addShape(dragedShape);
 						namesList.updateShapeNameList(engine.getShapes());
@@ -146,27 +151,54 @@ public class MainController {
 						endDrag = null;
 						System.out.println(selectedShapeName);
 
-					} else {
-						if (movingShape != null) {
-							engine.updateShape(selectedShape, movingShape);
-							movingModeFlag = 0;
-							selectedShape = movingShape;
-							movingShape = null;
-						}
-
-					}
+					} 
 					repaint();
 				}
-			});
 
-			this.addMouseMotionListener(new MouseMotionAdapter() {
+			};
+			createMotion = new MouseMotionAdapter() {
+				
 				@Override
 				public void mouseDragged(MouseEvent e) {
 					Paint.mouseXlbl.setText("X: ".concat(String.valueOf(e.getX())));
 					Paint.mouseYlbl.setText("Y: ".concat(String.valueOf(e.getY())));
 					endDrag = new Point(e.getX(), e.getY());
-					if (selectedShape != null && movingModeFlag == 1) {
-						try {
+					repaint();
+				}
+
+				@Override
+				public void mouseMoved(MouseEvent e) {
+					Paint.mouseXlbl.setText("X: ".concat(String.valueOf(e.getX())));
+					Paint.mouseYlbl.setText("Y: ".concat(String.valueOf(e.getY())));
+				}
+
+			};
+			moveAdapter = new MouseAdapter() {
+				@Override
+				public void mousePressed(MouseEvent e) {
+
+					
+					repaint();
+				}
+				@Override
+				public void mouseReleased(MouseEvent e) {
+					if (movingShape != null) {
+						engine.updateShape(selectedShape, movingShape);
+						movingModeFlag = 0;
+						selectedShape = movingShape;
+						movingShape = null;
+					}
+					repaint();
+				}
+			};
+			moveMotion = new MouseMotionAdapter(){
+				@Override
+				public void mouseDragged(MouseEvent e) {
+					Paint.mouseXlbl.setText("X: ".concat(String.valueOf(e.getX())));
+					Paint.mouseYlbl.setText("Y: ".concat(String.valueOf(e.getY())));
+					endDrag = new Point(e.getX(), e.getY());
+					if (selectedShape != null) {
+						try{
 							movingShape = (Shape) selectedShape.clone();
 							movingShape.setPosition(endDrag);
 							movingShape.draw(getGraphics());
@@ -183,7 +215,11 @@ public class MainController {
 					Paint.mouseYlbl.setText("Y: ".concat(String.valueOf(e.getY())));
 
 				}
-			});
+
+			};
+			this.addMouseListener(createAdapter);
+			this.addMouseMotionListener(createMotion);	
+			
 		}
 
 		private int diff = 0;
@@ -216,7 +252,6 @@ public class MainController {
 				if (selectedShape == null) {
 					setProperties(dragedShape, startDrag, endDrag);
 					dragedShape.draw(g2);
-					System.out.println("here");
 				}
 			}
 			if (selectedShape != null) {
@@ -356,7 +391,6 @@ public class MainController {
 
 		@Override
 		public void valueChanged(ListSelectionEvent e) {
-			// TODO Auto-generated method stub
 			if (!e.getValueIsAdjusting()) {
 				JList source = (JList) e.getSource();
 				if (source != null) {
@@ -383,6 +417,14 @@ public class MainController {
 		public void actionPerformed(ActionEvent e) {
 			ShapeCreationBtn source = (ShapeCreationBtn) e.getSource();
 			dragedShapeName = source.getToolTipText();
+			createModeFlage = 1;
+			movingModeFlag = 0;
+			if(!(surface.getMouseListeners()[0] == createAdapter)){
+				surface.removeMouseListener(moveAdapter);
+				surface.removeMouseMotionListener(moveMotion);
+				surface.addMouseListener(createAdapter);
+				surface.addMouseMotionListener(createMotion);
+			}
 			selectedShape = null;
 		}
 
@@ -639,6 +681,19 @@ public class MainController {
 			}
 		}
 
+	}
+	public class moveLestener implements ActionListener{
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if(!(surface.getMouseListeners()[0] == moveAdapter)){
+				surface.removeMouseListener(createAdapter);
+				surface.removeMouseMotionListener(createMotion);
+				surface.addMouseListener(moveAdapter);
+				surface.addMouseMotionListener(moveMotion);
+			}
+		}
+		
 	}
 
 }

@@ -50,7 +50,7 @@ public class GUI extends JFrame {
 	new JMenuItem("save json");
 	public final JButton btnColor = new JButton("Outer Color");
 	public final JButton btnFillColor = new JButton("Fill Color");
-
+	public final JButton btnMove = new JButton("Move");
 	public GUI() {
 		setTitle("Paint");
 		getContentPane().setBackground(Color.WHITE);
@@ -61,12 +61,16 @@ public class GUI extends JFrame {
 
 		getContentPane().add(ToolsPanel,
 		BorderLayout.NORTH);
+		
+		
 		GroupLayout gl_ToolsPanel =
 		new GroupLayout(ToolsPanel);
 		gl_ToolsPanel.setHorizontalGroup(
 			gl_ToolsPanel.createParallelGroup(Alignment.TRAILING)
 				.addGroup(gl_ToolsPanel.createSequentialGroup()
-					.addContainerGap(677, Short.MAX_VALUE)
+					.addContainerGap(545, Short.MAX_VALUE)
+					.addComponent(btnMove)
+					.addPreferredGap(ComponentPlacement.UNRELATED)
 					.addComponent(btnFillColor)
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(btnColor)
@@ -78,7 +82,8 @@ public class GUI extends JFrame {
 					.addContainerGap()
 					.addGroup(gl_ToolsPanel.createParallelGroup(Alignment.BASELINE)
 						.addComponent(btnColor)
-						.addComponent(btnFillColor))
+						.addComponent(btnFillColor)
+						.addComponent(btnMove))
 					.addContainerGap(35, Short.MAX_VALUE))
 		);
 		ToolsPanel.setLayout(gl_ToolsPanel);
@@ -210,5 +215,8 @@ public class GUI extends JFrame {
 	}
 	public void pasteListener(ActionListener listenForPaste) {
 		mntmPaste.addActionListener(listenForPaste);
+	}
+	public void moveListener(ActionListener listenForMove) {
+		btnMove.addActionListener(listenForMove);
 	}
 }
