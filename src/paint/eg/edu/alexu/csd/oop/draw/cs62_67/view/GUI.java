@@ -15,6 +15,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JSeparator;
 import javax.swing.KeyStroke;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
@@ -51,6 +52,8 @@ public class GUI extends JFrame {
 	public final JButton btnColor = new JButton("Outer Color");
 	public final JButton btnFillColor = new JButton("Fill Color");
 	public final JButton btnMove = new JButton("Move");
+	private final JMenu mnPlugins = new JMenu("Plugins");
+	private final JMenuItem mntmAddPlugin = new JMenuItem("Add Plugin..");
 	public GUI() {
 		setTitle("Paint");
 		getContentPane().setBackground(Color.WHITE);
@@ -163,6 +166,16 @@ public class GUI extends JFrame {
 		mntmDelete.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0));
 
 		mnEdit.add(mntmDelete);
+		
+		menuBar.add(mnPlugins);
+		
+		mnPlugins.add(mntmAddPlugin);
+		
+		JSeparator separator = new JSeparator();
+		mnPlugins.add(separator);
+		
+		JMenuItem mntmAboutPlugins = new JMenuItem("About Plugins");
+		mnPlugins.add(mntmAboutPlugins);
 		this.setVisible(true);
 	}
 
@@ -219,4 +232,8 @@ public class GUI extends JFrame {
 	public void moveListener(ActionListener listenForMove) {
 		btnMove.addActionListener(listenForMove);
 	}
+	public void addAddPluginListener(ActionListener listenForAddPlugin) {
+		mntmAddPlugin.addActionListener(listenForAddPlugin);
+	}
+	
 }

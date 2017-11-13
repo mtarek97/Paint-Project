@@ -23,7 +23,7 @@ public class MyDrawingEngine implements DrawingEngine, DrawingEngine2 {
 		String packageBinName = "paint.eg.edu.alexu.csd.oop.draw.cs62_67.model.";
 		this.addPlugin(classLoader.loadExtraClass(packageBinName + "Ellipse"));
 		this.addPlugin(classLoader.loadExtraClass(packageBinName + "Circle"));
-		this.addPlugin(classLoader.loadExtraClass(packageBinName + "LineSegment"));
+		//this.addPlugin(classLoader.loadExtraClass(packageBinName + "LineSegment"));
 		this.addPlugin(classLoader.loadExtraClass(packageBinName + "Rectangle"));
 		this.addPlugin(classLoader.loadExtraClass(packageBinName + "Square"));
 		this.addPlugin(classLoader.loadExtraClass(packageBinName + "Triangle"));
@@ -84,6 +84,7 @@ public class MyDrawingEngine implements DrawingEngine, DrawingEngine2 {
 		return this.supportedShapes;
 	}
 
+	@Override
 	public void addPlugin(Class<? extends Shape> myClass) {
 		this.supportedShapes.add(myClass);
 	}
@@ -146,7 +147,7 @@ public class MyDrawingEngine implements DrawingEngine, DrawingEngine2 {
 	@Override
 	public void load(String path) {
 		this.shapes.clear();
-		
+
 		int dotIndex = path.lastIndexOf('.');
 		String extension = path.substring(dotIndex + 1);
 		if (extension.equals("XmL")) {
@@ -175,6 +176,23 @@ public class MyDrawingEngine implements DrawingEngine, DrawingEngine2 {
 			}
 		}
 		return null;
+	}
+
+	@Override
+	public String pasrePathtoBinName(String path) {
+		path = path.substring(3);
+		path = path.substring(0, path.length() - 5);
+		String[] binaryNameParts = path.split("\\\\");
+		String binName = "";
+		int cnt = 0;
+		for (String i : binaryNameParts) {
+			binName = binName.concat(i);
+			if ((cnt != binaryNameParts.length - 1)) {
+				binName = binName.concat(".");
+			}
+			cnt++;
+		}
+		return binName;
 	}
 
 }

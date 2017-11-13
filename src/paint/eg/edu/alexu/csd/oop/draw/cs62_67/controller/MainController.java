@@ -13,9 +13,12 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Map;
+import java.util.jar.JarEntry;
+import java.util.jar.JarInputStream;
 
 import javax.swing.JButton;
 import javax.swing.JColorChooser;
@@ -36,6 +39,7 @@ import paint.eg.edu.alexu.csd.oop.draw.Shape2;
 import paint.eg.edu.alexu.csd.oop.draw.cs62_67.startProgram;
 import paint.eg.edu.alexu.csd.oop.draw.cs62_67.model.Circle;
 import paint.eg.edu.alexu.csd.oop.draw.cs62_67.model.Ellipse;
+import paint.eg.edu.alexu.csd.oop.draw.cs62_67.model.JavaClassLoader;
 import paint.eg.edu.alexu.csd.oop.draw.cs62_67.model.LineSegment;
 import paint.eg.edu.alexu.csd.oop.draw.cs62_67.model.Rectangle;
 import paint.eg.edu.alexu.csd.oop.draw.cs62_67.model.ShapeFactory;
@@ -73,6 +77,7 @@ public class MainController {
 	MouseMotionAdapter createMotion;
 	MouseAdapter moveAdapter;
 	MouseMotionAdapter moveMotion;
+
 	public MainController(DrawingEngine engine, ShapeFactory factory, GUI Paint) {
 		this.engine = engine;
 		this.factory = factory;
@@ -104,6 +109,7 @@ public class MainController {
 		this.Paint.copyListener(new copyListener());
 		this.Paint.pasteListener(new pasteListener());
 		this.Paint.moveListener(new moveLestener());
+		this.Paint.addAddPluginListener(new addPluginListener());
 		shapesCreationPanel.addButtonsListeners(new ShapeCreationBtnListner());
 		namesList.addSelectShapeListner(new SelectShapeListener());
 	}
@@ -121,8 +127,7 @@ public class MainController {
 			createAdapter = new MouseAdapter() {
 				@Override
 				public void mousePressed(MouseEvent e) {
-					
-					
+
 					if (!(dragedShapeName.equals("Triangle"))) {
 						orderShape(dragedShapeName);
 						startDrag = new Point(e.getX(), e.getY());
@@ -151,13 +156,13 @@ public class MainController {
 						endDrag = null;
 						System.out.println(selectedShapeName);
 
-					} 
+					}
 					repaint();
 				}
 
 			};
 			createMotion = new MouseMotionAdapter() {
-				
+
 				@Override
 				public void mouseDragged(MouseEvent e) {
 					Paint.mouseXlbl.setText("X: ".concat(String.valueOf(e.getX())));
@@ -177,9 +182,9 @@ public class MainController {
 				@Override
 				public void mousePressed(MouseEvent e) {
 
-					
 					repaint();
 				}
+
 				@Override
 				public void mouseReleased(MouseEvent e) {
 					if (movingShape != null) {
@@ -191,14 +196,14 @@ public class MainController {
 					repaint();
 				}
 			};
-			moveMotion = new MouseMotionAdapter(){
+			moveMotion = new MouseMotionAdapter() {
 				@Override
 				public void mouseDragged(MouseEvent e) {
 					Paint.mouseXlbl.setText("X: ".concat(String.valueOf(e.getX())));
 					Paint.mouseYlbl.setText("Y: ".concat(String.valueOf(e.getY())));
 					endDrag = new Point(e.getX(), e.getY());
 					if (selectedShape != null) {
-						try{
+						try {
 							movingShape = (Shape) selectedShape.clone();
 							movingShape.setPosition(endDrag);
 							movingShape.draw(getGraphics());
@@ -218,29 +223,29 @@ public class MainController {
 
 			};
 			this.addMouseListener(createAdapter);
-			this.addMouseMotionListener(createMotion);	
-			
+			this.addMouseMotionListener(createMotion);
+
 		}
 
 		private int diff = 0;
 		int speed = 5;
 		{
-			
-				final Timer timer = new Timer(1000 / (10 * speed), null);
-				timer.addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						if (diff < 20) {
-							diff++;
-						} else {
-							diff = 0;
-						}
-						repaint();
-						timer.setDelay(1000 / (10 * speed));
+
+			final Timer timer = new Timer(1000 / (10 * speed), null);
+			timer.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					if (diff < 20) {
+						diff++;
+					} else {
+						diff = 0;
 					}
-				});
-				timer.start();
-			
+					repaint();
+					timer.setDelay(1000 / (10 * speed));
+				}
+			});
+			timer.start();
+
 		}
 
 		@Override
@@ -419,7 +424,7 @@ public class MainController {
 			dragedShapeName = source.getToolTipText();
 			createModeFlage = 1;
 			movingModeFlag = 0;
-			if(!(surface.getMouseListeners()[0] == createAdapter)){
+			if (!(surface.getMouseListeners()[0] == createAdapter)) {
 				surface.removeMouseListener(moveAdapter);
 				surface.removeMouseMotionListener(moveMotion);
 				surface.addMouseListener(createAdapter);
@@ -682,18 +687,60 @@ public class MainController {
 		}
 
 	}
-	public class moveLestener implements ActionListener{
+
+	public class moveLestener implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			if(!(surface.getMouseListeners()[0] == moveAdapter)){
+			if (!(surface.getMouseListeners()[0] == moveAdapter)) {
 				surface.removeMouseListener(createAdapter);
 				surface.removeMouseMotionListener(createMotion);
 				surface.addMouseListener(moveAdapter);
 				surface.addMouseMotionListener(moveMotion);
 			}
 		}
-		
+
+	}
+
+	class addPluginListener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			String filename = File.separator + "tmp";
+			JFileChooser fc = new JFileChooser(new File(filename));
+			int result = fc.showOpenDialog(null);
+			String selectedFilePath = fc.getSelectedFile().getPath().toString();
+			if (result == JFileChooser.APPROVE_OPTION) {
+				try {
+					JarInputStream jarFile = new JarInputStream(new FileInputStream(selectedFilePath));
+					JarEntry jarEntry;
+					DrawingEngine2 engine2 = (DrawingEngine2) engine;
+					JavaClassLoader classLoader = new JavaClassLoader();
+					while (true) {
+						jarEntry = jarFile.getNextJarEntry();
+						if (jarEntry == null) {
+							break;
+						}
+						if (jarEntry.getName().endsWith(".class")) {
+							String classBinName = jarEntry.getName().replaceAll("/", "\\.");
+							classBinName = classBinName.substring(0, classBinName.length() - 6);
+							System.out.println(classBinName);
+							Class<? extends Shape> loaded = classLoader.loadExtraClass(classBinName);
+							//if(Shape.class.isAssignableFrom(loaded)){
+								engine2.addPlugin(loaded);
+							//}
+
+						}
+					}
+					jarFile.close();
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+
+			}
+			shapesCreationPanel.updateShapeCreationButtonsPanel(engine.getSupportedShapes());
+			shapesCreationPanel.addButtonsListeners(new ShapeCreationBtnListner());
+		}
 	}
 
 }

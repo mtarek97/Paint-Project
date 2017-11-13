@@ -39,6 +39,33 @@ public class ShapeCreationButtonsPanel extends JPanel{
 		}
 		
 	}
+	
+	public void updateShapeCreationButtonsPanel(List<Class<? extends Shape>> shapeslist){
+		this.removeAll();
+		this.revalidate();
+		this.repaint();
+		buttonsList.clear();
+		GroupLayout layout = new GroupLayout(this);
+		this.setLayout(layout);
+		//layout.setAutoCreateGaps(true);
+	    //layout.setAutoCreateContainerGaps(true);
+	    ParallelGroup parallel = layout.createParallelGroup();
+	    layout.setHorizontalGroup(parallel);
+	    SequentialGroup sequential = layout.createSequentialGroup();
+	    layout.setVerticalGroup(sequential);
+	    
+		for(Class i : shapeslist){
+			ShapeCreationBtn creationBtn = new ShapeCreationBtn(i.getSimpleName());
+			parallel.addComponent(creationBtn, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE);
+			 sequential.addComponent(creationBtn);
+			
+			buttonsList.add(creationBtn);
+			this.add(creationBtn);
+		}
+		
+	}
+	
+	
 	public void addButtonsListeners(ActionListener listener){
 		for(ShapeCreationBtn i : buttonsList){
 			i.addActionListener(listener);
