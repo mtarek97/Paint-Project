@@ -2,9 +2,9 @@ package paint.eg.edu.alexu.csd.oop.draw.cs62_67.view;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.SystemColor;
 import java.awt.Toolkit;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
@@ -40,10 +40,9 @@ public class GUI extends JFrame {
 	private final JMenuItem mntmExit =
 	new JMenuItem("Exit");
 	private final JPanel ToolsPanel = new JPanel();
-	private final JButton DeleteShapeBtn =
-	new JButton("Delete");
 	private final JPanel statusPanel = new JPanel();
-	private final JLabel mouseXlbl = new JLabel("X:");
+	public final JLabel mouseXlbl = new JLabel("X: ");
+	public final JLabel mouseYlbl = new JLabel("Y: ");
 	private final JMenu mnSave = new JMenu("Save");
 	private final JMenuItem mntmSaveXml =
 	new JMenuItem("save xml");
@@ -67,32 +66,27 @@ public class GUI extends JFrame {
 		gl_ToolsPanel.setHorizontalGroup(
 			gl_ToolsPanel.createParallelGroup(Alignment.TRAILING)
 				.addGroup(gl_ToolsPanel.createSequentialGroup()
-					.addContainerGap(643, Short.MAX_VALUE)
+					.addContainerGap(677, Short.MAX_VALUE)
 					.addComponent(btnFillColor)
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(btnColor)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(DeleteShapeBtn, GroupLayout.PREFERRED_SIZE, 73, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap())
+					.addGap(89))
 		);
 		gl_ToolsPanel.setVerticalGroup(
 			gl_ToolsPanel.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_ToolsPanel.createSequentialGroup()
 					.addContainerGap()
 					.addGroup(gl_ToolsPanel.createParallelGroup(Alignment.BASELINE)
-						.addComponent(DeleteShapeBtn)
 						.addComponent(btnColor)
 						.addComponent(btnFillColor))
 					.addContainerGap(35, Short.MAX_VALUE))
 		);
-		DeleteShapeBtn
-		.setBackground(SystemColor.activeCaption);
 		ToolsPanel.setLayout(gl_ToolsPanel);
 
 		getContentPane().add(statusPanel,
 		BorderLayout.SOUTH);
 
-		JLabel mouseYlbl = new JLabel("Y:");
+		
 		GroupLayout gl_statusPanel =
 		new GroupLayout(statusPanel);
 		gl_statusPanel.setHorizontalGroup(gl_statusPanel
@@ -161,6 +155,7 @@ public class GUI extends JFrame {
 		mnEdit.add(mntmCopy);
 
 		mnEdit.add(mntmPaste);
+		mntmDelete.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0));
 
 		mnEdit.add(mntmDelete);
 		this.setVisible(true);
@@ -188,7 +183,7 @@ public class GUI extends JFrame {
 
 	public void
 	addDeleteListener(ActionListener listenforDelete) {
-		DeleteShapeBtn.addActionListener(listenforDelete);
+		mntmDelete.addActionListener(listenforDelete);
 	}
 
 	public void

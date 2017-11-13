@@ -19,11 +19,11 @@ public class ShapeCreationButtonsPanel extends JPanel{
 	public ShapeCreationButtonsPanel(List<Class<? extends Shape>> shapeslist){
 		super();
 		this.setName("ShapeCreationButtonsPanel");
-		this.setBackground(Color.lightGray);
+		this.setBackground(new Color(227, 242, 253));
 		GroupLayout layout = new GroupLayout(this);
 		this.setLayout(layout);
-		layout.setAutoCreateGaps(true);
-	    layout.setAutoCreateContainerGaps(true);
+		//layout.setAutoCreateGaps(true);
+	    //layout.setAutoCreateContainerGaps(true);
 	    ParallelGroup parallel = layout.createParallelGroup();
 	    layout.setHorizontalGroup(parallel);
 	    SequentialGroup sequential = layout.createSequentialGroup();

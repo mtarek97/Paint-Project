@@ -19,9 +19,7 @@ import paint.eg.edu.alexu.csd.oop.draw.Shape2;
 public class ShapeNameList extends JList{
 	
 	private DefaultListModel listModel = new DefaultListModel();
-	//private ListSelectionModel listSelectionModel = new DefaultListSelectionModel();
 
-	
 	public ShapeNameList(Shape[] shapes){
 
 		super();
@@ -36,7 +34,7 @@ public class ShapeNameList extends JList{
 		 this.setDragEnabled(false);
 		 this.setCellRenderer(getRenderer());
 		 this.setFont(new Font("Comic Sans MS", Font.PLAIN, 14));
-		 this.setBackground(Color.lightGray);
+		 this.setBackground(new Color(227, 242, 253));
 		
 	}
 	
