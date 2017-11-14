@@ -197,11 +197,21 @@ public class MainController {
 
 				@Override
 				public void mouseReleased(MouseEvent e) {
-					if (movingShape != null) {
-						engine.updateShape(selectedShape, movingShape);
-						movingModeFlag = 0;
-						selectedShape = movingShape;
-						movingShape = null;
+					if (movingShape != null ) {
+							if(copyFlage == 0){
+							engine.updateShape(selectedShape, movingShape);
+							movingModeFlag = 0;
+							selectedShape = movingShape;
+							movingShape = null;
+						}
+						else{
+							Point point = e.getPoint();
+							movingShape.setPosition(new Point(point.x, point.y));
+							engine.addShape(movingShape);
+							namesList.updateShapeNameList(engine.getShapes());
+							movingShape = null;
+							copyFlage = 0;
+						}
 					}
 					repaint();
 				}
@@ -212,33 +222,9 @@ public class MainController {
 					Paint.mouseXlbl.setText("X: ".concat(String.valueOf(e.getX())));
 					Paint.mouseYlbl.setText("Y: ".concat(String.valueOf(e.getY())));
 					endDrag = new Point(e.getX(), e.getY());
-					if (selectedShape != null) {
-							Point prePoint = movingShape.getPosition();
-							movingShape.setPosition(endDrag);
-							if(movingShape instanceof LineSegment){
-								Map<String,Double> lineMap = movingShape.getProperties();
-								Double x1 = ((lineMap.get("x1") + (endDrag.x - prePoint.x)));
-								int y1 = (int) (lineMap.get("y1") + (endDrag.y - prePoint.y));
-								lineMap.put("x1", x1);
-								lineMap.put("y1", (double) y1);
-								movingShape.setProperties(lineMap);
-							}
-							if(movingShape instanceof Triangle){
-								Map<String,Double> lineMap = movingShape.getProperties();
-								Double x2 = ((lineMap.get("x2") + (endDrag.x - prePoint.x)));
-								int y2 = (int) (lineMap.get("y2") + (endDrag.y - prePoint.y));
-								Double x3 = ((lineMap.get("x3") + (endDrag.x - prePoint.x)));
-								int y3 = (int) (lineMap.get("y3") + (endDrag.y - prePoint.y));
-								lineMap.put("x2", x2);
-								lineMap.put("y2", (double) y2);
-								lineMap.put("x3", x3);
-								lineMap.put("y3", (double) y3);
-								movingShape.setProperties(lineMap);
-							}
-							movingShape.draw(getGraphics());
-						
+					if (movingShape != null ) {
+							draging(movingShape);
 					}
-					repaint();
 				}
 
 				@Override
@@ -294,6 +280,10 @@ public class MainController {
 				g2.setPaint(Color.BLACK);
 				drawHighlightingRectangle(g2, selectedShape);
 			}
+			if(movingShape != null)
+			{
+				movingShape.draw(g2);
+			}
 		}
 
 		public void setProperties(Shape shape, Point start, Point end) {
@@ -322,8 +312,6 @@ public class MainController {
 				prep.put("xAxis", end.getX() - start.getX());
 				prep.put("yAxis", end.getY() - start.getY());
 			} else if (shape instanceof LineSegment) {
-				//Point x = new Point(start.x,start.y);
-				//shape.setPosition(x);
 				prep.put("x1", end.getX());
 				prep.put("y1", end.getY());
 				prep.put("x2", start.getX());
@@ -419,6 +407,30 @@ public class MainController {
 
 			}
 
+		}
+		public void draging(Shape shape){
+			Point prePoint = shape.getPosition();
+			shape.setPosition(endDrag);
+			if(shape instanceof LineSegment){
+				Map<String,Double> lineMap = shape.getProperties();
+				Double x1 = ((lineMap.get("x1") + (endDrag.x - prePoint.x)));
+				int y1 = (int) (lineMap.get("y1") + (endDrag.y - prePoint.y));
+				lineMap.put("x1", x1);
+				lineMap.put("y1", (double) y1);
+				shape.setProperties(lineMap);
+			}
+			if(shape instanceof Triangle){
+				Map<String,Double> lineMap = shape.getProperties();
+				Double x2 = ((lineMap.get("x2") + (endDrag.x - prePoint.x)));
+				int y2 = (int) (lineMap.get("y2") + (endDrag.y - prePoint.y));
+				Double x3 = ((lineMap.get("x3") + (endDrag.x - prePoint.x)));
+				int y3 = (int) (lineMap.get("y3") + (endDrag.y - prePoint.y));
+				lineMap.put("x2", x2);
+				lineMap.put("y2", (double) y2);
+				lineMap.put("x3", x3);
+				lineMap.put("y3", (double) y3);
+				shape.setProperties(lineMap);
+			}
 		}
 	}
 
@@ -625,12 +637,12 @@ public class MainController {
 		public void actionPerformed(ActionEvent e) {
 
 			if (selectedShape != null) {
-				try {
-					copiedShape = (Shape) selectedShape.clone();
 					copyFlage = 1;
-				} catch (CloneNotSupportedException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+				if (!(surface.getMouseListeners()[0] == moveAdapter)) {
+					surface.removeMouseListener(createAdapter);
+					surface.removeMouseMotionListener(createMotion);
+					surface.addMouseListener(moveAdapter);
+					surface.addMouseMotionListener(moveMotion);
 				}
 			}
 
@@ -777,7 +789,7 @@ public class MainController {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			JFileChooser chooser = new JFileChooser();
+		 	JFileChooser chooser = new JFileChooser();
 			int retrival = chooser.showSaveDialog(null);
 			if (retrival == JFileChooser.APPROVE_OPTION) {
 				Path path = Paths.get(chooser.getCurrentDirectory() + "/" + chooser.getSelectedFile().getName());

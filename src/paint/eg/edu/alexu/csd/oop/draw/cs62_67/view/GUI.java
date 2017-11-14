@@ -8,6 +8,7 @@ import java.awt.event.KeyEvent;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -62,7 +63,7 @@ public class GUI extends JFrame {
 		getContentPane().setLayout(new BorderLayout(0, 0));
 		ToolsPanel.setBorder(null);
 		ToolsPanel.setBackground(Color.LIGHT_GRAY);
-
+		//btnMove.setIcon(new ImageIcon(GUI.class.getResource("/assets/move.png")));
 		getContentPane().add(ToolsPanel,
 		BorderLayout.NORTH);
 		
