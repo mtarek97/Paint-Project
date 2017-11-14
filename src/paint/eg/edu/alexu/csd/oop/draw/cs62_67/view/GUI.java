@@ -46,14 +46,15 @@ public class GUI extends JFrame {
 	public final JLabel mouseYlbl = new JLabel("Y: ");
 	private final JMenu mnSave = new JMenu("Save");
 	private final JMenuItem mntmSaveXml =
-	new JMenuItem("save xml");
+	new JMenuItem("save as xml");
 	private final JMenuItem mntmSaveJson =
-	new JMenuItem("save json");
+	new JMenuItem("save as json");
 	public final JButton btnColor = new JButton("Outer Color");
 	public final JButton btnFillColor = new JButton("Fill Color");
 	public final JButton btnMove = new JButton("Move");
 	private final JMenu mnPlugins = new JMenu("Plugins");
 	private final JMenuItem mntmAddPlugin = new JMenuItem("Add Plugin..");
+	private final JMenuItem mntmSaveAsPng = new JMenuItem("save as png");
 	public GUI() {
 		setTitle("Paint");
 		getContentPane().setBackground(Color.WHITE);
@@ -149,6 +150,8 @@ public class GUI extends JFrame {
 		mnSave.add(mntmSaveXml);
 
 		mnSave.add(mntmSaveJson);
+		
+		mnSave.add(mntmSaveAsPng);
 
 		mnFile.add(mntmExit);
 
@@ -234,6 +237,9 @@ public class GUI extends JFrame {
 	}
 	public void addAddPluginListener(ActionListener listenForAddPlugin) {
 		mntmAddPlugin.addActionListener(listenForAddPlugin);
+	}
+	public void addSaveAsPngListener(ActionListener listenForSaveAsPng) {
+		mntmSaveAsPng.addActionListener(listenForSaveAsPng);
 	}
 	
 }

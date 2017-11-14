@@ -12,14 +12,17 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Map;
 import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
 
+import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JColorChooser;
 import javax.swing.JComponent;
@@ -110,6 +113,7 @@ public class MainController {
 		this.Paint.pasteListener(new pasteListener());
 		this.Paint.moveListener(new moveLestener());
 		this.Paint.addAddPluginListener(new addPluginListener());
+		this.Paint.addSaveAsPngListener(new SaveAsPngListener());
 		shapesCreationPanel.addButtonsListeners(new ShapeCreationBtnListner());
 		namesList.addSelectShapeListner(new SelectShapeListener());
 	}
@@ -726,9 +730,9 @@ public class MainController {
 							classBinName = classBinName.substring(0, classBinName.length() - 6);
 							System.out.println(classBinName);
 							Class<? extends Shape> loaded = classLoader.loadExtraClass(classBinName);
-							//if(Shape.class.isAssignableFrom(loaded)){
+							if (Shape.class.isAssignableFrom(loaded)) {
 								engine2.addPlugin(loaded);
-							//}
+							}
 
 						}
 					}
@@ -743,4 +747,28 @@ public class MainController {
 		}
 	}
 
+	class SaveAsPngListener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			JFileChooser chooser = new JFileChooser();
+			int retrival = chooser.showSaveDialog(null);
+			if (retrival == JFileChooser.APPROVE_OPTION) {
+				Path path = Paths.get(chooser.getCurrentDirectory() + "/" + chooser.getSelectedFile().getName());
+				BufferedImage bImg = new BufferedImage(surface.getWidth(), surface.getHeight(),
+						BufferedImage.TYPE_INT_RGB);
+				Graphics2D cg = bImg.createGraphics();
+				surface.paintAll(cg);
+				try {
+					if (ImageIO.write(bImg, "png", new File(path.toString().concat(".png")))) {
+						System.out.println("-- saved");
+					}
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		}
+
+	}
 }
