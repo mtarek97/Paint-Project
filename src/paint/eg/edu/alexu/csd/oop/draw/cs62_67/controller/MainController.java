@@ -76,10 +76,10 @@ public class MainController {
 	private startProgram newPrgram;
 	private int createModeFlage = 0;
 	private int movingModeFlag = 0;
-	MouseAdapter createAdapter;
-	MouseMotionAdapter createMotion;
-	MouseAdapter moveAdapter;
-	MouseMotionAdapter moveMotion;
+	private MouseAdapter createAdapter;
+	private MouseMotionAdapter createMotion;
+	private MouseAdapter moveAdapter;
+	private MouseMotionAdapter moveMotion;
 
 	public MainController(DrawingEngine engine, ShapeFactory factory, GUI Paint) {
 		this.engine = engine;
@@ -185,8 +185,14 @@ public class MainController {
 			moveAdapter = new MouseAdapter() {
 				@Override
 				public void mousePressed(MouseEvent e) {
-
-					repaint();
+					if(selectedShape != null){
+						try {
+							movingShape = (Shape) selectedShape.clone();
+						} catch (CloneNotSupportedException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+					}
 				}
 
 				@Override
@@ -207,13 +213,30 @@ public class MainController {
 					Paint.mouseYlbl.setText("Y: ".concat(String.valueOf(e.getY())));
 					endDrag = new Point(e.getX(), e.getY());
 					if (selectedShape != null) {
-						try {
-							movingShape = (Shape) selectedShape.clone();
+							Point prePoint = movingShape.getPosition();
 							movingShape.setPosition(endDrag);
+							if(movingShape instanceof LineSegment){
+								Map<String,Double> lineMap = movingShape.getProperties();
+								Double x1 = ((lineMap.get("x1") + (endDrag.x - prePoint.x)));
+								int y1 = (int) (lineMap.get("y1") + (endDrag.y - prePoint.y));
+								lineMap.put("x1", x1);
+								lineMap.put("y1", (double) y1);
+								movingShape.setProperties(lineMap);
+							}
+							if(movingShape instanceof Triangle){
+								Map<String,Double> lineMap = movingShape.getProperties();
+								Double x2 = ((lineMap.get("x2") + (endDrag.x - prePoint.x)));
+								int y2 = (int) (lineMap.get("y2") + (endDrag.y - prePoint.y));
+								Double x3 = ((lineMap.get("x3") + (endDrag.x - prePoint.x)));
+								int y3 = (int) (lineMap.get("y3") + (endDrag.y - prePoint.y));
+								lineMap.put("x2", x2);
+								lineMap.put("y2", (double) y2);
+								lineMap.put("x3", x3);
+								lineMap.put("y3", (double) y3);
+								movingShape.setProperties(lineMap);
+							}
 							movingShape.draw(getGraphics());
-						} catch (CloneNotSupportedException e1) {
-							e1.printStackTrace();
-						}
+						
 					}
 					repaint();
 				}
@@ -358,10 +381,10 @@ public class MainController {
 				int minY;
 				int[] x = new int[3];
 				int[] y = new int[3];
-				x[0] = selectedShape.getProperties().get("x1").intValue();
+				x[0] = selectedShape.getPosition().x;
 				maxX = x[0];
 				minX = maxX;
-				y[0] = selectedShape.getProperties().get("y1").intValue();
+				y[0] = selectedShape.getPosition().y;
 				maxY = y[0];
 				minY = maxY;
 				x[1] = selectedShape.getProperties().get("x2").intValue();

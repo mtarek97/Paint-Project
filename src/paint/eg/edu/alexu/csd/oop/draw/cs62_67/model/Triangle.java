@@ -49,8 +49,8 @@ public class Triangle extends MyShape{
 		g2.setStroke(new BasicStroke(6.0f));
 		int[] x = new int[3];
 		int[] y = new int[3];
-		x[0] = getProperties().get(X1_KEY).intValue();
-		y[0] = getProperties().get(Y1_KEY).intValue();
+		x[0] = getPosition().x;
+		y[0] = getPosition().y;
 		x[1] = getProperties().get(X2_KEY).intValue();
 		y[1] = getProperties().get(Y2_KEY).intValue();
 		x[2] = getProperties().get(X3_KEY).intValue();

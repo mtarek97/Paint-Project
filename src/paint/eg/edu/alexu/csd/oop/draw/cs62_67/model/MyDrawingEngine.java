@@ -23,7 +23,7 @@ public class MyDrawingEngine implements DrawingEngine, DrawingEngine2 {
 		String packageBinName = "paint.eg.edu.alexu.csd.oop.draw.cs62_67.model.";
 		this.addPlugin(classLoader.loadExtraClass(packageBinName + "Ellipse"));
 		this.addPlugin(classLoader.loadExtraClass(packageBinName + "Circle"));
-		//this.addPlugin(classLoader.loadExtraClass(packageBinName + "LineSegment"));
+		this.addPlugin(classLoader.loadExtraClass(packageBinName + "LineSegment"));
 		this.addPlugin(classLoader.loadExtraClass(packageBinName + "Rectangle"));
 		this.addPlugin(classLoader.loadExtraClass(packageBinName + "Square"));
 		this.addPlugin(classLoader.loadExtraClass(packageBinName + "Triangle"));
