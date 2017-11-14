@@ -290,6 +290,7 @@ public class MainController {
 				prep.put("y3", Coordinates[2].getY());
 			} else if (shape instanceof Square) {
 				prep.put("xAxis", end.getX() - start.getX());
+				
 				prep.put("yAxis", end.getX() - start.getX());
 			} else if (shape instanceof Rectangle) {
 				prep.put("xAxis", end.getY() - start.getY());
@@ -298,6 +299,8 @@ public class MainController {
 				prep.put("xAxis", end.getX() - start.getX());
 				prep.put("yAxis", end.getY() - start.getY());
 			} else if (shape instanceof LineSegment) {
+				//Point x = new Point(start.x,start.y);
+				//shape.setPosition(x);
 				prep.put("x1", end.getX());
 				prep.put("y1", end.getY());
 				prep.put("x2", start.getX());
@@ -308,13 +311,13 @@ public class MainController {
 
 		public void drawHighlightingRectangle(Graphics2D g2, Shape selectedShape) {
 			if (selectedShape instanceof Square || selectedShape instanceof Ellipse) {
-				g2.drawRect(selectedShape.getPosition().x, selectedShape.getPosition().y,
-						selectedShape.getProperties().get("xAxis").intValue(),
-						selectedShape.getProperties().get("yAxis").intValue());
+				g2.drawRect(selectedShape.getPosition().x -5, selectedShape.getPosition().y -5,
+						selectedShape.getProperties().get("xAxis").intValue() +10,
+						selectedShape.getProperties().get("yAxis").intValue() + 10);
 			} else if (selectedShape instanceof Rectangle) {
-				g2.drawRect(selectedShape.getPosition().x, selectedShape.getPosition().y,
-						selectedShape.getProperties().get("yAxis").intValue(),
-						selectedShape.getProperties().get("xAxis").intValue());
+				g2.drawRect(selectedShape.getPosition().x -5, selectedShape.getPosition().y-5,
+						selectedShape.getProperties().get("yAxis").intValue()+10,
+						selectedShape.getProperties().get("xAxis").intValue()+10);
 			} else if (selectedShape instanceof LineSegment) {
 				Map<String, Double> properties = selectedShape.getProperties();
 				int minx;
@@ -327,14 +330,14 @@ public class MainController {
 				int y1 = properties.get("y1").intValue();
 				miny = y1;
 				maxy = y1;
-				int x2 = properties.get("x2").intValue();
+				int x2 = selectedShape.getPosition().x;
 				if (maxx < x2) {
 					maxx = x2;
 				}
 				if (minx > x2) {
 					minx = x2;
 				}
-				int y2 = properties.get("y2").intValue();
+				int y2 = selectedShape.getPosition().y;
 				if (maxy < y2) {
 					maxy = y2;
 				}

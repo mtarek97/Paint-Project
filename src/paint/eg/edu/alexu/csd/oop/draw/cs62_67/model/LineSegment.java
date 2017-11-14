@@ -48,8 +48,8 @@ public class LineSegment extends MyShape {
 		g2.setStroke(new BasicStroke(5.0f));
 		// I got it
 		canvas.setColor(getColor());
-		canvas.drawLine( getProperties().get(X1_KEY).intValue(),getProperties().get(Y1_KEY).intValue()
-				, getProperties().get(X2_KEY).intValue(), getProperties().get(Y2_KEY).intValue());
+		canvas.drawLine( getPosition().x,getPosition().y
+				, getProperties().get(X1_KEY).intValue(), getProperties().get(Y1_KEY).intValue());
 	}
 	@Override
 	public Object clone() throws CloneNotSupportedException{
