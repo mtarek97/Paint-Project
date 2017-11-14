@@ -57,7 +57,7 @@ import paint.eg.edu.alexu.csd.oop.draw.cs62_67.view.ShapePropertiesPanel;
 public class MainController {
 	private Shape updatedShape;
 	private Shape movingShape;
-	private int copyFlage = 0;
+	private int copyFlag = 0;
 	private Shape copiedShape;
 	private DrawingEngine engine;
 	private ShapeFactory factory;
@@ -198,8 +198,9 @@ public class MainController {
 				@Override
 				public void mouseReleased(MouseEvent e) {
 					if (movingShape != null ) {
-							if(copyFlage == 0){
+							if(copyFlag == 0){
 							engine.updateShape(selectedShape, movingShape);
+							namesList.updateShapeNameList(engine.getShapes());
 							movingModeFlag = 0;
 							selectedShape = movingShape;
 							movingShape = null;
@@ -210,7 +211,7 @@ public class MainController {
 							engine.addShape(movingShape);
 							namesList.updateShapeNameList(engine.getShapes());
 							movingShape = null;
-							copyFlage = 0;
+							copyFlag = 0;
 						}
 					}
 					repaint();
@@ -637,7 +638,7 @@ public class MainController {
 		public void actionPerformed(ActionEvent e) {
 
 			if (selectedShape != null) {
-					copyFlage = 1;
+					copyFlag = 1;
 				if (!(surface.getMouseListeners()[0] == moveAdapter)) {
 					surface.removeMouseListener(createAdapter);
 					surface.removeMouseMotionListener(createMotion);
@@ -654,13 +655,13 @@ public class MainController {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			if (copyFlage == 1) {
+			if (copyFlag == 1) {
 				Point point = selectedShape.getPosition();
 				copiedShape.setPosition(new Point(point.x + 20, point.y));
 				engine.addShape(copiedShape);
 				namesList.updateShapeNameList(engine.getShapes());
 				surface.repaint();
-				copyFlage = 0;
+				copyFlag = 0;
 			}
 
 		}
