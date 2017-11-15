@@ -42,7 +42,7 @@ public class Json {
 	public static void load(String path, ArrayList<Shape> shapes) throws IOException{
 			int counter = 0;
 			ShapeFactory factory = new ShapeFactory(engine);
-			Point position = new Point();
+
 			
 			br = new BufferedReader(new FileReader(path));
 			String currentLine = new String();
@@ -63,12 +63,13 @@ public class Json {
 						}catch (Exception e) {
 							
 						}
+						Point position = new Point();
 						currentLine = br.readLine();
-						Double positionX = Double.parseDouble(getValue(currentLine));
+						Double positionX = Double.parseDouble(getValue(currentLine)) ;
 						currentLine = br.readLine();
 						Double positionY = Double.parseDouble(getValue(currentLine));
 						currentLine = br.readLine();
-						position.setLocation(positionX, positionY);
+						position.setLocation(positionX.intValue(), positionY.intValue());
 						shape.setPosition(position);
 						shape.setFillColor(new Color(Integer.parseInt(getValue(currentLine))));
 						String property = br.readLine();
