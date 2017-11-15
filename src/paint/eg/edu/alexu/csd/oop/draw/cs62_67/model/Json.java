@@ -97,7 +97,7 @@ public class Json {
 	
 	private static void writeProperties(Shape shape) throws IOException{
 		bw.write("{\n");
-		writeKeyValue("Kind",kindOfShape(shape));
+		writeKeyValue("Kind",shape.getClass().getSimpleName());
 		bw.write(",\n");
 		try{
 			writeKeyValue("Color",String.valueOf(shape.getColor().getRGB()));
@@ -146,24 +146,6 @@ public class Json {
 		} catch (IOException e) {
 			
 			throw new RuntimeException("error");
-		}
-	}
-	
-	private static String kindOfShape(Shape shape){
-		if (shape instanceof Circle) {
-			return "Circle";
-		} else if (shape instanceof Ellipse) {
-			return "Ellipse";
-		} else if (shape instanceof Square) {
-			return "Square";
-		} else if (shape instanceof Rectangle) {
-			return "Rectangle";
-		} else if (shape instanceof LineSegment) {
-			return "LineSegment";
-		} else if (shape instanceof Triangle) {
-			return "Triangle";
-		} else {
-			return null;
 		}
 	}
 	
