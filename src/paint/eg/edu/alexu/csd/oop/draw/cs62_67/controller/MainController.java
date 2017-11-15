@@ -16,8 +16,11 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
@@ -79,8 +82,6 @@ public class MainController {
 	private MouseAdapter moveAdapter;
 	private MouseMotionAdapter moveMotion;
 
-	
-	
 	public MainController(MyDrawingEngine engine, ShapeFactory factory, GUI Paint) {
 		this.engine = engine;
 		this.factory = factory;
@@ -185,7 +186,7 @@ public class MainController {
 			moveAdapter = new MouseAdapter() {
 				@Override
 				public void mousePressed(MouseEvent e) {
-					if(selectedShape != null){
+					if (selectedShape != null) {
 						try {
 							movingShape = (Shape) selectedShape.clone();
 						} catch (CloneNotSupportedException e1) {
@@ -197,15 +198,14 @@ public class MainController {
 
 				@Override
 				public void mouseReleased(MouseEvent e) {
-					if (movingShape != null ) {
-							if(copyFlag == 0){
+					if (movingShape != null) {
+						if (copyFlag == 0) {
 							engine.updateShape(selectedShape, movingShape);
-						//	namesList.updateShapeNameList(engine.getShapes());
+							// namesList.updateShapeNameList(engine.getShapes());
 							movingModeFlag = 0;
 							selectedShape = movingShape;
 							movingShape = null;
-						}
-						else{
+						} else {
 							Point point = e.getPoint();
 							movingShape.setPosition(new Point(point.x, point.y));
 							engine.addShape(movingShape);
@@ -223,8 +223,8 @@ public class MainController {
 					Paint.mouseXlbl.setText("X: ".concat(String.valueOf(e.getX())));
 					Paint.mouseYlbl.setText("Y: ".concat(String.valueOf(e.getY())));
 					endDrag = new Point(e.getX(), e.getY());
-					if (movingShape != null ) {
-							draging(movingShape);
+					if (movingShape != null) {
+						draging(movingShape);
 					}
 				}
 
@@ -281,8 +281,7 @@ public class MainController {
 				g2.setPaint(Color.BLACK);
 				drawHighlightingRectangle(g2, selectedShape);
 			}
-			if(movingShape != null)
-			{
+			if (movingShape != null) {
 				movingShape.draw(g2);
 			}
 		}
@@ -304,7 +303,7 @@ public class MainController {
 				prep.put("y3", Coordinates[2].getY());
 			} else if (shape instanceof Square) {
 				prep.put("xAxis", end.getX() - start.getX());
-				
+
 				prep.put("yAxis", end.getX() - start.getX());
 			} else if (shape instanceof Rectangle) {
 				prep.put("xAxis", end.getY() - start.getY());
@@ -323,13 +322,13 @@ public class MainController {
 
 		public void drawHighlightingRectangle(Graphics2D g2, Shape selectedShape) {
 			if (selectedShape instanceof Square || selectedShape instanceof Ellipse) {
-				g2.drawRect(selectedShape.getPosition().x -5, selectedShape.getPosition().y -5,
-						selectedShape.getProperties().get("xAxis").intValue() +10,
+				g2.drawRect(selectedShape.getPosition().x - 5, selectedShape.getPosition().y - 5,
+						selectedShape.getProperties().get("xAxis").intValue() + 10,
 						selectedShape.getProperties().get("yAxis").intValue() + 10);
 			} else if (selectedShape instanceof Rectangle) {
-				g2.drawRect(selectedShape.getPosition().x -5, selectedShape.getPosition().y-5,
-						selectedShape.getProperties().get("yAxis").intValue()+10,
-						selectedShape.getProperties().get("xAxis").intValue()+10);
+				g2.drawRect(selectedShape.getPosition().x - 5, selectedShape.getPosition().y - 5,
+						selectedShape.getProperties().get("yAxis").intValue() + 10,
+						selectedShape.getProperties().get("xAxis").intValue() + 10);
 			} else if (selectedShape instanceof LineSegment) {
 				Map<String, Double> properties = selectedShape.getProperties();
 				int minx;
@@ -363,7 +362,7 @@ public class MainController {
 				} else {
 					g2.drawRect(minx, miny, maxx - minx, maxy - miny);
 				}
-			} else if (selectedShape instanceof Triangle){
+			} else if (selectedShape instanceof Triangle) {
 				int maxX;
 				int maxY;
 				int minX;
@@ -409,19 +408,20 @@ public class MainController {
 			}
 
 		}
-		public void draging(Shape shape){
+
+		public void draging(Shape shape) {
 			Point prePoint = shape.getPosition();
 			shape.setPosition(endDrag);
-			if(shape instanceof LineSegment){
-				Map<String,Double> lineMap = shape.getProperties();
+			if (shape instanceof LineSegment) {
+				Map<String, Double> lineMap = shape.getProperties();
 				Double x1 = ((lineMap.get("x1") + (endDrag.x - prePoint.x)));
 				int y1 = (int) (lineMap.get("y1") + (endDrag.y - prePoint.y));
 				lineMap.put("x1", x1);
 				lineMap.put("y1", (double) y1);
 				shape.setProperties(lineMap);
 			}
-			if(shape instanceof Triangle){
-				Map<String,Double> lineMap = shape.getProperties();
+			if (shape instanceof Triangle) {
+				Map<String, Double> lineMap = shape.getProperties();
 				Double x2 = ((lineMap.get("x2") + (endDrag.x - prePoint.x)));
 				int y2 = (int) (lineMap.get("y2") + (endDrag.y - prePoint.y));
 				Double x3 = ((lineMap.get("x3") + (endDrag.x - prePoint.x)));
@@ -441,25 +441,23 @@ public class MainController {
 		public void valueChanged(ListSelectionEvent e) {
 			if (!e.getValueIsAdjusting()) {
 				JList source = (JList) e.getSource();
-				if (source != null && source.getSelectedIndex()!=-1) {
+				if (source != null && source.getSelectedIndex() != -1) {
 					selectedShapeName = (String) source.getSelectedValue();
 					System.out.println(source);
 					selectedShape = engine.getShapes()[source.getSelectedIndex()];
 					System.out.println(selectedShape);
 					movingModeFlag = 1;
 					if (selectedShape != null) {
-						//namesList.removeListSelectionListener( this );
+						// namesList.removeListSelectionListener( this );
 						shapePropertiesPanel.updateShapePropertiesPanel(selectedShape);
 
 						namesList.updateShapeNameList(engine.getShapes());
 						shapePropertiesPanel.addPositionSetterButtonListener(new positionSetterButtonListner());
 						shapePropertiesPanel.addPropSetterButtonListeners(new probSetterButtonListner());
-						//namesList.addListSelectionListener( this );
+						// namesList.addListSelectionListener( this );
 					}
 				}
-				
 
-				
 			}
 		}
 	}
@@ -499,7 +497,7 @@ public class MainController {
 		public void actionPerformed(ActionEvent e) {
 			try {
 				engine.undo();
-				selectedShape = engine.redoActions.get(engine.redoActions.size()-1).getOldShape();
+				selectedShape = engine.redoActions.get(engine.redoActions.size() - 1).getOldShape();
 				namesList.updateShapeNameList(engine.getShapes());
 			} catch (Exception e1) {
 				// TODO: handle exception
@@ -515,7 +513,7 @@ public class MainController {
 		public void actionPerformed(ActionEvent e) {
 			try {
 				engine.redo();
-				selectedShape = engine.undoActions.get(engine.undoActions.size()-1).getNewShape();
+				selectedShape = engine.undoActions.get(engine.undoActions.size() - 1).getNewShape();
 				namesList.updateShapeNameList(engine.getShapes());
 			} catch (Exception e1) {
 				// TODO: handle exception
@@ -649,7 +647,7 @@ public class MainController {
 		public void actionPerformed(ActionEvent e) {
 
 			if (selectedShape != null) {
-					copyFlag = 1;
+				copyFlag = 1;
 				if (!(surface.getMouseListeners()[0] == moveAdapter)) {
 					surface.removeMouseListener(createAdapter);
 					surface.removeMouseMotionListener(createMotion);
@@ -711,8 +709,6 @@ public class MainController {
 
 	}
 
-
-
 	public class positionSetterButtonListner implements ActionListener {
 
 		@Override
@@ -729,9 +725,9 @@ public class MainController {
 				}
 				engine.updateShape(selectedShape, updatedShape);
 				selectedShape = updatedShape;
-			//	System.out.println("--------");
-			//	System.out.println(engine.getShapes());
-			//	System.out.println("--------");
+				// System.out.println("--------");
+				// System.out.println(engine.getShapes());
+				// System.out.println("--------");
 				namesList.updateShapeNameList(engine.getShapes());
 				surface.repaint();
 			}
@@ -766,7 +762,7 @@ public class MainController {
 					JavaClassLoader classLoader = new JavaClassLoader();
 					JarInputStream jarFile = new JarInputStream(new FileInputStream(selectedFilePath));
 					JarEntry jarEntry;
-				//	JavaClassLoader classLoader = new JavaClassLoader();
+					ArrayList<String> names = new ArrayList<>();
 					while (true) {
 						jarEntry = jarFile.getNextJarEntry();
 						if (jarEntry == null) {
@@ -775,14 +771,17 @@ public class MainController {
 						if (jarEntry.getName().endsWith(".class")) {
 							String classBinName = jarEntry.getName().replaceAll("/", "\\.");
 							classBinName = classBinName.substring(0, classBinName.length() - 6);
-							System.out.println(classBinName);
-							Class<? extends Shape> loaded = classLoader.loadExtraClass(classBinName);
-							System.out.println(loaded);
-							if (Shape.class.isAssignableFrom(loaded)) {
-								engine.addPlugin(loaded);
-							}
-
+							names.add(classBinName);
 						}
+					}
+					ClassLoader mainLoader = getClass().getClassLoader();
+					ClassLoader loader = URLClassLoader
+							.newInstance(new URL[] { new File(selectedFilePath).toURI().toURL() }, mainLoader);
+					Class<? extends Shape> cl = (Class<? extends Shape>) loader.getClass().forName(names.get(0), true,
+							loader);
+					if (cl.newInstance() instanceof Shape) {
+						System.out.println(cl.getSimpleName());
+						engine.addPlugin(cl);
 					}
 					jarFile.close();
 				} catch (Exception e1) {
@@ -798,46 +797,21 @@ public class MainController {
 	class SaveAsPngListener implements ActionListener {
 
 		@Override
-		  public void actionPerformed(ActionEvent e) {
-            BufferedImage image = new BufferedImage(surface.getWidth(), surface.getHeight(), BufferedImage.TYPE_INT_RGB);
-            Graphics2D g = image.createGraphics();
-            g.clearRect(0, 0, surface.getWidth(), surface.getHeight());
-            surface.printAll(g);
+		public void actionPerformed(ActionEvent e) {
+			BufferedImage image = new BufferedImage(surface.getWidth(), surface.getHeight(),
+					BufferedImage.TYPE_INT_RGB);
+			Graphics2D g = image.createGraphics();
+			g.clearRect(0, 0, surface.getWidth(), surface.getHeight());
+			surface.printAll(g);
 
-            g.dispose();
-            try {
-                ImageIO.write(image, "jpg", new File("Paint.jpg"));
-                ImageIO.write(image, "png", new File("Paint.png"));
-            } catch (IOException exp) {
-                exp.printStackTrace();
-            }
-		}
-			
-			
-			
-			
-			
-			
-			
-		/*	
-		 	JFileChooser chooser = new JFileChooser();
-			int retrival = chooser.showSaveDialog(null);
-			if (retrival == JFileChooser.APPROVE_OPTION) {
-				Path path = Paths.get(chooser.getCurrentDirectory() + "/" + chooser.getSelectedFile().getName());
-				BufferedImage bImg = new BufferedImage(surface.getWidth(), surface.getHeight(),
-						BufferedImage.TYPE_INT_RGB);
-				Graphics2D cg = bImg.createGraphics();
-				surface.paintAll(cg);
-				try {
-					if (ImageIO.write(bImg, "png", new File(path.toString().concat(".png")))) {
-						System.out.println("-- saved");
-					}
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}*/
+			g.dispose();
+			try {
+				ImageIO.write(image, "jpg", new File("Paint.jpg"));
+				ImageIO.write(image, "png", new File("Paint.png"));
+			} catch (IOException exp) {
+				exp.printStackTrace();
 			}
-		
-
+		}
 	}
 
+}
