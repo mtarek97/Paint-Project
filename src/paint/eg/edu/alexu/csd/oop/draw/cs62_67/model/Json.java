@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Point;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -13,16 +12,15 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import paint.eg.edu.alexu.csd.oop.draw.cs62_67.model.Circle;
-import paint.eg.edu.alexu.csd.oop.draw.cs62_67.model.Ellipse;
-import paint.eg.edu.alexu.csd.oop.draw.cs62_67.model.LineSegment;
-import paint.eg.edu.alexu.csd.oop.draw.cs62_67.model.Rectangle;
-import paint.eg.edu.alexu.csd.oop.draw.cs62_67.model.ShapeFactory;
-import paint.eg.edu.alexu.csd.oop.draw.cs62_67.model.Square;
-import paint.eg.edu.alexu.csd.oop.draw.cs62_67.model.Triangle;
+import paint.eg.edu.alexu.csd.oop.draw.DrawingEngine;
 import paint.eg.edu.alexu.csd.oop.draw.Shape;
 
 public class Json {
+	
+	private static DrawingEngine engine;
+	public Json(DrawingEngine engine){
+		this.engine = engine;
+	}
 
 	static StringBuilder builder = new StringBuilder();
 	private static BufferedWriter bw = null;
@@ -43,7 +41,7 @@ public class Json {
 	
 	public static void load(String path, ArrayList<Shape> shapes) throws IOException{
 			int counter = 0;
-			ShapeFactory factory = new ShapeFactory();
+			ShapeFactory factory = new ShapeFactory(engine);
 			Point position = new Point();
 			
 			br = new BufferedReader(new FileReader(path));

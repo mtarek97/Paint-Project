@@ -5,24 +5,14 @@ import java.awt.Point;
 import java.util.HashMap;
 import java.util.Map;
 
-import paint.eg.edu.alexu.csd.oop.draw.Shape2;
 import paint.eg.edu.alexu.csd.oop.draw.Shape;
 
 //An abstract class that implement the common methods between all shapes
 
-public abstract class MyShape implements Shape, Cloneable, Shape2{
+public abstract class MyShape implements Shape, Cloneable{
 
 	//common parameters between shapes
-	private static Map<String, Integer> numOfShapes = new HashMap<String, Integer>(){
-		{
-		put("Circle",1);
-		put("Ellipse",1);
-		put("LineSegment",1);
-		put("Rectangle",1);
-		put("Square",1);
-		put("Triangle",1);
-		}
-	};
+	
 	private Map<String, Double> properties = new HashMap<>();
 	private Point position = new Point(13, 12);
 	private String name;
@@ -91,29 +81,6 @@ public abstract class MyShape implements Shape, Cloneable, Shape2{
 			
     }
 
-	@Override
-	//common
-	public String getName() {
-		return this.name;
-	}
 
-	@Override
-	//common
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	@Override
-	//common
-	public Integer getNumOfShape(String type) {
-		return this.numOfShapes.get(type);
-	}
-
-	@Override
-	//common
-	public void increaseNumOfShape(String type) {
-		this.numOfShapes.put(type, numOfShapes.get(type) +1);
-	}
-	
 	
 }

@@ -19,8 +19,6 @@ public class LineSegment extends MyShape {
 	
 	//constructor
 	public LineSegment() {
-		setName(this.getClass().getSimpleName()+getNumOfShape(this.getClass().getSimpleName()));
-		increaseNumOfShape(this.getClass().getSimpleName());
 		setColor(this.getColor());
 		setPosition(this.getPosition());
 		this.properties.put(X1_KEY, 0.0);
@@ -29,8 +27,8 @@ public class LineSegment extends MyShape {
 		this.properties.put(Y2_KEY, 0.0);
 		setProperties(this.properties);
 		setFillColor(this.getFillColor());
-		System.out.println(this.getName());
 	}
+	@Override
 	public void setProperties(Map<String, Double> properties) {
 		this.properties = properties;
 	}

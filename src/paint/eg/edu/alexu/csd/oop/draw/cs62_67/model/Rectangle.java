@@ -15,8 +15,7 @@ public class Rectangle extends MyShape {
 	public static final String WIDTH_KEY = "yAxis";
 	
 	public Rectangle() {
-		setName(this.getClass().getSimpleName()+getNumOfShape(this.getClass().getSimpleName()));
-		increaseNumOfShape(this.getClass().getSimpleName());
+	
 		setColor(this.getColor());
 		// center of mass
 		setPosition(this.getPosition());
@@ -24,8 +23,8 @@ public class Rectangle extends MyShape {
 		this.properties.put(WIDTH_KEY, 0.0);
 		setProperties(this.properties);
 		setFillColor(this.getFillColor());
-		System.out.println(this.getName());
 	}
+	@Override
 	public void setProperties(Map<String, Double> properties) {
 		this.properties = properties;
 	}

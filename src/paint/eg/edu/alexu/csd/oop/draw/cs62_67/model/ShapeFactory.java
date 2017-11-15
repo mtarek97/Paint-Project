@@ -3,15 +3,16 @@ package paint.eg.edu.alexu.csd.oop.draw.cs62_67.model;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
+import paint.eg.edu.alexu.csd.oop.draw.DrawingEngine;
 import paint.eg.edu.alexu.csd.oop.draw.Shape;
 
 public class ShapeFactory {
-	private MyShape shape = null;
-	private MyDrawingEngine engine;
+	private Shape shape = null;
+	private DrawingEngine engine;
 
 	public ShapeFactory() {};
 
-	public ShapeFactory(MyDrawingEngine engine) {
+	public ShapeFactory(DrawingEngine engine) {
 		this.engine = engine;
 	}
 
@@ -30,7 +31,7 @@ public class ShapeFactory {
 					}
 
 					try {
-						this.shape = (MyShape) constuctor.newInstance();
+						this.shape =  (Shape) constuctor.newInstance();
 					} catch (IllegalArgumentException e) {
 						e.printStackTrace();
 					} catch (InvocationTargetException e) {

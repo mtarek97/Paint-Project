@@ -3,7 +3,6 @@ package paint.eg.edu.alexu.csd.oop.draw.cs62_67.model;
 import java.awt.BasicStroke;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Point;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,8 +18,6 @@ public class Triangle extends MyShape{
 	public static final String Y3_KEY = "y3";
 	
 	public Triangle() {
-		setName(this.getClass().getSimpleName()+getNumOfShape(this.getClass().getSimpleName()));
-		increaseNumOfShape(this.getClass().getSimpleName());
 		setColor(this.getColor());
 		setPosition(this.getPosition());
 		this.properties.put(X1_KEY, 0.0);
@@ -31,8 +28,8 @@ public class Triangle extends MyShape{
 		this.properties.put(Y3_KEY, 0.0);
 		setProperties(this.properties);
 		setFillColor(this.getFillColor());
-		System.out.println(this.getName());
 	}
+	@Override
 	public void setProperties(Map<String, Double> properties) {
 		this.properties = properties;
 	}

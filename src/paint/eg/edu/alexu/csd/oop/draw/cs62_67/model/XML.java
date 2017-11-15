@@ -18,10 +18,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
@@ -32,12 +29,18 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+import paint.eg.edu.alexu.csd.oop.draw.DrawingEngine;
 import paint.eg.edu.alexu.csd.oop.draw.Shape;
 
 
 
 public class XML {
 
+	DrawingEngine engine;
+	
+	public XML(DrawingEngine engine){
+		this.engine = engine;
+	}
 	
 	public void save(String path, ArrayList<Shape> shapes) throws Exception{
 		 DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
@@ -113,7 +116,7 @@ public class XML {
 				
 				Element root = dom.getDocumentElement();
 				NodeList shapesNodes = root.getChildNodes();
-				ShapeFactory factory = new ShapeFactory();
+				ShapeFactory factory = new ShapeFactory(engine);
 				for(int i=0;i<shapesNodes.getLength();i++){
 					Node shapeNode = shapesNodes.item(i);
 					Shape shape = factory.createShape(shapeNode.getNodeName());

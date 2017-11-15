@@ -15,16 +15,14 @@ public class Ellipse extends MyShape{
 	public static final String Y_KEY = "yAxis";
 	
 	public Ellipse() {
-		setName(this.getClass().getSimpleName()+getNumOfShape(this.getClass().getSimpleName()));
-		increaseNumOfShape(this.getClass().getSimpleName());
 		setColor(this.getColor());
 		setPosition(this.getPosition());
 		this.properties.put(X_KEY, 0.0);
 		this.properties.put(Y_KEY, 0.0);
 		setProperties(this.properties);
 		setFillColor(this.getFillColor());
-		System.out.println(this.getName());
 	}
+	@Override
 	public void setProperties(Map<String, Double> properties) {
 		this.properties = properties;
 	}

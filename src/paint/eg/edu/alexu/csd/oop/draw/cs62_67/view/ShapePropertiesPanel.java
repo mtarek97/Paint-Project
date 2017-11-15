@@ -13,7 +13,6 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import paint.eg.edu.alexu.csd.oop.draw.Shape;
-import paint.eg.edu.alexu.csd.oop.draw.Shape2;
 
 public class ShapePropertiesPanel extends JPanel {
 
@@ -36,10 +35,10 @@ public class ShapePropertiesPanel extends JPanel {
 		this.repaint();
 		textFields.clear();
 		SettersButtonsList.clear();
-		Shape2 shape2 = (Shape2) shape;
 
+		
 		JLabel nameLabel = new JLabel("name :");
-		JTextField nameField = new JTextField(shape2.getName());
+		JTextField nameField = new JTextField(shape.getClass().getSimpleName());
 		nameField.setName("name");
 		nameLabel.setLabelFor(nameField);
 		nameButton = new JButton("set");
@@ -50,6 +49,7 @@ public class ShapePropertiesPanel extends JPanel {
 		name.add(nameButton);
 		this.textFields.add(nameField);
 		this.add(name);
+		
 
 		JLabel positionLable = new JLabel("position ");
 		JLabel positionXLable = new JLabel("x :");

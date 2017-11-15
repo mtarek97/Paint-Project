@@ -6,11 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import paint.eg.edu.alexu.csd.oop.draw.DrawingEngine;
-import paint.eg.edu.alexu.csd.oop.draw.DrawingEngine2;
 import paint.eg.edu.alexu.csd.oop.draw.Shape;
-import paint.eg.edu.alexu.csd.oop.draw.Shape2;
-
-public class MyDrawingEngine implements DrawingEngine, DrawingEngine2 {
+public class MyDrawingEngine implements DrawingEngine{
 
 	private List<ICommand> undoActions = new ArrayList<ICommand>();
 	private List<ICommand> redoActions = new ArrayList<ICommand>();
@@ -21,12 +18,12 @@ public class MyDrawingEngine implements DrawingEngine, DrawingEngine2 {
 	public MyDrawingEngine() {
 		JavaClassLoader classLoader = new JavaClassLoader();
 		String packageBinName = "paint.eg.edu.alexu.csd.oop.draw.cs62_67.model.";
-		this.addPlugin(classLoader.loadExtraClass(packageBinName + "Ellipse"));
-		this.addPlugin(classLoader.loadExtraClass(packageBinName + "Circle"));
-		this.addPlugin(classLoader.loadExtraClass(packageBinName + "LineSegment"));
-		this.addPlugin(classLoader.loadExtraClass(packageBinName + "Rectangle"));
-		this.addPlugin(classLoader.loadExtraClass(packageBinName + "Square"));
-		this.addPlugin(classLoader.loadExtraClass(packageBinName + "Triangle"));
+		this.supportedShapes.add(classLoader.loadExtraClass(packageBinName + "Ellipse"));
+		this.supportedShapes.add(classLoader.loadExtraClass(packageBinName + "Circle"));
+		this.supportedShapes.add(classLoader.loadExtraClass(packageBinName + "LineSegment"));
+		this.supportedShapes.add(classLoader.loadExtraClass(packageBinName + "Rectangle"));
+		this.supportedShapes.add(classLoader.loadExtraClass(packageBinName + "Square"));
+		this.supportedShapes.add(classLoader.loadExtraClass(packageBinName + "Triangle"));
 	}
 
 	@Override
@@ -85,11 +82,6 @@ public class MyDrawingEngine implements DrawingEngine, DrawingEngine2 {
 	}
 
 	@Override
-	public void addPlugin(Class<? extends Shape> myClass) {
-		this.supportedShapes.add(myClass);
-	}
-
-	@Override
 	public void undo() {
 		try {
 			ICommand action = undoActions.remove(undoActions.size() - 1);
@@ -123,7 +115,7 @@ public class MyDrawingEngine implements DrawingEngine, DrawingEngine2 {
 		String extension = path.substring(dotIndex + 1);
 
 		if (extension.equals("XmL")) {
-			XML xml = new XML();
+			XML xml = new XML(this);
 			try {
 				xml.save(path, this.shapes);
 			} catch (Exception e) {
@@ -131,7 +123,7 @@ public class MyDrawingEngine implements DrawingEngine, DrawingEngine2 {
 				e.printStackTrace();
 			}
 		} else if (extension.equals("JsOn")) {
-			Json json = new Json();
+			Json json = new Json(this);
 			try {
 				json.save(path, this.shapes);
 			} catch (IOException e) {
@@ -151,10 +143,10 @@ public class MyDrawingEngine implements DrawingEngine, DrawingEngine2 {
 		int dotIndex = path.lastIndexOf('.');
 		String extension = path.substring(dotIndex + 1);
 		if (extension.equals("XmL")) {
-			XML xml = new XML();
+			XML xml = new XML(this);
 			xml.load(path, this.shapes);
 		} else if (extension.equals("JsOn")) {
-			Json json = new Json();
+			Json json = new Json(this);
 			try {
 				json.load(path, this.shapes);
 			} catch (IOException e) {
@@ -166,33 +158,10 @@ public class MyDrawingEngine implements DrawingEngine, DrawingEngine2 {
 		}
 
 	}
-
-	@Override
-	public Shape getShapeByName(String name) {
-		for (Shape i : this.shapes) {
-			Shape2 i2 = (Shape2) i;
-			if (i2.getName().equals(name)) {
-				return i;
-			}
-		}
-		return null;
+	
+	public void addPlugin(Class<? extends Shape> newClass){
+		this.supportedShapes.add(newClass);
 	}
 
-	@Override
-	public String pasrePathtoBinName(String path) {
-		path = path.substring(3);
-		path = path.substring(0, path.length() - 5);
-		String[] binaryNameParts = path.split("\\\\");
-		String binName = "";
-		int cnt = 0;
-		for (String i : binaryNameParts) {
-			binName = binName.concat(i);
-			if ((cnt != binaryNameParts.length - 1)) {
-				binName = binName.concat(".");
-			}
-			cnt++;
-		}
-		return binName;
-	}
 
 }

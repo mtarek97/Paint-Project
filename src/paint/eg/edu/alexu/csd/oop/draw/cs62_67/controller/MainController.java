@@ -35,15 +35,13 @@ import javax.swing.Timer;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import paint.eg.edu.alexu.csd.oop.draw.DrawingEngine;
-import paint.eg.edu.alexu.csd.oop.draw.DrawingEngine2;
 import paint.eg.edu.alexu.csd.oop.draw.Shape;
-import paint.eg.edu.alexu.csd.oop.draw.Shape2;
 import paint.eg.edu.alexu.csd.oop.draw.cs62_67.startProgram;
 import paint.eg.edu.alexu.csd.oop.draw.cs62_67.model.Circle;
 import paint.eg.edu.alexu.csd.oop.draw.cs62_67.model.Ellipse;
 import paint.eg.edu.alexu.csd.oop.draw.cs62_67.model.JavaClassLoader;
 import paint.eg.edu.alexu.csd.oop.draw.cs62_67.model.LineSegment;
+import paint.eg.edu.alexu.csd.oop.draw.cs62_67.model.MyDrawingEngine;
 import paint.eg.edu.alexu.csd.oop.draw.cs62_67.model.Rectangle;
 import paint.eg.edu.alexu.csd.oop.draw.cs62_67.model.ShapeFactory;
 import paint.eg.edu.alexu.csd.oop.draw.cs62_67.model.Square;
@@ -59,7 +57,7 @@ public class MainController {
 	private Shape movingShape;
 	private int copyFlag = 0;
 	private Shape copiedShape;
-	private DrawingEngine engine;
+	private MyDrawingEngine engine;
 	private ShapeFactory factory;
 	private GUI Paint;
 	private String selectedShapeName;
@@ -81,7 +79,7 @@ public class MainController {
 	private MouseAdapter moveAdapter;
 	private MouseMotionAdapter moveMotion;
 
-	public MainController(DrawingEngine engine, ShapeFactory factory, GUI Paint) {
+	public MainController(MyDrawingEngine engine, ShapeFactory factory, GUI Paint) {
 		this.engine = engine;
 		this.factory = factory;
 		this.Paint = Paint;
@@ -200,7 +198,7 @@ public class MainController {
 					if (movingShape != null ) {
 							if(copyFlag == 0){
 							engine.updateShape(selectedShape, movingShape);
-							namesList.updateShapeNameList(engine.getShapes());
+						//	namesList.updateShapeNameList(engine.getShapes());
 							movingModeFlag = 0;
 							selectedShape = movingShape;
 							movingShape = null;
@@ -363,7 +361,7 @@ public class MainController {
 				} else {
 					g2.drawRect(minx, miny, maxx - minx, maxy - miny);
 				}
-			} else {
+			} else if (selectedShape instanceof Triangle){
 				int maxX;
 				int maxY;
 				int minX;
@@ -441,20 +439,25 @@ public class MainController {
 		public void valueChanged(ListSelectionEvent e) {
 			if (!e.getValueIsAdjusting()) {
 				JList source = (JList) e.getSource();
-				if (source != null) {
+				if (source != null && source.getSelectedIndex()!=-1) {
 					selectedShapeName = (String) source.getSelectedValue();
-					DrawingEngine2 engine2 = (DrawingEngine2) engine;
-					selectedShape = engine2.getShapeByName(selectedShapeName);
+					System.out.println(source);
+					selectedShape = engine.getShapes()[source.getSelectedIndex()];
+					System.out.println(selectedShape);
 					movingModeFlag = 1;
-				}
+					if (selectedShape != null) {
+						//namesList.removeListSelectionListener( this );
+						shapePropertiesPanel.updateShapePropertiesPanel(selectedShape);
 
-				if (selectedShape != null) {
-					shapePropertiesPanel.updateShapePropertiesPanel(selectedShape);
-					shapePropertiesPanel.addNameSetterButtonListener(new nameSetterButtonListner());
-					shapePropertiesPanel.addPositionSetterButtonListener(new positionSetterButtonListner());
-					shapePropertiesPanel.addPropSetterButtonListeners(new probSetterButtonListner());
-
+						namesList.updateShapeNameList(engine.getShapes());
+						shapePropertiesPanel.addPositionSetterButtonListener(new positionSetterButtonListner());
+						shapePropertiesPanel.addPropSetterButtonListeners(new probSetterButtonListner());
+						//namesList.addListSelectionListener( this );
+					}
 				}
+				
+
+				
 			}
 		}
 	}
@@ -584,6 +587,7 @@ public class MainController {
 			int result = fc.showOpenDialog(null);
 			String selectedFilePath = fc.getSelectedFile().getPath().toString();
 			if (result == JFileChooser.APPROVE_OPTION) {
+				System.out.println(engine.getSupportedShapes());
 				engine.load(selectedFilePath);
 				namesList.updateShapeNameList(engine.getShapes());
 				surface.repaint();
@@ -694,20 +698,7 @@ public class MainController {
 
 	}
 
-	public class nameSetterButtonListner implements ActionListener {
 
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			if (selectedShape != null) {
-				Shape2 shape2 = (Shape2) selectedShape;
-				shape2.setName(shapePropertiesPanel.getTextFieldValue("name"));
-				shapePropertiesPanel.updateShapePropertiesPanel(selectedShape);
-				namesList.updateShapeNameList(engine.getShapes());
-			}
-
-		}
-
-	}
 
 	public class positionSetterButtonListner implements ActionListener {
 
@@ -724,6 +715,9 @@ public class MainController {
 					e1.printStackTrace();
 				}
 				engine.updateShape(selectedShape, updatedShape);
+			//	System.out.println("--------");
+			//	System.out.println(engine.getShapes());
+			//	System.out.println("--------");
 				namesList.updateShapeNameList(engine.getShapes());
 				surface.repaint();
 			}
@@ -755,10 +749,10 @@ public class MainController {
 			String selectedFilePath = fc.getSelectedFile().getPath().toString();
 			if (result == JFileChooser.APPROVE_OPTION) {
 				try {
+					JavaClassLoader classLoader = new JavaClassLoader();
 					JarInputStream jarFile = new JarInputStream(new FileInputStream(selectedFilePath));
 					JarEntry jarEntry;
-					DrawingEngine2 engine2 = (DrawingEngine2) engine;
-					JavaClassLoader classLoader = new JavaClassLoader();
+				//	JavaClassLoader classLoader = new JavaClassLoader();
 					while (true) {
 						jarEntry = jarFile.getNextJarEntry();
 						if (jarEntry == null) {
@@ -769,8 +763,9 @@ public class MainController {
 							classBinName = classBinName.substring(0, classBinName.length() - 6);
 							System.out.println(classBinName);
 							Class<? extends Shape> loaded = classLoader.loadExtraClass(classBinName);
+							System.out.println(loaded);
 							if (Shape.class.isAssignableFrom(loaded)) {
-								engine2.addPlugin(loaded);
+								engine.addPlugin(loaded);
 							}
 
 						}
@@ -789,7 +784,28 @@ public class MainController {
 	class SaveAsPngListener implements ActionListener {
 
 		@Override
-		public void actionPerformed(ActionEvent e) {
+		  public void actionPerformed(ActionEvent e) {
+            BufferedImage image = new BufferedImage(surface.getWidth(), surface.getHeight(), BufferedImage.TYPE_INT_RGB);
+            Graphics2D g = image.createGraphics();
+            g.clearRect(0, 0, surface.getWidth(), surface.getHeight());
+            surface.printAll(g);
+
+            g.dispose();
+            try {
+                ImageIO.write(image, "jpg", new File("Paint.jpg"));
+                ImageIO.write(image, "png", new File("Paint.png"));
+            } catch (IOException exp) {
+                exp.printStackTrace();
+            }
+		}
+			
+			
+			
+			
+			
+			
+			
+		/*	
 		 	JFileChooser chooser = new JFileChooser();
 			int retrival = chooser.showSaveDialog(null);
 			if (retrival == JFileChooser.APPROVE_OPTION) {
@@ -805,9 +821,9 @@ public class MainController {
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
-				}
+				}*/
 			}
-		}
+		
 
 	}
-}
+

@@ -15,8 +15,13 @@ public class ShapeCreationBtn extends JButton{
 		this.setForeground(new Color(0, 0, 0));
 	  	this.setFont(new Font("Comic Sans MS", Font.PLAIN, 14));
 	  	this.setBackground(new Color(227, 242, 253));
-	  	String iconPath = "/assets/shapes_32/".concat(shapeName).concat(".png");
-	  	this.setIcon(new ImageIcon(GUI.class.getResource(iconPath)));
+	  	try {
+	  		String iconPath = "/assets/shapes_32/".concat(shapeName).concat(".png");
+		  	this.setIcon(new ImageIcon(GUI.class.getResource(iconPath)));
+		} catch (Exception e) {
+			this.setText(shapeName);
+		}
+	  	
 	  	this.setToolTipText(shapeName);
 	}
 	
