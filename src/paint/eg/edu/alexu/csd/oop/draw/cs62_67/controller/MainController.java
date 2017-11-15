@@ -42,7 +42,6 @@ import paint.eg.edu.alexu.csd.oop.draw.Shape;
 import paint.eg.edu.alexu.csd.oop.draw.cs62_67.startProgram;
 import paint.eg.edu.alexu.csd.oop.draw.cs62_67.model.Circle;
 import paint.eg.edu.alexu.csd.oop.draw.cs62_67.model.Ellipse;
-import paint.eg.edu.alexu.csd.oop.draw.cs62_67.model.JavaClassLoader;
 import paint.eg.edu.alexu.csd.oop.draw.cs62_67.model.LineSegment;
 import paint.eg.edu.alexu.csd.oop.draw.cs62_67.model.MyDrawingEngine;
 import paint.eg.edu.alexu.csd.oop.draw.cs62_67.model.Rectangle;
@@ -56,6 +55,7 @@ import paint.eg.edu.alexu.csd.oop.draw.cs62_67.view.ShapeNameList;
 import paint.eg.edu.alexu.csd.oop.draw.cs62_67.view.ShapePropertiesPanel;
 
 public class MainController {
+	
 	private Shape updatedShape;
 	private Shape movingShape;
 	private int copyFlag = 0;
@@ -71,6 +71,7 @@ public class MainController {
 	private ShapeCreationButtonsPanel shapesCreationPanel;
 	private ShapePropertiesPanel shapePropertiesPanel;
 	private JPanel shapesPanel;
+	final public static  Color backgroundColor = new Color(245, 246, 247);
 	private Color color = Color.black;
 	private Color fillColor = Color.WHITE;
 	private ShapeNameList namesList;
@@ -115,6 +116,7 @@ public class MainController {
 		this.Paint.moveListener(new moveLestener());
 		this.Paint.addAddPluginListener(new addPluginListener());
 		this.Paint.addSaveAsPngListener(new SaveAsPngListener());
+
 		shapesCreationPanel.addButtonsListeners(new ShapeCreationBtnListner());
 		namesList.addSelectShapeListner(new SelectShapeListener());
 	}
@@ -759,7 +761,6 @@ public class MainController {
 			String selectedFilePath = fc.getSelectedFile().getPath().toString();
 			if (result == JFileChooser.APPROVE_OPTION) {
 				try {
-					JavaClassLoader classLoader = new JavaClassLoader();
 					JarInputStream jarFile = new JarInputStream(new FileInputStream(selectedFilePath));
 					JarEntry jarEntry;
 					ArrayList<String> names = new ArrayList<>();
@@ -813,5 +814,7 @@ public class MainController {
 			}
 		}
 	}
+	
+	
 
 }
