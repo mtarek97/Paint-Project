@@ -79,6 +79,8 @@ public class MainController {
 	private MouseAdapter moveAdapter;
 	private MouseMotionAdapter moveMotion;
 
+	
+	
 	public MainController(MyDrawingEngine engine, ShapeFactory factory, GUI Paint) {
 		this.engine = engine;
 		this.factory = factory;
@@ -497,6 +499,7 @@ public class MainController {
 		public void actionPerformed(ActionEvent e) {
 			try {
 				engine.undo();
+				selectedShape = engine.redoActions.get(engine.redoActions.size()-1).getOldShape();
 				namesList.updateShapeNameList(engine.getShapes());
 			} catch (Exception e1) {
 				// TODO: handle exception
@@ -512,6 +515,7 @@ public class MainController {
 		public void actionPerformed(ActionEvent e) {
 			try {
 				engine.redo();
+				selectedShape = engine.undoActions.get(engine.undoActions.size()-1).getNewShape();
 				namesList.updateShapeNameList(engine.getShapes());
 			} catch (Exception e1) {
 				// TODO: handle exception
@@ -660,10 +664,16 @@ public class MainController {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if (copyFlag == 1) {
-				Point point = selectedShape.getPosition();
+				try {
+					copiedShape = (Shape) selectedShape.clone();
+				} catch (CloneNotSupportedException e1) {
+					e1.printStackTrace();
+				}
+				Point point = copiedShape.getPosition();
 				copiedShape.setPosition(new Point(point.x + 20, point.y));
 				engine.addShape(copiedShape);
 				namesList.updateShapeNameList(engine.getShapes());
+				selectedShape = copiedShape;
 				surface.repaint();
 				copyFlag = 0;
 			}
@@ -715,6 +725,7 @@ public class MainController {
 					e1.printStackTrace();
 				}
 				engine.updateShape(selectedShape, updatedShape);
+				selectedShape = updatedShape;
 			//	System.out.println("--------");
 			//	System.out.println(engine.getShapes());
 			//	System.out.println("--------");

@@ -21,5 +21,15 @@ public class AddShape implements ICommand{
 	public void unexecute() {
 		this.shapes.remove(shape);
 	}
+	@Override
+	public Shape getNewShape() {
+		// TODO Auto-generated method stub
+		return shape;
+	}
+	@Override
+	public Shape getOldShape() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 }
