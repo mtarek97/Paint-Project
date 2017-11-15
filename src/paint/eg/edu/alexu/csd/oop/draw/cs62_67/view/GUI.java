@@ -89,6 +89,7 @@ public class GUI extends JFrame {
 		btnUndo.setIcon(new ImageIcon(GUI.class.getResource("/assets/undo.png")));
 		btnUndo.setBackground(backgroundColor);
 		btnUndo.setBorderPainted(false);
+		btnUndo.setFocusPainted(false);
 		addButtonHover(btnUndo, new buttonHover());
 		lblStroke.setHorizontalAlignment(SwingConstants.CENTER);
 		btnStroke.setIcon(new ImageIcon(GUI.class.getResource("/assets/stroke.png")));
