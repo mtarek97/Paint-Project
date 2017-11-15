@@ -242,7 +242,7 @@ public class MainController {
 		}
 
 		private int diff = 0;
-		int speed = 5;
+		int speed = 15;
 		{
 
 			final Timer timer = new Timer(1000 / (10 * speed), null);
@@ -543,6 +543,7 @@ public class MainController {
 			try {
 				engine.removeShape(selectedShape);
 				namesList.updateShapeNameList(engine.getShapes());
+				selectedShape = null;
 			} catch (Exception e1) {
 				// TODO: handle exception
 			}
@@ -701,8 +702,8 @@ public class MainController {
 					e1.printStackTrace();
 				}
 				engine.updateShape(selectedShape, updatedShape);
+				selectedShape = updatedShape;
 				namesList.updateShapeNameList(engine.getShapes());
-				// shapePropertiesPanel.updateShapePropertiesPanel(selectedShape);
 				surface.repaint();
 			}
 
@@ -721,7 +722,7 @@ public class MainController {
 					updatedShape = (Shape) selectedShape.clone();
 					Point newPosition = new Point();
 					newPosition.x = Integer.valueOf(shapePropertiesPanel.getTextFieldValue("positionX"));
-					newPosition.x = Integer.valueOf(shapePropertiesPanel.getTextFieldValue("positionX"));
+					newPosition.y = Integer.valueOf(shapePropertiesPanel.getTextFieldValue("positionY"));
 					updatedShape.setPosition(newPosition);
 				} catch (CloneNotSupportedException e1) {
 					e1.printStackTrace();
