@@ -614,6 +614,7 @@ public class MainController {
 				}
 				engine.updateShape(selectedShape, updatedShape);
 				namesList.updateShapeNameList(engine.getShapes());
+				selectedShape = updatedShape;
 				surface.repaint();
 			}
 		}
@@ -634,6 +635,7 @@ public class MainController {
 				}
 				engine.updateShape(selectedShape, updatedShape);
 				namesList.updateShapeNameList(engine.getShapes());
+				selectedShape = updatedShape;
 				surface.repaint();
 			}
 		}
