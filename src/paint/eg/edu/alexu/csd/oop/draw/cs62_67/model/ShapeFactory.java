@@ -4,9 +4,10 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
 import paint.eg.edu.alexu.csd.oop.draw.DrawingEngine;
+import paint.eg.edu.alexu.csd.oop.draw.IFactory;
 import paint.eg.edu.alexu.csd.oop.draw.Shape;
 
-public class ShapeFactory {
+public class ShapeFactory implements IFactory{
 	private Shape shape = null;
 	private DrawingEngine engine;
 
@@ -16,6 +17,7 @@ public class ShapeFactory {
 		this.engine = engine;
 	}
 
+	@Override
 	public Shape createShape(String shape) {
 
 		for (Class<? extends Shape> i : engine.getSupportedShapes()) {

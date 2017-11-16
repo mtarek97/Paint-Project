@@ -40,14 +40,14 @@ import javax.swing.event.ListSelectionListener;
 
 import paint.eg.edu.alexu.csd.oop.draw.Shape;
 import paint.eg.edu.alexu.csd.oop.draw.cs62_67.startProgram;
-import paint.eg.edu.alexu.csd.oop.draw.cs62_67.model.Circle;
-import paint.eg.edu.alexu.csd.oop.draw.cs62_67.model.Ellipse;
-import paint.eg.edu.alexu.csd.oop.draw.cs62_67.model.LineSegment;
 import paint.eg.edu.alexu.csd.oop.draw.cs62_67.model.MyDrawingEngine;
-import paint.eg.edu.alexu.csd.oop.draw.cs62_67.model.Rectangle;
 import paint.eg.edu.alexu.csd.oop.draw.cs62_67.model.ShapeFactory;
-import paint.eg.edu.alexu.csd.oop.draw.cs62_67.model.Square;
-import paint.eg.edu.alexu.csd.oop.draw.cs62_67.model.Triangle;
+import paint.eg.edu.alexu.csd.oop.draw.cs62_67.model.shapes.Circle;
+import paint.eg.edu.alexu.csd.oop.draw.cs62_67.model.shapes.Ellipse;
+import paint.eg.edu.alexu.csd.oop.draw.cs62_67.model.shapes.LineSegment;
+import paint.eg.edu.alexu.csd.oop.draw.cs62_67.model.shapes.Rectangle;
+import paint.eg.edu.alexu.csd.oop.draw.cs62_67.model.shapes.Square;
+import paint.eg.edu.alexu.csd.oop.draw.cs62_67.model.shapes.Triangle;
 import paint.eg.edu.alexu.csd.oop.draw.cs62_67.view.GUI;
 import paint.eg.edu.alexu.csd.oop.draw.cs62_67.view.ShapeCreationBtn;
 import paint.eg.edu.alexu.csd.oop.draw.cs62_67.view.ShapeCreationButtonsPanel;
@@ -501,6 +501,12 @@ public class MainController {
 				engine.undo();
 				selectedShape = engine.redoActions.get(engine.redoActions.size() - 1).getOldShape();
 				namesList.updateShapeNameList(engine.getShapes());
+				Paint.enableRedo();
+				if(!engine.undoActions.isEmpty()){
+					Paint.enableUndo();
+				}else{
+					Paint.disableUndo();
+				}
 			} catch (Exception e1) {
 				// TODO: handle exception
 			}
@@ -517,6 +523,12 @@ public class MainController {
 				engine.redo();
 				selectedShape = engine.undoActions.get(engine.undoActions.size() - 1).getNewShape();
 				namesList.updateShapeNameList(engine.getShapes());
+				Paint.enableUndo();
+				if(!engine.redoActions.isEmpty()){
+					Paint.enableRedo();
+				}else{
+					Paint.disableRedo();
+				}
 			} catch (Exception e1) {
 				// TODO: handle exception
 			}
