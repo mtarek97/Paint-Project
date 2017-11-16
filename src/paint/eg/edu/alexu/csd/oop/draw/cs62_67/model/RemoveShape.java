@@ -2,6 +2,7 @@ package paint.eg.edu.alexu.csd.oop.draw.cs62_67.model;
 
 import java.util.ArrayList;
 
+import paint.eg.edu.alexu.csd.oop.draw.ICommand;
 import paint.eg.edu.alexu.csd.oop.draw.Shape;
 
 public class RemoveShape implements ICommand{

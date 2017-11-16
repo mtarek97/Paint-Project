@@ -533,11 +533,13 @@ public class GUI extends JFrame {
 	public void
 	addUndoListener(ActionListener listenforUndo) {
 		mntmUndo.addActionListener(listenforUndo);
+		btnUndo.addActionListener(listenforUndo);
 	}
 
 	public void
 	addRedoListener(ActionListener listenforRedo) {
 		mntmRedo.addActionListener(listenforRedo);
+		btnRedo.addActionListener(listenforRedo);
 	}
 
 	public void
@@ -586,6 +588,27 @@ public class GUI extends JFrame {
 	}
 	public void addButtonHover(JButton myButton, MouseListener listenForbuttonHover) {
 		myButton.addMouseListener(listenForbuttonHover);
+	}
+	
+	
+	public void disableUndo(){
+		this.mntmUndo.setEnabled(false);
+		this.btnUndo.setIcon(new ImageIcon(GUI.class.getResource("/assets/noundo.png")));
+	}
+	
+	public void enableUndo(){
+		this.mntmUndo.setEnabled(true);
+		this.btnUndo.setIcon(new ImageIcon(GUI.class.getResource("/assets/undo.png")));
+	}
+	
+	public void disableRedo(){
+		this.mntmRedo.setEnabled(false);
+		this.btnRedo.setIcon(new ImageIcon(GUI.class.getResource("/assets/noredo.png")));
+	}
+	
+	public void enableRedo(){
+		this.mntmRedo.setEnabled(true);
+		this.btnRedo.setIcon(new ImageIcon(GUI.class.getResource("/assets/redo.png")));
 	}
 	
 	class buttonHover implements MouseListener{

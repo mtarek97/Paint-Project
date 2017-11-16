@@ -1,4 +1,4 @@
-package paint.eg.edu.alexu.csd.oop.draw.cs62_67.model;
+package paint.eg.edu.alexu.csd.oop.draw.cs62_67.model.shapes;
 
 import java.awt.BasicStroke;
 import java.awt.Graphics;
@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import paint.eg.edu.alexu.csd.oop.draw.Shape;
+import paint.eg.edu.alexu.csd.oop.draw.cs62_67.model.MyShape;
 
 public class Rectangle extends MyShape {
 	private Map<String, Double> properties = new HashMap<>();

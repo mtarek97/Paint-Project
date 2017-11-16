@@ -1,31 +1,25 @@
-package paint.eg.edu.alexu.csd.oop.draw.cs62_67.model;
+package paint.eg.edu.alexu.csd.oop.draw.cs62_67.model.shapes;
 
 import java.awt.BasicStroke;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.util.HashMap;
 import java.util.Map;
 
 import paint.eg.edu.alexu.csd.oop.draw.Shape;
+import paint.eg.edu.alexu.csd.oop.draw.cs62_67.model.MyShape;
 
-public class Triangle extends MyShape{
-	private Map<String, Double> properties = new HashMap<>();
-	public static final String X1_KEY = "x1";
-	public static final String Y1_KEY = "y1";
-	public static final String X2_KEY = "x2";
-	public static final String Y2_KEY = "y2";
-	public static final String X3_KEY = "x3";
-	public static final String Y3_KEY = "y3";
+public class Ellipse extends MyShape{
+	private Map<String, Double> properties =  new HashMap<>();
+	public static final String X_KEY = "xAxis";
+	public static final String Y_KEY = "yAxis";
 	
-	public Triangle() {
+	public Ellipse() {
 		setColor(this.getColor());
 		setPosition(this.getPosition());
-		this.properties.put(X1_KEY, 0.0);
-		this.properties.put(Y1_KEY, 0.0);
-		this.properties.put(X2_KEY, 0.0);
-		this.properties.put(Y2_KEY, 0.0);
-		this.properties.put(X3_KEY, 0.0);
-		this.properties.put(Y3_KEY, 0.0);
+		this.properties.put(X_KEY, 0.0);
+		this.properties.put(Y_KEY, 0.0);
 		setProperties(this.properties);
 		setFillColor(this.getFillColor());
 	}
@@ -44,23 +38,19 @@ public class Triangle extends MyShape{
 	public void draw(Graphics canvas) {
 		Graphics2D g2 = (Graphics2D) canvas;
 		g2.setStroke(new BasicStroke(6.0f));
-		int[] x = new int[3];
-		int[] y = new int[3];
-		x[0] = getPosition().x;
-		y[0] = getPosition().y;
-		x[1] = getProperties().get(X2_KEY).intValue();
-		y[1] = getProperties().get(Y2_KEY).intValue();
-		x[2] = getProperties().get(X3_KEY).intValue();
-		y[2] = getProperties().get(Y3_KEY).intValue();
+		Point position = getPosition();
+
+		double x = getProperties().get(X_KEY);
+		double y = getProperties().get(Y_KEY);
 		g2.setColor(getColor());
-		g2.drawPolygon(x, y, 3);
+		g2.drawOval(position.x, position.y, (int)x, (int)y);
 		g2.setColor(getFillColor());
-		g2.fillPolygon(x, y, 3);
+		g2.fillOval(position.x, position.y, (int)x, (int)y);
+		
 	}
-	
 	@Override
 	public Object clone() throws CloneNotSupportedException{
-		Shape clonedShape = new Triangle();
+		Shape clonedShape = new Ellipse();
         clonedShape.setColor(this.getColor());
         clonedShape.setFillColor(this.getFillColor());
         clonedShape.setPosition(this.getPosition());
@@ -73,5 +63,4 @@ public class Triangle extends MyShape{
         clonedShape.setProperties(newprop);
         return clonedShape;	
     }
-
 }

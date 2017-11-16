@@ -19,7 +19,7 @@ public class ShapeCreationButtonsPanel extends JPanel{
 	public ShapeCreationButtonsPanel(List<Class<? extends Shape>> shapeslist){
 		super();
 		this.setName("ShapeCreationButtonsPanel");
-		this.setBackground(new Color(227, 242, 253));
+		this.setBackground(new Color(245, 246, 247));
 		GroupLayout layout = new GroupLayout(this);
 		this.setLayout(layout);
 		//layout.setAutoCreateGaps(true);

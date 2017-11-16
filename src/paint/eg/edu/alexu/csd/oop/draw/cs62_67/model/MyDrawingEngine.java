@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import paint.eg.edu.alexu.csd.oop.draw.DrawingEngine;
+import paint.eg.edu.alexu.csd.oop.draw.ICommand;
 import paint.eg.edu.alexu.csd.oop.draw.Shape;
 public class MyDrawingEngine implements DrawingEngine{
 
@@ -17,7 +18,7 @@ public class MyDrawingEngine implements DrawingEngine{
 
 	public MyDrawingEngine() {
 		JavaClassLoader classLoader = new JavaClassLoader();
-		String packageBinName = "paint.eg.edu.alexu.csd.oop.draw.cs62_67.model.";
+		String packageBinName = "paint.eg.edu.alexu.csd.oop.draw.cs62_67.model.shapes.";
 		this.supportedShapes.add(classLoader.loadExtraClass(packageBinName + "Ellipse"));
 		this.supportedShapes.add(classLoader.loadExtraClass(packageBinName + "Circle"));
 		this.supportedShapes.add(classLoader.loadExtraClass(packageBinName + "LineSegment"));

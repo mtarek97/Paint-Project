@@ -1,4 +1,4 @@
-package paint.eg.edu.alexu.csd.oop.draw.cs62_67.model;
+package paint.eg.edu.alexu.csd.oop.draw.cs62_67.model.shapes;
 
 import java.util.HashMap;
 import java.util.Map;
