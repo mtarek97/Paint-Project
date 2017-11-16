@@ -9,6 +9,7 @@ import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.ParallelGroup;
 import javax.swing.GroupLayout.SequentialGroup;
 import javax.swing.JPanel;
+import javax.swing.border.LineBorder;
 
 import paint.eg.edu.alexu.csd.oop.draw.Shape;
 
@@ -20,6 +21,7 @@ public class ShapeCreationButtonsPanel extends JPanel{
 		super();
 		this.setName("ShapeCreationButtonsPanel");
 		this.setBackground(new Color(245, 246, 247));
+		this.setBorder(new LineBorder(new Color(0, 0, 0)));
 		GroupLayout layout = new GroupLayout(this);
 		this.setLayout(layout);
 		//layout.setAutoCreateGaps(true);

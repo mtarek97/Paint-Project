@@ -55,7 +55,7 @@ import paint.eg.edu.alexu.csd.oop.draw.cs62_67.view.ShapeNameList;
 import paint.eg.edu.alexu.csd.oop.draw.cs62_67.view.ShapePropertiesPanel;
 
 public class MainController {
-	
+
 	private Shape updatedShape;
 	private Shape movingShape;
 	private int copyFlag = 0;
@@ -71,9 +71,10 @@ public class MainController {
 	private ShapeCreationButtonsPanel shapesCreationPanel;
 	private ShapePropertiesPanel shapePropertiesPanel;
 	private JPanel shapesPanel;
-	final public static  Color backgroundColor = new Color(245, 246, 247);
+	final public static Color backgroundColor = new Color(245, 246, 247);
 	private Color color = Color.black;
 	private Color fillColor = Color.WHITE;
+	private String selectedColorButton = null;
 	private ShapeNameList namesList;
 	private startProgram newPrgram;
 	private int createModeFlage = 0;
@@ -111,11 +112,13 @@ public class MainController {
 		this.Paint.loadListener(new loadListener());
 		this.Paint.colorListener(new colorLestener());
 		this.Paint.fillColorListener(new fillColorLestener());
+		this.Paint.addPaletteListener(new paletteListerner());
 		this.Paint.copyListener(new copyListener());
 		this.Paint.pasteListener(new pasteListener());
 		this.Paint.moveListener(new moveLestener());
 		this.Paint.addAddPluginListener(new addPluginListener());
-		this.Paint.addSaveAsPngListener(new SaveAsPngListener());
+		this.Paint.addSnapshotListener(new snapshotListener());
+		this.Paint.addColorButtonsListener(new colorButtonsListener());
 
 		shapesCreationPanel.addButtonsListeners(new ShapeCreationBtnListner());
 		namesList.addSelectShapeListner(new SelectShapeListener());
@@ -268,6 +271,7 @@ public class MainController {
 		public void paint(Graphics g) {
 			Graphics2D g2 = (Graphics2D) g;
 			engine.refresh(g2);
+			updateUndoAndRedoView();
 			if (startDrag != null && endDrag != null) {
 				g2.setPaint(Color.LIGHT_GRAY);
 				if (selectedShape == null) {
@@ -501,12 +505,6 @@ public class MainController {
 				engine.undo();
 				selectedShape = engine.redoActions.get(engine.redoActions.size() - 1).getOldShape();
 				namesList.updateShapeNameList(engine.getShapes());
-				Paint.enableRedo();
-				if(!engine.undoActions.isEmpty()){
-					Paint.enableUndo();
-				}else{
-					Paint.disableUndo();
-				}
 			} catch (Exception e1) {
 				// TODO: handle exception
 			}
@@ -523,12 +521,6 @@ public class MainController {
 				engine.redo();
 				selectedShape = engine.undoActions.get(engine.undoActions.size() - 1).getNewShape();
 				namesList.updateShapeNameList(engine.getShapes());
-				Paint.enableUndo();
-				if(!engine.redoActions.isEmpty()){
-					Paint.enableRedo();
-				}else{
-					Paint.disableRedo();
-				}
 			} catch (Exception e1) {
 				// TODO: handle exception
 			}
@@ -607,6 +599,8 @@ public class MainController {
 				System.out.println(engine.getSupportedShapes());
 				engine.load(selectedFilePath);
 				namesList.updateShapeNameList(engine.getShapes());
+
+				selectedShape = null;
 				surface.repaint();
 			}
 		}
@@ -616,20 +610,8 @@ public class MainController {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			color = JColorChooser.showDialog(null, "Choose a Color", color);
-			Paint.btnColor.setBackground(color);
-			if (selectedShape != null) {
-				try {
-					updatedShape = (Shape) selectedShape.clone();
-					updatedShape.setColor(color);
-				} catch (CloneNotSupportedException e1) {
-					e1.printStackTrace();
-				}
-				engine.updateShape(selectedShape, updatedShape);
-				namesList.updateShapeNameList(engine.getShapes());
-				selectedShape = updatedShape;
-				surface.repaint();
-			}
+			selectedColorButton = "OuterColor";
+			Paint.clickedSelectedColorButton(selectedColorButton);
 		}
 
 	}
@@ -637,20 +619,8 @@ public class MainController {
 	class fillColorLestener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			fillColor = JColorChooser.showDialog(null, "Choose a Color", fillColor);
-			Paint.btnFillColor.setBackground(fillColor);
-			if (selectedShape != null) {
-				try {
-					updatedShape = (Shape) selectedShape.clone();
-					updatedShape.setFillColor(fillColor);
-				} catch (CloneNotSupportedException e1) {
-					e1.printStackTrace();
-				}
-				engine.updateShape(selectedShape, updatedShape);
-				namesList.updateShapeNameList(engine.getShapes());
-				selectedShape = updatedShape;
-				surface.repaint();
-			}
+			selectedColorButton = "FillColor";
+			Paint.clickedSelectedColorButton(selectedColorButton);
 		}
 
 	}
@@ -704,12 +674,13 @@ public class MainController {
 			if (selectedShape != null) {
 				JButton source = (JButton) e.getSource();
 				String propKey = source.getName();
-				Map<String, Double> newProperties = selectedShape.getProperties();
-				newProperties.put(propKey, Double.valueOf(shapePropertiesPanel.getTextFieldValue(propKey)));
+
 				try {
 					updatedShape = (Shape) selectedShape.clone();
+					Map<String, Double> newProperties = updatedShape.getProperties();
+					newProperties.put(propKey, Double.valueOf(shapePropertiesPanel.getTextFieldValue(propKey)));
 					updatedShape.setProperties(newProperties);
-					System.out.println(updatedShape.getProperties().get(propKey));
+					// System.out.println(updatedShape.getProperties().get(propKey));
 				} catch (CloneNotSupportedException e1) {
 					e1.printStackTrace();
 				}
@@ -728,20 +699,17 @@ public class MainController {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if (selectedShape != null) {
+				Point newPosition = new Point();
+				newPosition.x = Integer.valueOf(shapePropertiesPanel.getTextFieldValue("positionX"));
+				newPosition.y = Integer.valueOf(shapePropertiesPanel.getTextFieldValue("positionY"));
 				try {
 					updatedShape = (Shape) selectedShape.clone();
-					Point newPosition = new Point();
-					newPosition.x = Integer.valueOf(shapePropertiesPanel.getTextFieldValue("positionX"));
-					newPosition.y = Integer.valueOf(shapePropertiesPanel.getTextFieldValue("positionY"));
 					updatedShape.setPosition(newPosition);
 				} catch (CloneNotSupportedException e1) {
 					e1.printStackTrace();
 				}
 				engine.updateShape(selectedShape, updatedShape);
 				selectedShape = updatedShape;
-				// System.out.println("--------");
-				// System.out.println(engine.getShapes());
-				// System.out.println("--------");
 				namesList.updateShapeNameList(engine.getShapes());
 				surface.repaint();
 			}
@@ -807,7 +775,7 @@ public class MainController {
 		}
 	}
 
-	class SaveAsPngListener implements ActionListener {
+	class snapshotListener implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -819,14 +787,107 @@ public class MainController {
 
 			g.dispose();
 			try {
-				ImageIO.write(image, "jpg", new File("Paint.jpg"));
 				ImageIO.write(image, "png", new File("Paint.png"));
 			} catch (IOException exp) {
 				exp.printStackTrace();
 			}
 		}
 	}
-	
-	
+
+	public void updateUndoAndRedoView() {
+		if (engine.undoActions.isEmpty()) {
+			Paint.disableUndo();
+		} else {
+			Paint.enableUndo();
+		}
+		if (engine.redoActions.isEmpty()) {
+			Paint.disableRedo();
+		} else {
+			Paint.enableRedo();
+		}
+	}
+
+	class paletteListerner implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if (selectedColorButton == "FillColor") {
+				fillColor = JColorChooser.showDialog(null, "Choose a Color", fillColor);
+
+				Paint.btnFillColor.setBackground(fillColor);
+				if (selectedShape != null) {
+					try {
+						updatedShape = (Shape) selectedShape.clone();
+						updatedShape.setFillColor(fillColor);
+					} catch (CloneNotSupportedException e1) {
+						e1.printStackTrace();
+					}
+					engine.updateShape(selectedShape, updatedShape);
+					namesList.updateShapeNameList(engine.getShapes());
+					selectedShape = updatedShape;
+
+					surface.repaint();
+				}
+			} else if (selectedColorButton == "OuterColor") {
+				color = JColorChooser.showDialog(null, "Choose a Color", color);
+				Paint.btnColor.setBackground(color);
+				if (selectedShape != null) {
+					try {
+						updatedShape = (Shape) selectedShape.clone();
+						updatedShape.setColor(color);
+					} catch (CloneNotSupportedException e1) {
+						e1.printStackTrace();
+					}
+					engine.updateShape(selectedShape, updatedShape);
+					namesList.updateShapeNameList(engine.getShapes());
+					selectedShape = updatedShape;
+					surface.repaint();
+				}
+			}
+		}
+
+	}
+
+	class colorButtonsListener implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			JButton source = (JButton) e.getSource();
+			Color newColor = source.getBackground();
+			if(selectedColorButton == "FillColor"){
+				fillColor=newColor;
+				Paint.btnFillColor.setBackground(fillColor);
+				if (selectedShape != null) {
+					try {
+						updatedShape = (Shape) selectedShape.clone();
+						updatedShape.setFillColor(fillColor);
+					} catch (CloneNotSupportedException e1) {
+						e1.printStackTrace();
+					}
+					engine.updateShape(selectedShape, updatedShape);
+					namesList.updateShapeNameList(engine.getShapes());
+					selectedShape = updatedShape;
+
+					surface.repaint();
+				}
+				
+				
+			}else if(selectedColorButton == "OuterColor"){
+				color=newColor;
+				Paint.btnColor.setBackground(color);
+				if (selectedShape != null) {
+					try {
+						updatedShape = (Shape) selectedShape.clone();
+						updatedShape.setColor(color);
+					} catch (CloneNotSupportedException e1) {
+						e1.printStackTrace();
+					}
+					engine.updateShape(selectedShape, updatedShape);
+					namesList.updateShapeNameList(engine.getShapes());
+					selectedShape = updatedShape;
+					surface.repaint();
+				}
+			}
+
+		}
+	}
 
 }
