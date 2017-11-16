@@ -140,7 +140,8 @@ public class MyDrawingEngine implements DrawingEngine{
 	@Override
 	public void load(String path) {
 		this.shapes.clear();
-
+		this.undoActions.clear();
+		this.redoActions.clear();
 		int dotIndex = path.lastIndexOf('.');
 		String extension = path.substring(dotIndex + 1);
 		if (extension.equals("XmL")) {
