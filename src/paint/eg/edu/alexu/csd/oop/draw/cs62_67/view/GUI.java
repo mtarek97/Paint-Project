@@ -97,6 +97,7 @@ public class GUI extends JFrame {
 	private final JLabel lblPalette = new JLabel("Palette");
 
 	public GUI() {
+		getContentPane().setForeground(Color.WHITE);
 		lblPalette.setHorizontalAlignment(SwingConstants.CENTER);
 		lblPalette.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		btnPalette.setIcon(new ImageIcon(GUI.class.getResource("/assets/palette.png")));
