@@ -123,7 +123,6 @@ public class GUI extends JFrame {
 		btnStroke.setBorderPainted(false);
 		btnStroke.setFocusPainted(false);
 		addButtonHover(btnStroke, new buttonHover());
-		setResizable(false);
 		btnColorLavender.setToolTipText("Lavender");
 		btnColorLavender.setBackground(new Color(200, 191, 213));
 		btnColorPurple.setToolTipText("Purple");
@@ -450,6 +449,7 @@ public class GUI extends JFrame {
 		gl_ToolsPanel.setAutoCreateGaps(true);
 		gl_ToolsPanel.setAutoCreateContainerGaps(true);
 		ToolsPanel.setLayout(gl_ToolsPanel);
+		statusPanel.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
 
 		getContentPane().add(statusPanel, BorderLayout.SOUTH);
 
@@ -602,6 +602,10 @@ public class GUI extends JFrame {
 	public void moveListener(ActionListener listenForMove) {
 		btnMove.addActionListener(listenForMove);
 	}
+	
+	public void resizeListener(ActionListener listenForResize) {
+		btnResize.addActionListener(listenForResize);
+	}
 
 	public void addAddPluginListener(ActionListener listenForAddPlugin) {
 		mntmAddPlugin.addActionListener(listenForAddPlugin);
@@ -673,4 +677,5 @@ public class GUI extends JFrame {
 		
 		}
 	}
+	
 }

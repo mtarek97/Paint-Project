@@ -3,6 +3,7 @@ package paint.eg.edu.alexu.csd.oop.draw.cs62_67.controller;
 import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -56,8 +57,10 @@ import paint.eg.edu.alexu.csd.oop.draw.cs62_67.view.ShapePropertiesPanel;
 
 public class MainController {
 
+	final int PROX_DIST = 3;
 	private Shape updatedShape;
 	private Shape movingShape;
+	private Shape resizedShape;
 	private int copyFlag = 0;
 	private Shape copiedShape;
 	private MyDrawingEngine engine;
@@ -83,6 +86,9 @@ public class MainController {
 	private MouseMotionAdapter createMotion;
 	private MouseAdapter moveAdapter;
 	private MouseMotionAdapter moveMotion;
+	private MouseAdapter resizeAdapter;
+	private MouseMotionAdapter resizeMotion;
+	java.awt.Rectangle highlightRect = new java.awt.Rectangle();
 
 	public MainController(MyDrawingEngine engine, ShapeFactory factory, GUI Paint) {
 		this.engine = engine;
@@ -116,6 +122,7 @@ public class MainController {
 		this.Paint.copyListener(new copyListener());
 		this.Paint.pasteListener(new pasteListener());
 		this.Paint.moveListener(new moveLestener());
+		this.Paint.resizeListener(new resizeLestener());
 		this.Paint.addAddPluginListener(new addPluginListener());
 		this.Paint.addSnapshotListener(new snapshotListener());
 		this.Paint.addColorButtonsListener(new colorButtonsListener());
@@ -241,13 +248,113 @@ public class MainController {
 				}
 
 			};
+
+			resizeAdapter = new MouseAdapter() {
+				@Override
+				public void mousePressed(MouseEvent e) {
+					if (selectedShape != null && getCursor() != Cursor.getDefaultCursor()) {
+						try {
+							resizedShape = (Shape) selectedShape.clone();
+						} catch (CloneNotSupportedException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+					}
+
+				}
+
+				@Override
+				public void mouseReleased(MouseEvent e) {
+					if (resizedShape != null) {
+						engine.updateShape(selectedShape, resizedShape);
+						selectedShape = resizedShape;
+						resizedShape = null;
+					}
+					repaint();
+				}
+
+			};
+			resizeMotion = new MouseMotionAdapter() {
+				@Override
+				public void mouseDragged(MouseEvent e) {
+					Paint.mouseXlbl.setText("X: ".concat(String.valueOf(e.getX())));
+					Paint.mouseYlbl.setText("Y: ".concat(String.valueOf(e.getY())));
+					if (resizedShape != null) {
+						resizing(resizedShape, e.getPoint());
+					}
+				}
+
+				@Override
+				public void mouseMoved(MouseEvent e) {
+					Paint.mouseXlbl.setText("X: ".concat(String.valueOf(e.getX())));
+					Paint.mouseYlbl.setText("Y: ".concat(String.valueOf(e.getY())));
+					Point p = e.getPoint();
+					if (!isOverRect(p)) {
+						if (getCursor() != Cursor.getDefaultCursor()) {
+							// If cursor is not over rect reset it to the
+							// default.
+							setCursor(Cursor.getDefaultCursor());
+						}
+						return;
+					}
+					// Locate cursor relative to center of rect.
+					int outcode = getOutcode(p);
+					java.awt.Rectangle r = highlightRect;
+					switch (outcode) {
+					case java.awt.Rectangle.OUT_TOP:
+						if (Math.abs(p.y - r.y) < PROX_DIST) {
+							setCursor(Cursor.getPredefinedCursor(Cursor.N_RESIZE_CURSOR));
+						}
+						break;
+					case java.awt.Rectangle.OUT_TOP + java.awt.Rectangle.OUT_LEFT:
+						if (Math.abs(p.y - r.y) < PROX_DIST && Math.abs(p.x - r.x) < PROX_DIST) {
+							setCursor(Cursor.getPredefinedCursor(Cursor.NW_RESIZE_CURSOR));
+						}
+						break;
+					case java.awt.Rectangle.OUT_LEFT:
+						if (Math.abs(p.x - r.x) < PROX_DIST) {
+							setCursor(Cursor.getPredefinedCursor(Cursor.W_RESIZE_CURSOR));
+						}
+						break;
+					case java.awt.Rectangle.OUT_LEFT + java.awt.Rectangle.OUT_BOTTOM:
+						if (Math.abs(p.x - r.x) < PROX_DIST && Math.abs(p.y - (r.y + r.height)) < PROX_DIST) {
+							setCursor(Cursor.getPredefinedCursor(Cursor.SW_RESIZE_CURSOR));
+						}
+						break;
+					case java.awt.Rectangle.OUT_BOTTOM:
+						if (Math.abs(p.y - (r.y + r.height)) < PROX_DIST) {
+							setCursor(Cursor.getPredefinedCursor(Cursor.S_RESIZE_CURSOR));
+						}
+						break;
+					case java.awt.Rectangle.OUT_BOTTOM + java.awt.Rectangle.OUT_RIGHT:
+						if (Math.abs(p.x - (r.x + r.width)) < PROX_DIST
+								&& Math.abs(p.y - (r.y + r.height)) < PROX_DIST) {
+							setCursor(Cursor.getPredefinedCursor(Cursor.SE_RESIZE_CURSOR));
+						}
+						break;
+					case java.awt.Rectangle.OUT_RIGHT:
+						if (Math.abs(p.x - (r.x + r.width)) < PROX_DIST) {
+							setCursor(Cursor.getPredefinedCursor(Cursor.E_RESIZE_CURSOR));
+						}
+						break;
+					case java.awt.Rectangle.OUT_RIGHT + java.awt.Rectangle.OUT_TOP:
+						if (Math.abs(p.x - (r.x + r.width)) < PROX_DIST && Math.abs(p.y - r.y) < PROX_DIST) {
+							setCursor(Cursor.getPredefinedCursor(Cursor.NE_RESIZE_CURSOR));
+						}
+						break;
+					default: // center
+						setCursor(Cursor.getDefaultCursor());
+					}
+				}
+			};
+
 			this.addMouseListener(createAdapter);
 			this.addMouseMotionListener(createMotion);
 
 		}
 
 		private int diff = 0;
-		int speed = 15;
+		int speed = 8;
 		{
 
 			final Timer timer = new Timer(1000 / (10 * speed), null);
@@ -290,6 +397,9 @@ public class MainController {
 			if (movingShape != null) {
 				movingShape.draw(g2);
 			}
+			if (resizedShape != null) {
+				resizedShape.draw(g2);
+			}
 		}
 
 		public void setProperties(Shape shape, Point start, Point end) {
@@ -328,13 +438,17 @@ public class MainController {
 
 		public void drawHighlightingRectangle(Graphics2D g2, Shape selectedShape) {
 			if (selectedShape instanceof Square || selectedShape instanceof Ellipse) {
-				g2.drawRect(selectedShape.getPosition().x - 5, selectedShape.getPosition().y - 5,
-						selectedShape.getProperties().get("xAxis").intValue() + 10,
-						selectedShape.getProperties().get("yAxis").intValue() + 10);
+				highlightRect.x = selectedShape.getPosition().x - 5;
+				highlightRect.y = selectedShape.getPosition().y - 5;
+				highlightRect.width = selectedShape.getProperties().get("xAxis").intValue() + 10;
+				highlightRect.height = selectedShape.getProperties().get("yAxis").intValue() + 10;
+				g2.drawRect(highlightRect.x, highlightRect.y, highlightRect.width, highlightRect.height);
 			} else if (selectedShape instanceof Rectangle) {
-				g2.drawRect(selectedShape.getPosition().x - 5, selectedShape.getPosition().y - 5,
-						selectedShape.getProperties().get("yAxis").intValue() + 10,
-						selectedShape.getProperties().get("xAxis").intValue() + 10);
+				highlightRect.x = selectedShape.getPosition().x - 5;
+				highlightRect.y = selectedShape.getPosition().y - 5;
+				highlightRect.width = selectedShape.getProperties().get("yAxis").intValue() + 10;
+				highlightRect.height = selectedShape.getProperties().get("xAxis").intValue() + 10;
+				g2.drawRect(highlightRect.x, highlightRect.y, highlightRect.width, highlightRect.height);
 			} else if (selectedShape instanceof LineSegment) {
 				Map<String, Double> properties = selectedShape.getProperties();
 				int minx;
@@ -362,11 +476,23 @@ public class MainController {
 					miny = y2;
 				}
 				if (maxx - minx == 0) {
-					g2.drawRect(minx - 5, miny, 10, maxy - miny);
+					highlightRect.x = minx - 5;
+					highlightRect.y = miny;
+					highlightRect.width = 10;
+					highlightRect.height = maxy - miny;
+					g2.drawRect(highlightRect.x, highlightRect.y, highlightRect.width, highlightRect.height);
 				} else if (maxy - miny == 0) {
-					g2.drawRect(minx, miny - 5, maxx - minx, 10);
+					highlightRect.x = minx;
+					highlightRect.y = miny - 5;
+					highlightRect.width = maxx - minx;
+					highlightRect.height = 10;
+					g2.drawRect(highlightRect.x, highlightRect.y, highlightRect.width, highlightRect.height);
 				} else {
-					g2.drawRect(minx, miny, maxx - minx, maxy - miny);
+					highlightRect.x = minx;
+					highlightRect.y = miny;
+					highlightRect.width = maxx - minx;
+					highlightRect.height = maxy - miny;
+					g2.drawRect(highlightRect.x, highlightRect.y, highlightRect.width, highlightRect.height);
 				}
 			} else if (selectedShape instanceof Triangle) {
 				int maxX;
@@ -409,7 +535,11 @@ public class MainController {
 				if (minY > y[2]) {
 					minY = y[2];
 				}
-				g2.drawRect(minX - 2, minY - 1, maxX - minX, maxY - minY + 3);
+				highlightRect.x = minX - 2;
+				highlightRect.y = minY - 1;
+				highlightRect.width = maxX - minX;
+				highlightRect.height = maxY - minY + 3;
+				g2.drawRect(highlightRect.x, highlightRect.y, highlightRect.width, highlightRect.height);
 
 			}
 
@@ -437,6 +567,65 @@ public class MainController {
 				lineMap.put("x3", x3);
 				lineMap.put("y3", (double) y3);
 				shape.setProperties(lineMap);
+			}
+		}
+
+		public void resizing(Shape shape, Point p) {
+			if (shape instanceof Rectangle) {
+				int type = getCursor().getType();
+				Map<String, Double> RectMap = shape.getProperties();
+				Double x = shape.getPosition().getX();
+				Double y = shape.getPosition().getY();
+				Double height = RectMap.get("xAxis"); // = y1-y2
+				Double width = RectMap.get("yAxis"); // = x2-x1
+				Double dx = p.x - x;
+				Double dy = p.y - y;
+				switch (type) {
+				case Cursor.N_RESIZE_CURSOR:
+					shape.setPosition(new Point(x.intValue(), (int) (y.intValue() + dy)));
+					RectMap.put("xAxis", height - dy);
+					shape.setProperties(RectMap);
+					break;
+				case Cursor.NW_RESIZE_CURSOR:
+					shape.setPosition(new Point((int) (x.intValue() + dx), (int) (y.intValue() + dy)));
+					RectMap.put("xAxis", height - dy);
+					RectMap.put("yAxis", width - dx);
+					shape.setProperties(RectMap);
+					break;
+				case Cursor.W_RESIZE_CURSOR:
+					shape.setPosition(new Point((int) (x.intValue() + dx), y.intValue()));
+					RectMap.put("yAxis", width - dx);
+					shape.setProperties(RectMap);
+					break;
+				case Cursor.SW_RESIZE_CURSOR:
+					shape.setPosition(new Point((int) (x.intValue() + dx), y.intValue()));
+					RectMap.put("xAxis", dy);
+					RectMap.put("yAxis", width - dx);
+					shape.setProperties(RectMap);
+					break;
+				case Cursor.S_RESIZE_CURSOR:
+					RectMap.put("xAxis", dy);
+					shape.setProperties(RectMap);
+					break;
+				case Cursor.SE_RESIZE_CURSOR:
+					RectMap.put("xAxis", dy);
+					RectMap.put("yAxis", dx);
+					shape.setProperties(RectMap);
+					break;
+				case Cursor.E_RESIZE_CURSOR:
+					RectMap.put("yAxis", dx);
+					shape.setProperties(RectMap);
+					break;
+				case Cursor.NE_RESIZE_CURSOR:
+					shape.setPosition(new Point(x.intValue(), (int) (y.intValue() + dy)));
+					RectMap.put("xAxis", height - dy);
+					RectMap.put("yAxis", dx);
+					shape.setProperties(RectMap);
+					break;
+				default:
+					System.out.println("unexpected type: " + type);
+
+				}
 			}
 		}
 	}
@@ -477,8 +666,19 @@ public class MainController {
 			createModeFlage = 1;
 			movingModeFlag = 0;
 			if (!(surface.getMouseListeners()[0] == createAdapter)) {
-				surface.removeMouseListener(moveAdapter);
-				surface.removeMouseMotionListener(moveMotion);
+				if (surface.getMouseListeners().length != 0) {
+					if (surface.getMouseListeners()[0] == moveAdapter) {
+						surface.removeMouseListener(moveAdapter);
+						surface.removeMouseMotionListener(moveAdapter);
+					}
+				}
+				if (surface.getMouseListeners().length != 0) {
+					if (surface.getMouseListeners()[0] == resizeAdapter) {
+						surface.removeMouseListener(resizeAdapter);
+						surface.removeMouseMotionListener(resizeMotion);
+					}
+				}
+
 				surface.addMouseListener(createAdapter);
 				surface.addMouseMotionListener(createMotion);
 			}
@@ -633,8 +833,19 @@ public class MainController {
 			if (selectedShape != null) {
 				copyFlag = 1;
 				if (!(surface.getMouseListeners()[0] == moveAdapter)) {
-					surface.removeMouseListener(createAdapter);
-					surface.removeMouseMotionListener(createMotion);
+					if (surface.getMouseListeners().length != 0) {
+						if (surface.getMouseListeners()[0] == createAdapter) {
+							surface.removeMouseListener(createAdapter);
+							surface.removeMouseMotionListener(createMotion);
+						}
+					}
+					if (surface.getMouseListeners().length != 0) {
+						if (surface.getMouseListeners()[0] == resizeAdapter) {
+							surface.removeMouseListener(resizeAdapter);
+							surface.removeMouseMotionListener(resizeMotion);
+						}
+					}
+
 					surface.addMouseListener(moveAdapter);
 					surface.addMouseMotionListener(moveMotion);
 				}
@@ -722,10 +933,46 @@ public class MainController {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if (!(surface.getMouseListeners()[0] == moveAdapter)) {
-				surface.removeMouseListener(createAdapter);
-				surface.removeMouseMotionListener(createMotion);
+				if (surface.getMouseListeners().length != 0) {
+					if (surface.getMouseListeners()[0] == createAdapter) {
+						surface.removeMouseListener(createAdapter);
+						surface.removeMouseMotionListener(createMotion);
+					}
+				}
+				if (surface.getMouseListeners().length != 0) {
+					if (surface.getMouseListeners()[0] == resizeAdapter) {
+						surface.removeMouseListener(resizeAdapter);
+						surface.removeMouseMotionListener(resizeMotion);
+					}
+				}
+
 				surface.addMouseListener(moveAdapter);
 				surface.addMouseMotionListener(moveMotion);
+			}
+		}
+
+	}
+
+	public class resizeLestener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if (!(surface.getMouseListeners()[0] == resizeAdapter)) {
+				if (surface.getMouseListeners().length != 0) {
+					if (surface.getMouseListeners()[0] == moveAdapter) {
+						surface.removeMouseListener(moveAdapter);
+						surface.removeMouseMotionListener(moveMotion);
+					}
+				}
+				if (surface.getMouseListeners().length != 0) {
+					if (surface.getMouseListeners()[0] == createAdapter) {
+						surface.removeMouseListener(createAdapter);
+						surface.removeMouseMotionListener(createMotion);
+					}
+				}
+
+				surface.addMouseListener(resizeAdapter);
+				surface.addMouseMotionListener(resizeMotion);
 			}
 		}
 
@@ -852,8 +1099,8 @@ public class MainController {
 		public void actionPerformed(ActionEvent e) {
 			JButton source = (JButton) e.getSource();
 			Color newColor = source.getBackground();
-			if(selectedColorButton == "FillColor"){
-				fillColor=newColor;
+			if (selectedColorButton == "FillColor") {
+				fillColor = newColor;
 				Paint.btnFillColor.setBackground(fillColor);
 				if (selectedShape != null) {
 					try {
@@ -868,10 +1115,9 @@ public class MainController {
 
 					surface.repaint();
 				}
-				
-				
-			}else if(selectedColorButton == "OuterColor"){
-				color=newColor;
+
+			} else if (selectedColorButton == "OuterColor") {
+				color = newColor;
 				Paint.btnColor.setBackground(color);
 				if (selectedShape != null) {
 					try {
@@ -888,6 +1134,25 @@ public class MainController {
 			}
 
 		}
+	}
+
+	/**
+	 * Make a smaller Rectangle and use it to locate the cursor relative to the
+	 * Rectangle center.
+	 */
+	private int getOutcode(Point p) {
+		java.awt.Rectangle r = (java.awt.Rectangle) this.highlightRect.clone();
+		r.grow(-PROX_DIST, -PROX_DIST);
+		return r.outcode(p.x, p.y);
+	}
+
+	/**
+	 * Make a larger Rectangle and check to see if the cursor is over it.
+	 */
+	private boolean isOverRect(Point p) {
+		java.awt.Rectangle r = (java.awt.Rectangle) this.highlightRect.clone();
+		r.grow(PROX_DIST, PROX_DIST);
+		return r.contains(p);
 	}
 
 }
