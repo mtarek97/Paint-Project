@@ -219,9 +219,32 @@ public class MainController {
 							movingShape = null;
 						} else {
 							Point point = e.getPoint();
-							movingShape.setPosition(new Point(point.x, point.y));
+							if (movingShape instanceof LineSegment) {
+								movingShape.setPosition(new Point(point.x, point.y));
+								Map<String, Double> prop = movingShape.getProperties();
+								prop.put("x1", prop.get("x1") + (point.x - prop.get("x2")));
+								prop.put("y1", prop.get("y1") + (point.y - prop.get("y2")));
+								prop.put("x2", (double) movingShape.getPosition().x);
+								prop.put("y2", (double) movingShape.getPosition().y);
+								movingShape.setProperties(prop);
+							} else if (movingShape instanceof Triangle) {
+								movingShape.setPosition(new Point(point.x, point.y));
+								Map<String, Double> prop = movingShape.getProperties();
+								prop.put("x2", prop.get("x2") + (point.x - prop.get("x1")));
+								prop.put("y2", prop.get("y2") + (point.y - prop.get("y1")));
+								prop.put("x3", prop.get("x3") + (point.x - prop.get("x1")));
+								prop.put("y3", prop.get("y3") + (point.y - prop.get("y1")));
+								prop.put("x1", movingShape.getPosition().getX());
+								prop.put("y1", movingShape.getPosition().getY());
+								movingShape.setProperties(prop);
+
+							} else {
+								movingShape.setPosition(new Point(point.x, point.y));
+							}
+
 							engine.addShape(movingShape);
 							namesList.updateShapeNameList(engine.getShapes());
+							selectedShape = movingShape;
 							movingShape = null;
 							copyFlag = 0;
 						}
@@ -554,6 +577,8 @@ public class MainController {
 				int y1 = (int) (lineMap.get("y1") + (endDrag.y - prePoint.y));
 				lineMap.put("x1", x1);
 				lineMap.put("y1", (double) y1);
+				lineMap.put("x2", shape.getPosition().getX());
+				lineMap.put("y2", shape.getPosition().getY());
 				shape.setProperties(lineMap);
 			}
 			if (shape instanceof Triangle) {
@@ -566,13 +591,15 @@ public class MainController {
 				lineMap.put("y2", (double) y2);
 				lineMap.put("x3", x3);
 				lineMap.put("y3", (double) y3);
+				lineMap.put("x1", shape.getPosition().getX());
+				lineMap.put("y1", shape.getPosition().getY());
 				shape.setProperties(lineMap);
 			}
 		}
 
 		public void resizing(Shape shape, Point p) {
+			int type = getCursor().getType();
 			if (shape instanceof Rectangle) {
-				int type = getCursor().getType();
 				Map<String, Double> RectMap = shape.getProperties();
 				Double x = shape.getPosition().getX();
 				Double y = shape.getPosition().getY();
@@ -620,6 +647,60 @@ public class MainController {
 					shape.setPosition(new Point(x.intValue(), (int) (y.intValue() + dy)));
 					RectMap.put("xAxis", height - dy);
 					RectMap.put("yAxis", dx);
+					shape.setProperties(RectMap);
+					break;
+				default:
+					System.out.println("unexpected type: " + type);
+
+				}
+			} else if (shape instanceof Ellipse) {
+				Map<String, Double> RectMap = shape.getProperties();
+				Double x = shape.getPosition().getX();
+				Double y = shape.getPosition().getY();
+				Double width = RectMap.get("xAxis"); // = y1-y2
+				Double height = RectMap.get("yAxis"); // = x2-x1
+				Double dx = p.x - x;
+				Double dy = p.y - y;
+				switch (type) {
+				case Cursor.N_RESIZE_CURSOR:
+					shape.setPosition(new Point(x.intValue(), (int) (y.intValue() + dy)));
+					RectMap.put("yAxis", height - dy);
+					shape.setProperties(RectMap);
+					break;
+				case Cursor.NW_RESIZE_CURSOR:
+					shape.setPosition(new Point((int) (x.intValue() + dx), (int) (y.intValue() + dy)));
+					RectMap.put("yAxis", height - dy);
+					RectMap.put("xAxis", width - dx);
+					shape.setProperties(RectMap);
+					break;
+				case Cursor.W_RESIZE_CURSOR:
+					shape.setPosition(new Point((int) (x.intValue() + dx), y.intValue()));
+					RectMap.put("xAxis", width - dx);
+					shape.setProperties(RectMap);
+					break;
+				case Cursor.SW_RESIZE_CURSOR:
+					shape.setPosition(new Point((int) (x.intValue() + dx), y.intValue()));
+					RectMap.put("yAxis", dy);
+					RectMap.put("xAxis", width - dx);
+					shape.setProperties(RectMap);
+					break;
+				case Cursor.S_RESIZE_CURSOR:
+					RectMap.put("yAxis", dy);
+					shape.setProperties(RectMap);
+					break;
+				case Cursor.SE_RESIZE_CURSOR:
+					RectMap.put("yAxis", dy);
+					RectMap.put("xAxis", dx);
+					shape.setProperties(RectMap);
+					break;
+				case Cursor.E_RESIZE_CURSOR:
+					RectMap.put("xAxis", dx);
+					shape.setProperties(RectMap);
+					break;
+				case Cursor.NE_RESIZE_CURSOR:
+					shape.setPosition(new Point(x.intValue(), (int) (y.intValue() + dy)));
+					RectMap.put("yAxis", height - dy);
+					RectMap.put("xAxis", dx);
 					shape.setProperties(RectMap);
 					break;
 				default:
@@ -866,179 +947,201 @@ public class MainController {
 					e1.printStackTrace();
 				}
 				Point point = copiedShape.getPosition();
+				if (copiedShape instanceof LineSegment) {
+					copiedShape.setPosition(new Point(point.x + 20, point.y));
+					Map<String, Double> prop = copiedShape.getProperties();
+					prop.put("x1", prop.get("x1") + 20);
+					prop.put("y1", prop.get("y1"));
+					prop.put("x2", prop.get("x2") + 20);
+					prop.put("y2", prop.get("y2"));
+					copiedShape.setProperties(prop);
+
+				} else if (copiedShape instanceof Triangle) {
+					copiedShape.setPosition(new Point(point.x + 20, point.y));
+					Map<String, Double> prop = copiedShape.getProperties();
+					prop.put("x1", prop.get("x1") + 20);
+					prop.put("y1", prop.get("y1"));
+					prop.put("x2", prop.get("x2") + 20);
+					prop.put("y2", prop.get("y2"));
+					prop.put("x3", prop.get("x3") + 20);
+					prop.put("y3", prop.get("y3"));
+					copiedShape.setProperties(prop);
+				} else {
 				copiedShape.setPosition(new Point(point.x + 20, point.y));
-				engine.addShape(copiedShape);
-				namesList.updateShapeNameList(engine.getShapes());
-				selectedShape = copiedShape;
-				surface.repaint();
-				copyFlag = 0;
 			}
 
+			engine.addShape(copiedShape);
+			namesList.updateShapeNameList(engine.getShapes());
+			selectedShape = copiedShape;
+			surface.repaint();
+			copyFlag = 0;
 		}
 
 	}
 
-	public class probSetterButtonListner implements ActionListener {
+}
 
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			if (selectedShape != null) {
-				JButton source = (JButton) e.getSource();
-				String propKey = source.getName();
+public class probSetterButtonListner implements ActionListener {
 
-				try {
-					updatedShape = (Shape) selectedShape.clone();
-					Map<String, Double> newProperties = updatedShape.getProperties();
-					newProperties.put(propKey, Double.valueOf(shapePropertiesPanel.getTextFieldValue(propKey)));
-					updatedShape.setProperties(newProperties);
-					// System.out.println(updatedShape.getProperties().get(propKey));
-				} catch (CloneNotSupportedException e1) {
-					e1.printStackTrace();
-				}
-				engine.updateShape(selectedShape, updatedShape);
-				selectedShape = updatedShape;
-				namesList.updateShapeNameList(engine.getShapes());
-				surface.repaint();
-			}
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if (selectedShape != null) {
+			JButton source = (JButton) e.getSource();
+			String propKey = source.getName();
 
-		}
-
-	}
-
-	public class positionSetterButtonListner implements ActionListener {
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			if (selectedShape != null) {
-				Point newPosition = new Point();
-				newPosition.x = Integer.valueOf(shapePropertiesPanel.getTextFieldValue("positionX"));
-				newPosition.y = Integer.valueOf(shapePropertiesPanel.getTextFieldValue("positionY"));
-				try {
-					updatedShape = (Shape) selectedShape.clone();
-					updatedShape.setPosition(newPosition);
-				} catch (CloneNotSupportedException e1) {
-					e1.printStackTrace();
-				}
-				engine.updateShape(selectedShape, updatedShape);
-				selectedShape = updatedShape;
-				namesList.updateShapeNameList(engine.getShapes());
-				surface.repaint();
-			}
-		}
-
-	}
-
-	public class moveLestener implements ActionListener {
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			if (!(surface.getMouseListeners()[0] == moveAdapter)) {
-				if (surface.getMouseListeners().length != 0) {
-					if (surface.getMouseListeners()[0] == createAdapter) {
-						surface.removeMouseListener(createAdapter);
-						surface.removeMouseMotionListener(createMotion);
-					}
-				}
-				if (surface.getMouseListeners().length != 0) {
-					if (surface.getMouseListeners()[0] == resizeAdapter) {
-						surface.removeMouseListener(resizeAdapter);
-						surface.removeMouseMotionListener(resizeMotion);
-					}
-				}
-
-				surface.addMouseListener(moveAdapter);
-				surface.addMouseMotionListener(moveMotion);
-			}
-		}
-
-	}
-
-	public class resizeLestener implements ActionListener {
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			if (!(surface.getMouseListeners()[0] == resizeAdapter)) {
-				if (surface.getMouseListeners().length != 0) {
-					if (surface.getMouseListeners()[0] == moveAdapter) {
-						surface.removeMouseListener(moveAdapter);
-						surface.removeMouseMotionListener(moveMotion);
-					}
-				}
-				if (surface.getMouseListeners().length != 0) {
-					if (surface.getMouseListeners()[0] == createAdapter) {
-						surface.removeMouseListener(createAdapter);
-						surface.removeMouseMotionListener(createMotion);
-					}
-				}
-
-				surface.addMouseListener(resizeAdapter);
-				surface.addMouseMotionListener(resizeMotion);
-			}
-		}
-
-	}
-
-	class addPluginListener implements ActionListener {
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			String filename = File.separator + "tmp";
-			JFileChooser fc = new JFileChooser(new File(filename));
-			int result = fc.showOpenDialog(null);
-			String selectedFilePath = fc.getSelectedFile().getPath().toString();
-			if (result == JFileChooser.APPROVE_OPTION) {
-				try {
-					JarInputStream jarFile = new JarInputStream(new FileInputStream(selectedFilePath));
-					JarEntry jarEntry;
-					ArrayList<String> names = new ArrayList<>();
-					while (true) {
-						jarEntry = jarFile.getNextJarEntry();
-						if (jarEntry == null) {
-							break;
-						}
-						if (jarEntry.getName().endsWith(".class")) {
-							String classBinName = jarEntry.getName().replaceAll("/", "\\.");
-							classBinName = classBinName.substring(0, classBinName.length() - 6);
-							names.add(classBinName);
-						}
-					}
-					ClassLoader mainLoader = getClass().getClassLoader();
-					ClassLoader loader = URLClassLoader
-							.newInstance(new URL[] { new File(selectedFilePath).toURI().toURL() }, mainLoader);
-					Class<? extends Shape> cl = (Class<? extends Shape>) loader.getClass().forName(names.get(0), true,
-							loader);
-					if (cl.newInstance() instanceof Shape) {
-						System.out.println(cl.getSimpleName());
-						engine.addPlugin(cl);
-					}
-					jarFile.close();
-				} catch (Exception e1) {
-					e1.printStackTrace();
-				}
-
-			}
-			shapesCreationPanel.updateShapeCreationButtonsPanel(engine.getSupportedShapes());
-			shapesCreationPanel.addButtonsListeners(new ShapeCreationBtnListner());
-		}
-	}
-
-	class snapshotListener implements ActionListener {
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			BufferedImage image = new BufferedImage(surface.getWidth(), surface.getHeight(),
-					BufferedImage.TYPE_INT_RGB);
-			Graphics2D g = image.createGraphics();
-			g.clearRect(0, 0, surface.getWidth(), surface.getHeight());
-			surface.printAll(g);
-
-			g.dispose();
 			try {
-				ImageIO.write(image, "png", new File("Paint.png"));
-			} catch (IOException exp) {
-				exp.printStackTrace();
+				updatedShape = (Shape) selectedShape.clone();
+				Map<String, Double> newProperties = updatedShape.getProperties();
+				newProperties.put(propKey, Double.valueOf(shapePropertiesPanel.getTextFieldValue(propKey)));
+				updatedShape.setProperties(newProperties);
+				// System.out.println(updatedShape.getProperties().get(propKey));
+			} catch (CloneNotSupportedException e1) {
+				e1.printStackTrace();
 			}
+			engine.updateShape(selectedShape, updatedShape);
+			selectedShape = updatedShape;
+			namesList.updateShapeNameList(engine.getShapes());
+			surface.repaint();
 		}
+
+	}
+
+}
+
+public class positionSetterButtonListner implements ActionListener {
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if (selectedShape != null) {
+			Point newPosition = new Point();
+			newPosition.x = Integer.valueOf(shapePropertiesPanel.getTextFieldValue("positionX"));
+			newPosition.y = Integer.valueOf(shapePropertiesPanel.getTextFieldValue("positionY"));
+			try {
+				updatedShape = (Shape) selectedShape.clone();
+				updatedShape.setPosition(newPosition);
+			} catch (CloneNotSupportedException e1) {
+				e1.printStackTrace();
+			}
+			engine.updateShape(selectedShape, updatedShape);
+			selectedShape = updatedShape;
+			namesList.updateShapeNameList(engine.getShapes());
+			surface.repaint();
+		}
+	}
+
+}
+
+public class moveLestener implements ActionListener {
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if (!(surface.getMouseListeners()[0] == moveAdapter)) {
+			if (surface.getMouseListeners().length != 0) {
+				if (surface.getMouseListeners()[0] == createAdapter) {
+					surface.removeMouseListener(createAdapter);
+					surface.removeMouseMotionListener(createMotion);
+				}
+			}
+			if (surface.getMouseListeners().length != 0) {
+				if (surface.getMouseListeners()[0] == resizeAdapter) {
+					surface.removeMouseListener(resizeAdapter);
+					surface.removeMouseMotionListener(resizeMotion);
+				}
+			}
+
+			surface.addMouseListener(moveAdapter);
+			surface.addMouseMotionListener(moveMotion);
+		}
+	}
+
+}
+
+public class resizeLestener implements ActionListener {
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if (!(surface.getMouseListeners()[0] == resizeAdapter)) {
+			if (surface.getMouseListeners().length != 0) {
+				if (surface.getMouseListeners()[0] == moveAdapter) {
+					surface.removeMouseListener(moveAdapter);
+					surface.removeMouseMotionListener(moveMotion);
+				}
+			}
+			if (surface.getMouseListeners().length != 0) {
+				if (surface.getMouseListeners()[0] == createAdapter) {
+					surface.removeMouseListener(createAdapter);
+					surface.removeMouseMotionListener(createMotion);
+				}
+			}
+
+			surface.addMouseListener(resizeAdapter);
+			surface.addMouseMotionListener(resizeMotion);
+		}
+	}
+
+}
+
+class addPluginListener implements ActionListener {
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		String filename = File.separator + "tmp";
+		JFileChooser fc = new JFileChooser(new File(filename));
+		int result = fc.showOpenDialog(null);
+		String selectedFilePath = fc.getSelectedFile().getPath().toString();
+		if (result == JFileChooser.APPROVE_OPTION) {
+			try {
+				JarInputStream jarFile = new JarInputStream(new FileInputStream(selectedFilePath));
+				JarEntry jarEntry;
+				ArrayList<String> names = new ArrayList<>();
+				while (true) {
+					jarEntry = jarFile.getNextJarEntry();
+					if (jarEntry == null) {
+						break;
+					}
+					if (jarEntry.getName().endsWith(".class")) {
+						String classBinName = jarEntry.getName().replaceAll("/", "\\.");
+						classBinName = classBinName.substring(0, classBinName.length() - 6);
+						names.add(classBinName);
+					}
+				}
+				ClassLoader mainLoader = getClass().getClassLoader();
+				ClassLoader loader = URLClassLoader
+						.newInstance(new URL[] { new File(selectedFilePath).toURI().toURL() }, mainLoader);
+				Class<? extends Shape> cl = (Class<? extends Shape>) loader.getClass().forName(names.get(0), true,
+						loader);
+				if (cl.newInstance() instanceof Shape) {
+					System.out.println(cl.getSimpleName());
+					engine.addPlugin(cl);
+				}
+				jarFile.close();
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}
+
+		}
+		shapesCreationPanel.updateShapeCreationButtonsPanel(engine.getSupportedShapes());
+		shapesCreationPanel.addButtonsListeners(new ShapeCreationBtnListner());
+	}
+}
+
+class snapshotListener implements ActionListener {
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		BufferedImage image = new BufferedImage(surface.getWidth(), surface.getHeight(), BufferedImage.TYPE_INT_RGB);
+		Graphics2D g = image.createGraphics();
+		g.clearRect(0, 0, surface.getWidth(), surface.getHeight());
+		surface.printAll(g);
+
+		g.dispose();
+		try {
+			ImageIO.write(image, "png", new File("Paint.png"));
+		} catch (IOException exp) {
+			exp.printStackTrace();
+		}
+	}
+
 	}
 
 	public void updateUndoAndRedoView() {
