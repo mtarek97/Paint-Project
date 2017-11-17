@@ -11,6 +11,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.border.LineBorder;
 
 import paint.eg.edu.alexu.csd.oop.draw.Shape;
 
@@ -24,8 +25,8 @@ public class ShapePropertiesPanel extends JPanel {
 	public ShapePropertiesPanel() {
 		super();
 		this.setName("ShapePropertiesPanel");
-		this.setBackground(new Color(227, 242, 253));
-		// this.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+		this.setBackground(new Color(245, 246, 247));
+		this.setBorder(new LineBorder(new Color(0, 0, 0)));
 		this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 	}
 
@@ -43,7 +44,7 @@ public class ShapePropertiesPanel extends JPanel {
 		nameLabel.setLabelFor(nameField);
 		nameButton = new JButton("set");
 		JPanel name = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		name.setBackground(new Color(227, 242, 253));
+		name.setBackground(new Color(245, 246, 247));
 		name.add(nameLabel);
 		name.add(nameField);
 		name.add(nameButton);
@@ -62,7 +63,7 @@ public class ShapePropertiesPanel extends JPanel {
 		positionYLable.setLabelFor(positionYField);
 		position = new JButton("set");
 		JPanel pos = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		pos.setBackground(new Color(227, 242, 253));
+		pos.setBackground(new Color(245, 246, 247));
 		pos.add(positionLable);
 		pos.add(positionXLable);
 		pos.add(positionXField);
@@ -81,7 +82,7 @@ public class ShapePropertiesPanel extends JPanel {
 			JButton propButton = new JButton("set");
 			propButton.setName(property.getKey());
 			JPanel propPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-			propPanel.setBackground(new Color(227, 242, 253));
+			propPanel.setBackground(new Color(245, 246, 247));
 			propPanel.add(propLabel);
 			propPanel.add(propField);
 			propPanel.add(propButton);
