@@ -1130,15 +1130,21 @@ class snapshotListener implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		BufferedImage image = new BufferedImage(surface.getWidth(), surface.getHeight(), BufferedImage.TYPE_INT_RGB);
+		surface.paint(image.getGraphics());
 		Graphics2D g = image.createGraphics();
+		g.setBackground(Color.WHITE);
 		g.clearRect(0, 0, surface.getWidth(), surface.getHeight());
 		surface.printAll(g);
-
-		g.dispose();
-		try {
-			ImageIO.write(image, "png", new File("Paint.png"));
-		} catch (IOException exp) {
-			exp.printStackTrace();
+		JFileChooser chooser = new JFileChooser("");
+		int retrival = chooser.showSaveDialog(null);
+		if (retrival == JFileChooser.APPROVE_OPTION) {
+			Path path = Paths.get(chooser.getCurrentDirectory() + "/" + chooser.getSelectedFile().getName());
+			try {
+				ImageIO.write(image, "png", new File(path.toString().concat(".png")));
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		}
 	}
 
