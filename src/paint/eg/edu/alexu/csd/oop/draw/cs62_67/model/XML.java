@@ -126,7 +126,7 @@ public class XML {
 						for(int j=0;j<propNodes.getLength();j++){
 							Node probNode = propNodes.item(j);
 							Element probElement = (Element) probNode;
-							prop.put(probElement.getNodeName(), Double.valueOf(probElement.getTextContent()));
+							 prop.put(probElement.getNodeName(), Double.valueOf(probElement.getTextContent()));
 						}
 						shape.setProperties(prop);
 						Element shapeElement = (Element) shapeNode;
