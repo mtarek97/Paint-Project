@@ -31,7 +31,7 @@ public class MyDrawingEngine implements DrawingEngine{
 	public void refresh(Graphics canvas) {
 		Shape[] shapes = getShapes();
 		for (Shape i : shapes) {
-			i.draw(canvas);
+			 i.draw(canvas);
 		}
 	}
 

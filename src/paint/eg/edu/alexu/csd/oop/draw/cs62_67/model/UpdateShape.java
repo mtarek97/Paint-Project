@@ -17,24 +17,20 @@ public class UpdateShape implements ICommand{
 	}
 	@Override
 	public void execute() {
-		for(int i=0;i<shapes.size();i++){
-			if(shapes.get(i).equals(oldShape)){
-				this.shapes.remove(oldShape);
-				this.shapes.add(i, newShape);
-			}
-		}
+		
+		int index = this.shapes.indexOf(oldShape);
+		this.shapes.remove(oldShape);
+		this.shapes.add(index, newShape);
+		
 
 
 	}
 
 	@Override
 	public void unexecute() {
-		for(int i=0;i<shapes.size();i++){
-			if(shapes.get(i).equals(newShape)){
-				this.shapes.remove(newShape);
-				this.shapes.add(i, oldShape);
-			}
-		}
+		int index = this.shapes.indexOf(newShape);
+		this.shapes.remove(newShape);
+		this.shapes.add(index, oldShape);
 	}
 	@Override
 	public Shape getNewShape() {

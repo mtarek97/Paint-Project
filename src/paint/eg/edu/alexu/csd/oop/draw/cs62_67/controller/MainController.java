@@ -58,6 +58,7 @@ import paint.eg.edu.alexu.csd.oop.draw.cs62_67.view.ShapePropertiesPanel;
 public class MainController {
 
 	final int PROX_DIST = 3;
+	private float stroke;
 	private Shape updatedShape;
 	private Shape movingShape;
 	private Shape resizedShape;
@@ -125,7 +126,6 @@ public class MainController {
 		this.Paint.addAddPluginListener(new addPluginListener());
 		this.Paint.addSnapshotListener(new snapshotListener());
 		this.Paint.addColorButtonsListener(new colorButtonsListener());
-
 		shapesCreationPanel.addButtonsListeners(new ShapeCreationBtnListner());
 		namesList.addSelectShapeListner(new SelectShapeListener());
 	}
@@ -415,6 +415,7 @@ public class MainController {
 						new float[] { 10f, 10f }, diff));
 				g2.setPaint(Color.BLACK);
 				drawHighlightingRectangle(g2, selectedShape);
+				shapePropertiesPanel.updateShapePropertiesPanel(selectedShape);
 			}
 			if (movingShape != null) {
 				movingShape.draw(g2);
@@ -422,6 +423,7 @@ public class MainController {
 			if (resizedShape != null) {
 				resizedShape.draw(g2);
 			}
+			
 		}
 
 		public void setProperties(Shape shape, Point start, Point end) {
@@ -1128,6 +1130,8 @@ class snapshotListener implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		selectedShape = null;
+		surface.repaint();
 		BufferedImage image = new BufferedImage(surface.getWidth(), surface.getHeight(), BufferedImage.TYPE_INT_RGB);
 		surface.paint(image.getGraphics());
 		Graphics2D g = image.createGraphics();
@@ -1261,5 +1265,6 @@ class snapshotListener implements ActionListener {
 		r.grow(PROX_DIST, PROX_DIST);
 		return r.contains(p);
 	}
+	
 
 }
