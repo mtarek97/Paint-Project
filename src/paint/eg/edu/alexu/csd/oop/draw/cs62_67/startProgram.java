@@ -11,7 +11,13 @@ public class startProgram {
 		ShapeFactory factory = new ShapeFactory(engine);
 		GUI Paint = new GUI();
 		MainController main = new MainController(engine, factory, Paint);
-		Paint.setVisible(true);
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
+			public void run() {
+                Paint.setVisible(true);;
+            }
+        });
+		
 	}
 
 }
