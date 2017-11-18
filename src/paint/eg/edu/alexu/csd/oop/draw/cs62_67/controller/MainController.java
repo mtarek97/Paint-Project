@@ -111,7 +111,6 @@ public class MainController {
 		this.Paint.addExitListener(new ExitListener());
 		this.Paint.addUndoListener(new UndoListener());
 		this.Paint.addRedoListener(new RedoListener());
-		this.Paint.addNewListener(new NewListener());
 		this.Paint.addDeleteListener(new DeleteListener());
 		this.Paint.saveJsonListener(new jsonSaveListener());
 		this.Paint.saveXmlListener(new xmlSaveListener());
@@ -1142,7 +1141,6 @@ class snapshotListener implements ActionListener {
 			try {
 				ImageIO.write(image, "png", new File(path.toString().concat(".png")));
 			} catch (IOException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 		}

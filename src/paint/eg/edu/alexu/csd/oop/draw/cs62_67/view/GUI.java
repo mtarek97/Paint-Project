@@ -34,12 +34,10 @@ public class GUI extends JFrame {
 	final public static Color selectedButtonColor = new Color(201,224,247);
 	private final JMenuBar menuBar = new JMenuBar();
 	private final JMenu mnFile = new JMenu("File");
-	private final JMenuItem mntmNew = new JMenuItem("New");
 	private final JMenuItem mntmLoad = new JMenuItem("Load");
 	private final JMenu mnEdit = new JMenu("Edit");
 	private final JMenuItem mntmUndo = new JMenuItem("Undo");
 	private final JMenuItem mntmRedo = new JMenuItem("Redo");
-	private final JMenuItem mntmCut = new JMenuItem("Cut");
 	private final JMenuItem mntmCopy = new JMenuItem("Copy");
 	private final JMenuItem mntmPaste = new JMenuItem("Paste");
 	private final JMenuItem mntmDelete = new JMenuItem("Delete");
@@ -49,12 +47,11 @@ public class GUI extends JFrame {
 	public final JLabel mouseXlbl = new JLabel("X: ");
 	public final JLabel mouseYlbl = new JLabel("Y: ");
 	private final JMenu mnSave = new JMenu("Save");
-	private final JMenuItem mntmSaveXml = new JMenuItem("save as xml");
-	private final JMenuItem mntmSaveJson = new JMenuItem("save as json");
+	private final JMenuItem mntmSaveXml = new JMenuItem("Save as XML");
+	private final JMenuItem mntmSaveJson = new JMenuItem("Save as JSON");
 
 	private final JMenu mnPlugins = new JMenu("Plugins");
 	private final JMenuItem mntmAddPlugin = new JMenuItem("Add Plugin..");
-	private final JMenuItem mntmSaveAsPng = new JMenuItem("save as png");
 	private final JSeparator separator_1 = new JSeparator();
 	private final JLabel lblStroke = new JLabel("Stroke");
 	private final JLabel lblDelete = new JLabel("Delete");
@@ -95,6 +92,9 @@ public class GUI extends JFrame {
 	private final JButton btnColorWhite = new JButton("");
 	private final JButton btnPalette = new JButton("");
 	private final JLabel lblPalette = new JLabel("Palette");
+	private final JMenu mnHelp = new JMenu("Help");
+	private final JMenuItem mntmUserGuide = new JMenuItem("User Guide");
+	private final JMenuItem mntmAbout = new JMenuItem("About");
 
 	public GUI() {
 		getContentPane().setForeground(Color.WHITE);
@@ -140,9 +140,10 @@ public class GUI extends JFrame {
 		separator_2.setForeground(SystemColor.controlShadow);
 		separator_2.setBackground(Color.WHITE);
 		lblDelete.setHorizontalAlignment(SwingConstants.CENTER);
-		btnDelete.addActionListener(new ActionListener() {
+		mntmAbout.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				About myAbout = new About();
 			}
 		});
 		btnDelete.setIcon(new ImageIcon(GUI.class.getResource("/assets/trash.png")));
@@ -465,21 +466,15 @@ public class GUI extends JFrame {
 						.addComponent(mouseXlbl, GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE)
 						.addComponent(mouseYlbl)));
 		statusPanel.setLayout(gl_statusPanel);
-		// Color newColor = JColorChooser.showDialog(null,
-		// "Choose a color", Color.RED);
-		mntmNew.setAccelerator(KeyStroke.getKeyStroke('N', Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
 		mntmLoad.setAccelerator(KeyStroke.getKeyStroke('O', Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
 		mntmUndo.setAccelerator(KeyStroke.getKeyStroke('Z', Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
 		mntmRedo.setAccelerator(KeyStroke.getKeyStroke('Y', Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
-		mntmCut.setAccelerator(KeyStroke.getKeyStroke('X', Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
 		mntmCopy.setAccelerator(KeyStroke.getKeyStroke('D', Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
 		mntmPaste.setAccelerator(KeyStroke.getKeyStroke('F', Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
 
 		setJMenuBar(menuBar);
 
 		menuBar.add(mnFile);
-
-		mnFile.add(mntmNew);
 
 		mnFile.add(mntmLoad);
 
@@ -489,8 +484,6 @@ public class GUI extends JFrame {
 
 		mnSave.add(mntmSaveJson);
 
-		mnSave.add(mntmSaveAsPng);
-
 		mnFile.add(mntmExit);
 
 		menuBar.add(mnEdit);
@@ -498,8 +491,6 @@ public class GUI extends JFrame {
 		mnEdit.add(mntmUndo);
 
 		mnEdit.add(mntmRedo);
-
-		mnEdit.add(mntmCut);
 
 		mnEdit.add(mntmCopy);
 
@@ -517,6 +508,12 @@ public class GUI extends JFrame {
 
 		JMenuItem mntmAboutPlugins = new JMenuItem("About Plugins");
 		mnPlugins.add(mntmAboutPlugins);
+		
+		menuBar.add(mnHelp);
+		
+		mnHelp.add(mntmUserGuide);
+		
+		mnHelp.add(mntmAbout);
 		this.setVisible(true);
 	}
 
@@ -534,9 +531,6 @@ public class GUI extends JFrame {
 		btnRedo.addActionListener(listenforRedo);
 	}
 
-	public void addNewListener(ActionListener listenforNew) {
-		mntmNew.addActionListener(listenforNew);
-	}
 
 	public void addDeleteListener(ActionListener listenforDelete) {
 		mntmDelete.addActionListener(listenforDelete);
