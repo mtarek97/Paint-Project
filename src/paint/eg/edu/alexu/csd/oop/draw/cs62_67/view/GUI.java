@@ -15,6 +15,7 @@ import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -26,6 +27,9 @@ import javax.swing.KeyStroke;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
+import javax.swing.JPopupMenu;
+import java.awt.Component;
+import java.awt.event.MouseAdapter;
 
 public class GUI extends JFrame {
 
@@ -560,6 +564,9 @@ public class GUI extends JFrame {
 	public void fillColorListener(ActionListener listenForFillColor) {
 		btnFillColor.addActionListener(listenForFillColor);
 	}
+	public void strokeListener(ActionListener listenForStroke){
+		btnStroke.addActionListener(listenForStroke);
+	}
 	
 	public void addColorButtonsListener(ActionListener listenForColorButtons) {
 		btnColorBlack.addActionListener(listenForColorButtons);
@@ -673,4 +680,21 @@ public class GUI extends JFrame {
 		}
 	}
 	
+	private static void addPopup(Component component, final JPopupMenu popup) {
+		component.addMouseListener(new MouseAdapter() {
+			public void mousePressed(MouseEvent e) {
+				if (e.isPopupTrigger()) {
+					showMenu(e);
+				}
+			}
+			public void mouseReleased(MouseEvent e) {
+				if (e.isPopupTrigger()) {
+					showMenu(e);
+				}
+			}
+			private void showMenu(MouseEvent e) {
+				popup.show(e.getComponent(), e.getX(), e.getY());
+			}
+		});
+	}
 }

@@ -12,7 +12,7 @@ import paint.eg.edu.alexu.csd.oop.draw.Shape;
 public abstract class MyShape implements Shape, Cloneable{
 
 	//common parameters between shapes
-	
+	private float stroke = 3.0f;
 	private Map<String, Double> properties = new HashMap<>();
 	private Point position = new Point(13, 12);
 	private String name;
@@ -34,6 +34,7 @@ public abstract class MyShape implements Shape, Cloneable{
 	@Override
 	//common
 	public void setColor(Color color) {
+		  
 		this.color = color;
 	}
 
@@ -81,6 +82,11 @@ public abstract class MyShape implements Shape, Cloneable{
 			
     }
 
-
+	public void setStroke(int stroke){
+		this.stroke = stroke;
+	}
 	
+	public float getStroke(){
+		return this.stroke;
+	}
 }
