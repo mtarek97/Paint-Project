@@ -31,10 +31,6 @@ public interface Shape {
     /* redraw the shape on the canvas */
     public void draw(java.awt.Graphics canvas);
     
-    public void setStroke(int strock);
-    
-    public float getStroke();
-
     /* create a deep clone of the shape */
     public Object clone() throws CloneNotSupportedException;
 }

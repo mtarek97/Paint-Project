@@ -26,6 +26,7 @@ public class LineSegment extends MyShape {
 		this.properties.put(Y1_KEY, 0.0);
 		this.properties.put(X2_KEY, 0.0);
 		this.properties.put(Y2_KEY, 0.0);
+		this.properties.put("stroke",(double) 3.0f);
 		setProperties(this.properties);
 		setFillColor(this.getFillColor());
 	}
@@ -43,8 +44,8 @@ public class LineSegment extends MyShape {
 	@Override
 	public void draw(Graphics canvas) {
 		Graphics2D g2 = (Graphics2D) canvas;
-		Map<String, Double> properties = getProperties();
-		g2.setStroke(new BasicStroke(5.0f));
+		double stroke = this.properties.get("stroke");
+		g2.setStroke(new BasicStroke((float) stroke));
 		// I got it
 		canvas.setColor(getColor());
 		canvas.drawLine( getPosition().x,getPosition().y

@@ -58,7 +58,7 @@ import paint.eg.edu.alexu.csd.oop.draw.cs62_67.view.ShapePropertiesPanel;
 public class MainController {
 
 	final int PROX_DIST = 3;
-	private float stroke;
+	private float stroke = 3.0f;
 	private Shape updatedShape;
 	private Shape movingShape;
 	private Shape resizedShape;
@@ -126,6 +126,7 @@ public class MainController {
 		this.Paint.addAddPluginListener(new addPluginListener());
 		this.Paint.addSnapshotListener(new snapshotListener());
 		this.Paint.addColorButtonsListener(new colorButtonsListener());
+		this.Paint.strokeListener(new strokeListener());
 		shapesCreationPanel.addButtonsListeners(new ShapeCreationBtnListner());
 		namesList.addSelectShapeListner(new SelectShapeListener());
 	}
@@ -143,37 +144,44 @@ public class MainController {
 			createAdapter = new MouseAdapter() {
 				@Override
 				public void mousePressed(MouseEvent e) {
-
-					if (!(dragedShapeName.equals("Triangle"))) {
-						orderShape(dragedShapeName);
-						startDrag = new Point(e.getX(), e.getY());
-						endDrag = startDrag;
-					} else {
-						Coordinates[counter] = e.getPoint();
-						counter++;
-						if (counter % 3 == 0) {
+					try{
+						if (!(dragedShapeName.equals("Triangle"))) {
 							orderShape(dragedShapeName);
-							setProperties(dragedShape, Coordinates[0], endDrag);
-							engine.addShape(dragedShape);
-							namesList.updateShapeNameList(engine.getShapes());
-							counter = 0;
+							startDrag = new Point(e.getX(), e.getY());
+							endDrag = startDrag;
+						} else {
+							Coordinates[counter] = e.getPoint();
+							counter++;
+							if (counter % 3 == 0) {
+								orderShape(dragedShapeName);
+								setProperties(dragedShape, Coordinates[0], endDrag);
+								engine.addShape(dragedShape);
+								namesList.updateShapeNameList(engine.getShapes());
+								counter = 0;
+							}
 						}
+						repaint();
+					}catch (Exception e1) {
+						// TODO: handle exception
 					}
-					repaint();
 				}
 
 				@Override
 				public void mouseReleased(MouseEvent e) {
-					if (!(dragedShapeName.equals("Triangle"))) {
-						setProperties(dragedShape, startDrag, e.getPoint());
-						engine.addShape(dragedShape);
-						namesList.updateShapeNameList(engine.getShapes());
-						startDrag = null;
-						endDrag = null;
-						System.out.println(selectedShapeName);
-
+					try{
+						if (!(dragedShapeName.equals("Triangle"))) {
+							setProperties(dragedShape, startDrag, e.getPoint());
+							engine.addShape(dragedShape);
+							namesList.updateShapeNameList(engine.getShapes());
+							startDrag = null;
+							endDrag = null;
+							System.out.println(selectedShapeName);
+	
+						}
+						repaint();
+					}catch (Exception e1) {
+						// TODO: handle exception
 					}
-					repaint();
 				}
 
 			};
@@ -1264,6 +1272,33 @@ class snapshotListener implements ActionListener {
 		java.awt.Rectangle r = (java.awt.Rectangle) this.highlightRect.clone();
 		r.grow(PROX_DIST, PROX_DIST);
 		return r.contains(p);
+	}
+	public class strokeListener implements ActionListener{
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if(stroke == 3.0f){
+				stroke = 6.0f;
+			}else if(stroke == 6.0f){
+				stroke = 9.0f;
+			}else{
+				stroke = 3.0f;
+			}
+			if(selectedShape != null){
+				try {
+					updatedShape = (Shape) selectedShape.clone();
+				} catch (CloneNotSupportedException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				Map<String, Double> properties = updatedShape.getProperties();
+				properties.put("stroke", (double) stroke);
+				updatedShape.setProperties(properties);
+				engine.updateShape(selectedShape, updatedShape);
+				selectedShape = updatedShape;
+			}
+		}
+		
 	}
 	
 

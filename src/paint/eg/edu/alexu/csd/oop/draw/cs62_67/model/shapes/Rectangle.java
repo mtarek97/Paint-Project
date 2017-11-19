@@ -20,6 +20,7 @@ public class Rectangle extends MyShape {
 		setColor(this.getColor());
 		// center of mass
 		setPosition(this.getPosition());
+		this.properties.put("stroke",(double) 3.0f);
 		this.properties.put(LENGTH_KEY, 0.0);
 		this.properties.put(WIDTH_KEY, 0.0);
 		setProperties(this.properties);
@@ -39,7 +40,8 @@ public class Rectangle extends MyShape {
 	@Override
 	public void draw(Graphics canvas) {
 		Graphics2D g2 = (Graphics2D) canvas;
-		g2.setStroke(new BasicStroke(6.0f));
+		double stroke = this.properties.get("stroke");
+		g2.setStroke(new BasicStroke((float) stroke));
 		Point position = getPosition();
 		double length = getProperties().get(LENGTH_KEY);
 		double width = getProperties().get(WIDTH_KEY);

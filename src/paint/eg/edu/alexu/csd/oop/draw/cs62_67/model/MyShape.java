@@ -5,6 +5,8 @@ import java.awt.Point;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.sun.xml.internal.fastinfoset.sax.Properties;
+
 import paint.eg.edu.alexu.csd.oop.draw.Shape;
 
 //An abstract class that implement the common methods between all shapes
@@ -12,7 +14,6 @@ import paint.eg.edu.alexu.csd.oop.draw.Shape;
 public abstract class MyShape implements Shape, Cloneable{
 
 	//common parameters between shapes
-	private float stroke = 3.0f;
 	private Map<String, Double> properties = new HashMap<>();
 	private Point position = new Point(13, 12);
 	private String name;
@@ -82,11 +83,4 @@ public abstract class MyShape implements Shape, Cloneable{
 			
     }
 
-	public void setStroke(int stroke){
-		this.stroke = stroke;
-	}
-	
-	public float getStroke(){
-		return this.stroke;
-	}
 }

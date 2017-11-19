@@ -27,6 +27,7 @@ public class Triangle extends MyShape{
 		this.properties.put(Y2_KEY, 0.0);
 		this.properties.put(X3_KEY, 0.0);
 		this.properties.put(Y3_KEY, 0.0);
+		this.properties.put("stroke",(double) 3.0f);
 		setProperties(this.properties);
 		setFillColor(this.getFillColor());
 	}
@@ -44,7 +45,9 @@ public class Triangle extends MyShape{
 	@Override
 	public void draw(Graphics canvas) {
 		Graphics2D g2 = (Graphics2D) canvas;
-		g2.setStroke(new BasicStroke(6.0f));
+		double stroke = this.properties.get("stroke");
+		g2.setStroke(new BasicStroke((float) stroke));
+
 		int[] x = new int[3];
 		int[] y = new int[3];
 		x[0] = getPosition().x;
@@ -53,6 +56,7 @@ public class Triangle extends MyShape{
 		y[1] = getProperties().get(Y2_KEY).intValue();
 		x[2] = getProperties().get(X3_KEY).intValue();
 		y[2] = getProperties().get(Y3_KEY).intValue();
+		
 		g2.setColor(getColor());
 		g2.drawPolygon(x, y, 3);
 		g2.setColor(getFillColor());
