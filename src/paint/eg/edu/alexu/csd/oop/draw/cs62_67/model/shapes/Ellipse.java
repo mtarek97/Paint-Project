@@ -14,6 +14,7 @@ public class Ellipse extends MyShape{
 	private Map<String, Double> properties =  new HashMap<>();
 	public static final String X_KEY = "xAxis";
 	public static final String Y_KEY = "yAxis";
+
 	public Ellipse() {
 		setColor(this.getColor());
 		setPosition(this.getPosition());
@@ -39,6 +40,7 @@ public class Ellipse extends MyShape{
 		Graphics2D g2 = (Graphics2D) canvas;
 		double stroke = properties.get("stroke");
 		g2.setStroke(new BasicStroke((float) stroke));
+
 		Point position = getPosition();
 
 		double x = getProperties().get(X_KEY);

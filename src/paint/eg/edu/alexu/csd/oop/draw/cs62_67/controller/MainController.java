@@ -144,44 +144,37 @@ public class MainController {
 			createAdapter = new MouseAdapter() {
 				@Override
 				public void mousePressed(MouseEvent e) {
-					try{
-						if (!(dragedShapeName.equals("Triangle"))) {
+
+					if (!(dragedShapeName.equals("Triangle"))) {
+						orderShape(dragedShapeName);
+						startDrag = new Point(e.getX(), e.getY());
+						endDrag = startDrag;
+					} else {
+						Coordinates[counter] = e.getPoint();
+						counter++;
+						if (counter % 3 == 0) {
 							orderShape(dragedShapeName);
-							startDrag = new Point(e.getX(), e.getY());
-							endDrag = startDrag;
-						} else {
-							Coordinates[counter] = e.getPoint();
-							counter++;
-							if (counter % 3 == 0) {
-								orderShape(dragedShapeName);
-								setProperties(dragedShape, Coordinates[0], endDrag);
-								engine.addShape(dragedShape);
-								namesList.updateShapeNameList(engine.getShapes());
-								counter = 0;
-							}
+							setProperties(dragedShape, Coordinates[0], endDrag);
+							engine.addShape(dragedShape);
+							namesList.updateShapeNameList(engine.getShapes());
+							counter = 0;
 						}
-						repaint();
-					}catch (Exception e1) {
-						// TODO: handle exception
 					}
+					repaint();
 				}
 
 				@Override
 				public void mouseReleased(MouseEvent e) {
-					try{
-						if (!(dragedShapeName.equals("Triangle"))) {
-							setProperties(dragedShape, startDrag, e.getPoint());
-							engine.addShape(dragedShape);
-							namesList.updateShapeNameList(engine.getShapes());
-							startDrag = null;
-							endDrag = null;
-							System.out.println(selectedShapeName);
-	
-						}
-						repaint();
-					}catch (Exception e1) {
-						// TODO: handle exception
+					if (!(dragedShapeName.equals("Triangle"))) {
+						setProperties(dragedShape, startDrag, e.getPoint());
+						engine.addShape(dragedShape);
+						namesList.updateShapeNameList(engine.getShapes());
+						startDrag = null;
+						endDrag = null;
+						System.out.println(selectedShapeName);
+
 					}
+					repaint();
 				}
 
 			};
@@ -1293,7 +1286,6 @@ class snapshotListener implements ActionListener {
 				}
 				Map<String, Double> properties = updatedShape.getProperties();
 				properties.put("stroke", (double) stroke);
-				updatedShape.setProperties(properties);
 				engine.updateShape(selectedShape, updatedShape);
 				selectedShape = updatedShape;
 			}
