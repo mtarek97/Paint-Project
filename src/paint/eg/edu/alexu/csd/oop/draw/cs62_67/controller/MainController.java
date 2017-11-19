@@ -150,15 +150,10 @@ public class MainController {
 						startDrag = new Point(e.getX(), e.getY());
 						endDrag = startDrag;
 					} else {
+						startDrag = new Point(e.getX(), e.getY());
+						endDrag = startDrag;
 						Coordinates[counter] = e.getPoint();
 						counter++;
-						if (counter % 3 == 0) {
-							orderShape(dragedShapeName);
-							setProperties(dragedShape, Coordinates[0], endDrag);
-							engine.addShape(dragedShape);
-							namesList.updateShapeNameList(engine.getShapes());
-							counter = 0;
-						}
 					}
 					repaint();
 				}
@@ -173,6 +168,16 @@ public class MainController {
 						endDrag = null;
 						System.out.println(selectedShapeName);
 
+					}
+					else{
+						Coordinates[2] = e.getPoint();
+						orderShape(dragedShapeName);
+						if (counter % 3 == 0) {
+							counter = 0;
+							setProperties(dragedShape, Coordinates[0], endDrag);
+							engine.addShape(dragedShape);
+							namesList.updateShapeNameList(engine.getShapes());
+						}
 					}
 					repaint();
 				}
@@ -213,6 +218,7 @@ public class MainController {
 					if (movingShape != null) {
 						if (copyFlag == 0) {
 							engine.updateShape(selectedShape, movingShape);
+							shapePropertiesPanel.updateShapePropertiesPanel(selectedShape);
 							// namesList.updateShapeNameList(engine.getShapes());
 							movingModeFlag = 0;
 							selectedShape = movingShape;
@@ -290,6 +296,7 @@ public class MainController {
 				public void mouseReleased(MouseEvent e) {
 					if (resizedShape != null) {
 						engine.updateShape(selectedShape, resizedShape);
+						shapePropertiesPanel.updateShapePropertiesPanel(selectedShape);
 						selectedShape = resizedShape;
 						resizedShape = null;
 					}
@@ -405,8 +412,14 @@ public class MainController {
 			if (startDrag != null && endDrag != null) {
 				g2.setPaint(Color.LIGHT_GRAY);
 				if (selectedShape == null) {
-					setProperties(dragedShape, startDrag, endDrag);
-					dragedShape.draw(g2);
+					if(!(dragedShapeName.equals("Triangle"))){
+						setProperties(dragedShape, startDrag, endDrag);
+						dragedShape.draw(g2);
+					}
+					else if(dragedShape instanceof Triangle && counter > 2){
+						setProperties(dragedShape, Coordinates[0], endDrag);
+						dragedShape.draw(g2);
+					}
 				}
 			}
 			if (selectedShape != null) {
@@ -416,7 +429,6 @@ public class MainController {
 						new float[] { 10f, 10f }, diff));
 				g2.setPaint(Color.BLACK);
 				drawHighlightingRectangle(g2, selectedShape);
-				shapePropertiesPanel.updateShapePropertiesPanel(selectedShape);
 			}
 			if (movingShape != null) {
 				movingShape.draw(g2);
@@ -440,8 +452,8 @@ public class MainController {
 				prep.put("y1", Coordinates[0].getY());
 				prep.put("x2", Coordinates[1].getX());
 				prep.put("y2", Coordinates[1].getY());
-				prep.put("x3", Coordinates[2].getX());
-				prep.put("y3", Coordinates[2].getY());
+				prep.put("x3", end.getX());
+				prep.put("y3", end.getY());
 			} else if (shape instanceof Square) {
 				prep.put("xAxis", end.getX() - start.getX());
 
@@ -728,7 +740,7 @@ public class MainController {
 					if (selectedShape != null) {
 						// namesList.removeListSelectionListener( this );
 						shapePropertiesPanel.updateShapePropertiesPanel(selectedShape);
-
+						
 						namesList.updateShapeNameList(engine.getShapes());
 						shapePropertiesPanel.addPositionSetterButtonListener(new positionSetterButtonListner());
 						shapePropertiesPanel.addPropSetterButtonListeners(new probSetterButtonListner());
@@ -1001,6 +1013,7 @@ public class probSetterButtonListner implements ActionListener {
 				e1.printStackTrace();
 			}
 			engine.updateShape(selectedShape, updatedShape);
+			shapePropertiesPanel.updateShapePropertiesPanel(selectedShape);
 			selectedShape = updatedShape;
 			namesList.updateShapeNameList(engine.getShapes());
 			surface.repaint();
@@ -1025,6 +1038,7 @@ public class positionSetterButtonListner implements ActionListener {
 				e1.printStackTrace();
 			}
 			engine.updateShape(selectedShape, updatedShape);
+			shapePropertiesPanel.updateShapePropertiesPanel(selectedShape);
 			selectedShape = updatedShape;
 			namesList.updateShapeNameList(engine.getShapes());
 			surface.repaint();
@@ -1181,6 +1195,7 @@ class snapshotListener implements ActionListener {
 						e1.printStackTrace();
 					}
 					engine.updateShape(selectedShape, updatedShape);
+					shapePropertiesPanel.updateShapePropertiesPanel(selectedShape);
 					namesList.updateShapeNameList(engine.getShapes());
 					selectedShape = updatedShape;
 
@@ -1197,6 +1212,7 @@ class snapshotListener implements ActionListener {
 						e1.printStackTrace();
 					}
 					engine.updateShape(selectedShape, updatedShape);
+					shapePropertiesPanel.updateShapePropertiesPanel(selectedShape);
 					namesList.updateShapeNameList(engine.getShapes());
 					selectedShape = updatedShape;
 					surface.repaint();
@@ -1222,6 +1238,7 @@ class snapshotListener implements ActionListener {
 						e1.printStackTrace();
 					}
 					engine.updateShape(selectedShape, updatedShape);
+					shapePropertiesPanel.updateShapePropertiesPanel(selectedShape);
 					namesList.updateShapeNameList(engine.getShapes());
 					selectedShape = updatedShape;
 
@@ -1239,6 +1256,7 @@ class snapshotListener implements ActionListener {
 						e1.printStackTrace();
 					}
 					engine.updateShape(selectedShape, updatedShape);
+					shapePropertiesPanel.updateShapePropertiesPanel(selectedShape);
 					namesList.updateShapeNameList(engine.getShapes());
 					selectedShape = updatedShape;
 					surface.repaint();
@@ -1287,6 +1305,7 @@ class snapshotListener implements ActionListener {
 				Map<String, Double> properties = updatedShape.getProperties();
 				properties.put("stroke", (double) stroke);
 				engine.updateShape(selectedShape, updatedShape);
+				shapePropertiesPanel.updateShapePropertiesPanel(selectedShape);
 				selectedShape = updatedShape;
 			}
 		}
