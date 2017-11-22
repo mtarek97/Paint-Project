@@ -213,6 +213,7 @@ public class MainController {
 					if (movingShape != null) {
 						if (copyFlag == 0) {
 							engine.updateShape(selectedShape, movingShape);
+							shapePropertiesPanel.updateShapePropertiesPanel(selectedShape);
 							// namesList.updateShapeNameList(engine.getShapes());
 							movingModeFlag = 0;
 							selectedShape = movingShape;
@@ -244,6 +245,7 @@ public class MainController {
 
 							engine.addShape(movingShape);
 							namesList.updateShapeNameList(engine.getShapes());
+							shapePropertiesPanel.updateShapePropertiesPanel(selectedShape);
 							selectedShape = movingShape;
 							movingShape = null;
 							copyFlag = 0;
@@ -290,6 +292,7 @@ public class MainController {
 				public void mouseReleased(MouseEvent e) {
 					if (resizedShape != null) {
 						engine.updateShape(selectedShape, resizedShape);
+						shapePropertiesPanel.updateShapePropertiesPanel(selectedShape);
 						selectedShape = resizedShape;
 						resizedShape = null;
 					}
@@ -416,7 +419,6 @@ public class MainController {
 						new float[] { 10f, 10f }, diff));
 				g2.setPaint(Color.BLACK);
 				drawHighlightingRectangle(g2, selectedShape);
-				shapePropertiesPanel.updateShapePropertiesPanel(selectedShape);
 			}
 			if (movingShape != null) {
 				movingShape.draw(g2);
@@ -1001,6 +1003,7 @@ public class probSetterButtonListner implements ActionListener {
 				e1.printStackTrace();
 			}
 			engine.updateShape(selectedShape, updatedShape);
+			shapePropertiesPanel.updateShapePropertiesPanel(selectedShape);
 			selectedShape = updatedShape;
 			namesList.updateShapeNameList(engine.getShapes());
 			surface.repaint();
@@ -1025,6 +1028,7 @@ public class positionSetterButtonListner implements ActionListener {
 				e1.printStackTrace();
 			}
 			engine.updateShape(selectedShape, updatedShape);
+			shapePropertiesPanel.updateShapePropertiesPanel(selectedShape);
 			selectedShape = updatedShape;
 			namesList.updateShapeNameList(engine.getShapes());
 			surface.repaint();
@@ -1181,6 +1185,7 @@ class snapshotListener implements ActionListener {
 						e1.printStackTrace();
 					}
 					engine.updateShape(selectedShape, updatedShape);
+					shapePropertiesPanel.updateShapePropertiesPanel(selectedShape);
 					namesList.updateShapeNameList(engine.getShapes());
 					selectedShape = updatedShape;
 
@@ -1197,6 +1202,7 @@ class snapshotListener implements ActionListener {
 						e1.printStackTrace();
 					}
 					engine.updateShape(selectedShape, updatedShape);
+					shapePropertiesPanel.updateShapePropertiesPanel(selectedShape);
 					namesList.updateShapeNameList(engine.getShapes());
 					selectedShape = updatedShape;
 					surface.repaint();
@@ -1222,6 +1228,7 @@ class snapshotListener implements ActionListener {
 						e1.printStackTrace();
 					}
 					engine.updateShape(selectedShape, updatedShape);
+					shapePropertiesPanel.updateShapePropertiesPanel(selectedShape);
 					namesList.updateShapeNameList(engine.getShapes());
 					selectedShape = updatedShape;
 
@@ -1239,6 +1246,7 @@ class snapshotListener implements ActionListener {
 						e1.printStackTrace();
 					}
 					engine.updateShape(selectedShape, updatedShape);
+					shapePropertiesPanel.updateShapePropertiesPanel(selectedShape);
 					namesList.updateShapeNameList(engine.getShapes());
 					selectedShape = updatedShape;
 					surface.repaint();
@@ -1287,6 +1295,7 @@ class snapshotListener implements ActionListener {
 				Map<String, Double> properties = updatedShape.getProperties();
 				properties.put("stroke", (double) stroke);
 				engine.updateShape(selectedShape, updatedShape);
+				shapePropertiesPanel.updateShapePropertiesPanel(selectedShape);
 				selectedShape = updatedShape;
 			}
 		}
