@@ -80,9 +80,6 @@ public class MainController {
 	private Color fillColor = Color.WHITE;
 	private String selectedColorButton = null;
 	private ShapeNameList namesList;
-	private startProgram newPrgram;
-	private int createModeFlage = 0;
-	private int movingModeFlag = 0;
 	private MouseAdapter createAdapter;
 	private MouseMotionAdapter createMotion;
 	private MouseAdapter moveAdapter;
@@ -224,10 +221,9 @@ public class MainController {
 					if (movingShape != null) {
 						if (copyFlag == 0) {
 							engine.updateShape(selectedShape, movingShape);
-							shapePropertiesPanel.updateShapePropertiesPanel(selectedShape);
 							// namesList.updateShapeNameList(engine.getShapes());
-							movingModeFlag = 0;
 							selectedShape = movingShape;
+							shapePropertiesPanel.updateShapePropertiesPanel(selectedShape);
 							movingShape = null;
 						} else {
 							Point point = e.getPoint();
@@ -256,8 +252,8 @@ public class MainController {
 
 							engine.addShape(movingShape);
 							namesList.updateShapeNameList(engine.getShapes());
-							shapePropertiesPanel.updateShapePropertiesPanel(selectedShape);
 							selectedShape = movingShape;
+							shapePropertiesPanel.updateShapePropertiesPanel(selectedShape);
 							movingShape = null;
 							copyFlag = 0;
 						}
@@ -303,8 +299,8 @@ public class MainController {
 				public void mouseReleased(MouseEvent e) {
 					if (resizedShape != null) {
 						engine.updateShape(selectedShape, resizedShape);
-						shapePropertiesPanel.updateShapePropertiesPanel(selectedShape);
 						selectedShape = resizedShape;
+						shapePropertiesPanel.updateShapePropertiesPanel(selectedShape);
 						resizedShape = null;
 					}
 					repaint();
@@ -737,7 +733,6 @@ public class MainController {
 					System.out.println(source);
 					selectedShape = engine.getShapes()[source.getSelectedIndex()];
 					System.out.println(selectedShape);
-					movingModeFlag = 1;
 					if (selectedShape != null) {
 						// namesList.removeListSelectionListener( this );
 						shapePropertiesPanel.updateShapePropertiesPanel(selectedShape);
@@ -759,8 +754,6 @@ public class MainController {
 		public void actionPerformed(ActionEvent e) {
 			ShapeCreationBtn source = (ShapeCreationBtn) e.getSource();
 			dragedShapeName = source.getToolTipText();
-			createModeFlage = 1;
-			movingModeFlag = 0;
 			if (!(surface.getMouseListeners()[0] == createAdapter)) {
 				if (surface.getMouseListeners().length != 0) {
 					if (surface.getMouseListeners()[0] == moveAdapter) {
@@ -1002,9 +995,11 @@ public class probSetterButtonListner implements ActionListener {
 				e1.printStackTrace();
 			}
 			engine.updateShape(selectedShape, updatedShape);
-			shapePropertiesPanel.updateShapePropertiesPanel(selectedShape);
 			selectedShape = updatedShape;
+			shapePropertiesPanel.updateShapePropertiesPanel(selectedShape);
 			namesList.updateShapeNameList(engine.getShapes());
+			shapePropertiesPanel.addPositionSetterButtonListener(new positionSetterButtonListner());
+			shapePropertiesPanel.addPropSetterButtonListeners(new probSetterButtonListner());
 			surface.repaint();
 		}
 
@@ -1027,8 +1022,10 @@ public class positionSetterButtonListner implements ActionListener {
 				e1.printStackTrace();
 			}
 			engine.updateShape(selectedShape, updatedShape);
-			shapePropertiesPanel.updateShapePropertiesPanel(selectedShape);
 			selectedShape = updatedShape;
+			shapePropertiesPanel.updateShapePropertiesPanel(selectedShape);
+			shapePropertiesPanel.addPositionSetterButtonListener(new positionSetterButtonListner());
+			shapePropertiesPanel.addPropSetterButtonListeners(new probSetterButtonListner());
 			namesList.updateShapeNameList(engine.getShapes());
 			surface.repaint();
 		}
@@ -1184,10 +1181,9 @@ class snapshotListener implements ActionListener {
 						e1.printStackTrace();
 					}
 					engine.updateShape(selectedShape, updatedShape);
-					shapePropertiesPanel.updateShapePropertiesPanel(selectedShape);
 					namesList.updateShapeNameList(engine.getShapes());
 					selectedShape = updatedShape;
-
+					shapePropertiesPanel.updateShapePropertiesPanel(selectedShape);
 					surface.repaint();
 				}
 			} else if (selectedColorButton == "OuterColor") {
@@ -1201,9 +1197,9 @@ class snapshotListener implements ActionListener {
 						e1.printStackTrace();
 					}
 					engine.updateShape(selectedShape, updatedShape);
-					shapePropertiesPanel.updateShapePropertiesPanel(selectedShape);
 					namesList.updateShapeNameList(engine.getShapes());
 					selectedShape = updatedShape;
+					shapePropertiesPanel.updateShapePropertiesPanel(selectedShape);
 					surface.repaint();
 				}
 			}
@@ -1227,10 +1223,9 @@ class snapshotListener implements ActionListener {
 						e1.printStackTrace();
 					}
 					engine.updateShape(selectedShape, updatedShape);
-					shapePropertiesPanel.updateShapePropertiesPanel(selectedShape);
 					namesList.updateShapeNameList(engine.getShapes());
 					selectedShape = updatedShape;
-
+					shapePropertiesPanel.updateShapePropertiesPanel(selectedShape);
 					surface.repaint();
 				}
 
@@ -1245,9 +1240,9 @@ class snapshotListener implements ActionListener {
 						e1.printStackTrace();
 					}
 					engine.updateShape(selectedShape, updatedShape);
-					shapePropertiesPanel.updateShapePropertiesPanel(selectedShape);
 					namesList.updateShapeNameList(engine.getShapes());
 					selectedShape = updatedShape;
+					shapePropertiesPanel.updateShapePropertiesPanel(selectedShape);
 					surface.repaint();
 				}
 			}
@@ -1294,8 +1289,8 @@ class snapshotListener implements ActionListener {
 				Map<String, Double> properties = updatedShape.getProperties();
 				properties.put("stroke", (double) stroke);
 				engine.updateShape(selectedShape, updatedShape);
-				shapePropertiesPanel.updateShapePropertiesPanel(selectedShape);
 				selectedShape = updatedShape;
+				shapePropertiesPanel.updateShapePropertiesPanel(selectedShape);
 			}
 		}
 		
