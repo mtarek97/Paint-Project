@@ -1017,7 +1017,32 @@ public class positionSetterButtonListner implements ActionListener {
 			newPosition.y = Integer.valueOf(shapePropertiesPanel.getTextFieldValue("positionY"));
 			try {
 				updatedShape = (Shape) selectedShape.clone();
+				Point position = updatedShape.getPosition();
 				updatedShape.setPosition(newPosition);
+				if(updatedShape instanceof Triangle){
+					Map<String, Double> lineMap = updatedShape.getProperties();
+					Double x2 = ((lineMap.get("x2") + (newPosition.x - position.x)));
+					int y2 = (int) (lineMap.get("y2") + (newPosition.y - position.y));
+					Double x3 = ((lineMap.get("x3") + (newPosition.x - position.x)));
+					int y3 = (int) (lineMap.get("y3") + (newPosition.y - position.y));
+					lineMap.put("x2", x2);
+					lineMap.put("y2", (double) y2);
+					lineMap.put("x3", x3);
+					lineMap.put("y3", (double) y3);
+					lineMap.put("x1", newPosition.getX());
+					lineMap.put("y1", newPosition.getY());
+					updatedShape.setProperties(lineMap);
+				}
+				else if(updatedShape instanceof LineSegment){
+					Map<String, Double> lineMap = updatedShape.getProperties();
+					Double x1 = ((lineMap.get("x1") + (newPosition.x - position.x)));
+					int y1 = (int) (lineMap.get("y1") + (newPosition.y - position.y));
+					lineMap.put("x1", x1);
+					lineMap.put("y1", (double) y1);
+					lineMap.put("x2", newPosition.getX());
+					lineMap.put("y2", newPosition.getY());
+					updatedShape.setProperties(lineMap);
+				}
 			} catch (CloneNotSupportedException e1) {
 				e1.printStackTrace();
 			}

@@ -3,6 +3,7 @@ package paint.eg.edu.alexu.csd.oop.draw.cs62_67.model.shapes;
 import java.awt.BasicStroke;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -45,6 +46,8 @@ public class LineSegment extends MyShape {
 	public void draw(Graphics canvas) {
 		Graphics2D g2 = (Graphics2D) canvas;
 		double stroke = this.properties.get("stroke");
+		Point position = new Point(getProperties().get(X2_KEY).intValue(), getProperties().get(Y2_KEY).intValue());
+		setPosition(position);
 		g2.setStroke(new BasicStroke((float) stroke));
 		// I got it
 		canvas.setColor(getColor());
