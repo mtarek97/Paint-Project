@@ -37,20 +37,15 @@ public class ShapePropertiesPanel extends JPanel {
 		textFields.clear();
 		SettersButtonsList.clear();
 
-		
-		JLabel nameLabel = new JLabel("name :");
-		JTextField nameField = new JTextField(shape.getClass().getSimpleName());
-		nameField.setName("name");
-		nameLabel.setLabelFor(nameField);
-		nameButton = new JButton("set");
-		JPanel name = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		name.setBackground(new Color(245, 246, 247));
-		name.add(nameLabel);
-		name.add(nameField);
-		name.add(nameButton);
-		this.textFields.add(nameField);
-		this.add(name);
-		
+		JLabel typeLabel = new JLabel("type :");
+		JLabel typeName = new JLabel(shape.getClass().getSimpleName());
+		typeName.setName("type");
+		typeLabel.setLabelFor(typeName);
+		JPanel type = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		type.setBackground(new Color(245, 246, 247));
+		type.add(typeLabel);
+		type.add(typeName);
+		this.add(type);
 
 		JLabel positionLable = new JLabel("position ");
 		JLabel positionXLable = new JLabel("x :");
@@ -75,27 +70,23 @@ public class ShapePropertiesPanel extends JPanel {
 		this.add(pos);
 
 		for (Map.Entry<String, Double> property : shape.getProperties().entrySet()) {
-			JLabel propLabel = new JLabel(property.getKey() + " :");
-			JTextField propField = new JTextField(property.getValue().toString());
-			propField.setName(property.getKey());
-			propLabel.setLabelFor(propField);
-			JButton propButton = new JButton("set");
-			propButton.setName(property.getKey());
-			JPanel propPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-			propPanel.setBackground(new Color(245, 246, 247));
-			propPanel.add(propLabel);
-			propPanel.add(propField);
-			propPanel.add(propButton);
-			this.textFields.add(propField);
-			this.SettersButtonsList.add(propButton);
-			this.add(propPanel);
+			if (!property.getKey().equals("stroke")) {
+				JLabel propLabel = new JLabel(property.getKey() + " :");
+				JTextField propField = new JTextField(property.getValue().toString());
+				propField.setName(property.getKey());
+				propLabel.setLabelFor(propField);
+				JButton propButton = new JButton("set");
+				propButton.setName(property.getKey());
+				JPanel propPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+				propPanel.setBackground(new Color(245, 246, 247));
+				propPanel.add(propLabel);
+				propPanel.add(propField);
+				propPanel.add(propButton);
+				this.textFields.add(propField);
+				this.SettersButtonsList.add(propButton);
+				this.add(propPanel);
+			}
 		}
-
-	}
-
-	public void addNameSetterButtonListener(ActionListener listener) {
-
-		this.nameButton.addActionListener(listener);
 
 	}
 

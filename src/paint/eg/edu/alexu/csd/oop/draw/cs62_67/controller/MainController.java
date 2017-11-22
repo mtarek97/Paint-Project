@@ -826,16 +826,6 @@ public class MainController {
 
 	}
 
-	class NewListener implements ActionListener {
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			newPrgram = new startProgram();
-			newPrgram.main(null);
-		}
-
-	}
-
 	class DeleteListener implements ActionListener {
 
 		@Override
@@ -907,7 +897,6 @@ public class MainController {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			selectedColorButton = "OuterColor";
-			Paint.clickedSelectedColorButton(selectedColorButton);
 		}
 
 	}
@@ -916,7 +905,6 @@ public class MainController {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			selectedColorButton = "FillColor";
-			Paint.clickedSelectedColorButton(selectedColorButton);
 		}
 
 	}
