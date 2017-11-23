@@ -4,6 +4,7 @@ import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
+import java.awt.Desktop;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -40,7 +41,6 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import paint.eg.edu.alexu.csd.oop.draw.Shape;
-import paint.eg.edu.alexu.csd.oop.draw.cs62_67.startProgram;
 import paint.eg.edu.alexu.csd.oop.draw.cs62_67.model.MyDrawingEngine;
 import paint.eg.edu.alexu.csd.oop.draw.cs62_67.model.ShapeFactory;
 import paint.eg.edu.alexu.csd.oop.draw.cs62_67.model.shapes.Circle;
@@ -124,6 +124,7 @@ public class MainController {
 		this.Paint.addSnapshotListener(new snapshotListener());
 		this.Paint.addColorButtonsListener(new colorButtonsListener());
 		this.Paint.strokeListener(new strokeListener());
+		this.Paint.userGuideListener(new UserGuideListener());
 		shapesCreationPanel.addButtonsListeners(new ShapeCreationBtnListner());
 		namesList.addSelectShapeListner(new SelectShapeListener());
 	}
@@ -141,8 +142,8 @@ public class MainController {
 			createAdapter = new MouseAdapter() {
 				@Override
 				public void mousePressed(MouseEvent e) {
-					try{
-						if(selectedShape == null){
+					try {
+						if (selectedShape == null) {
 							if (!(dragedShapeName.equals("Triangle"))) {
 								orderShape(dragedShapeName);
 								startDrag = new Point(e.getX(), e.getY());
@@ -160,15 +161,15 @@ public class MainController {
 							}
 							repaint();
 						}
-					}catch (Exception e1) {
+					} catch (Exception e1) {
 						// TODO: handle exception
 					}
 				}
 
 				@Override
 				public void mouseReleased(MouseEvent e) {
-					try{
-						if(selectedShape == null){
+					try {
+						if (selectedShape == null) {
 							if (!(dragedShapeName.equals("Triangle"))) {
 								setProperties(dragedShape, startDrag, e.getPoint());
 								engine.addShape(dragedShape);
@@ -176,11 +177,11 @@ public class MainController {
 								startDrag = null;
 								endDrag = null;
 								System.out.println(selectedShapeName);
-		
+
 							}
 							repaint();
 						}
-					}catch (Exception e1) {
+					} catch (Exception e1) {
 						// TODO: handle exception
 					}
 				}
@@ -433,7 +434,7 @@ public class MainController {
 			if (resizedShape != null) {
 				resizedShape.draw(g2);
 			}
-			
+
 		}
 
 		public void setProperties(Shape shape, Point start, Point end) {
@@ -963,218 +964,218 @@ public class MainController {
 					prop.put("y3", prop.get("y3"));
 					copiedShape.setProperties(prop);
 				} else {
-				copiedShape.setPosition(new Point(point.x + 20, point.y));
+					copiedShape.setPosition(new Point(point.x + 20, point.y));
+				}
+
+				engine.addShape(copiedShape);
+				namesList.updateShapeNameList(engine.getShapes());
+				selectedShape = copiedShape;
+				surface.repaint();
+				copyFlag = 0;
 			}
 
-			engine.addShape(copiedShape);
-			namesList.updateShapeNameList(engine.getShapes());
-			selectedShape = copiedShape;
-			surface.repaint();
-			copyFlag = 0;
 		}
 
 	}
 
-}
+	public class probSetterButtonListner implements ActionListener {
 
-public class probSetterButtonListner implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if (selectedShape != null) {
+				JButton source = (JButton) e.getSource();
+				String propKey = source.getName();
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		if (selectedShape != null) {
-			JButton source = (JButton) e.getSource();
-			String propKey = source.getName();
-
-			try {
-				updatedShape = (Shape) selectedShape.clone();
-				Map<String, Double> newProperties = updatedShape.getProperties();
-				newProperties.put(propKey, Double.valueOf(shapePropertiesPanel.getTextFieldValue(propKey)));
-				updatedShape.setProperties(newProperties);
-				// System.out.println(updatedShape.getProperties().get(propKey));
-			} catch (CloneNotSupportedException e1) {
-				e1.printStackTrace();
+				try {
+					updatedShape = (Shape) selectedShape.clone();
+					Map<String, Double> newProperties = updatedShape.getProperties();
+					newProperties.put(propKey, Double.valueOf(shapePropertiesPanel.getTextFieldValue(propKey)));
+					updatedShape.setProperties(newProperties);
+					// System.out.println(updatedShape.getProperties().get(propKey));
+				} catch (CloneNotSupportedException e1) {
+					e1.printStackTrace();
+				}
+				engine.updateShape(selectedShape, updatedShape);
+				selectedShape = updatedShape;
+				shapePropertiesPanel.updateShapePropertiesPanel(selectedShape);
+				namesList.updateShapeNameList(engine.getShapes());
+				shapePropertiesPanel.addPositionSetterButtonListener(new positionSetterButtonListner());
+				shapePropertiesPanel.addPropSetterButtonListeners(new probSetterButtonListner());
+				surface.repaint();
 			}
-			engine.updateShape(selectedShape, updatedShape);
-			selectedShape = updatedShape;
-			shapePropertiesPanel.updateShapePropertiesPanel(selectedShape);
-			namesList.updateShapeNameList(engine.getShapes());
-			shapePropertiesPanel.addPositionSetterButtonListener(new positionSetterButtonListner());
-			shapePropertiesPanel.addPropSetterButtonListeners(new probSetterButtonListner());
-			surface.repaint();
+
 		}
 
 	}
 
-}
+	public class positionSetterButtonListner implements ActionListener {
 
-public class positionSetterButtonListner implements ActionListener {
-
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		if (selectedShape != null) {
-			Point newPosition = new Point();
-			newPosition.x = Integer.valueOf(shapePropertiesPanel.getTextFieldValue("positionX"));
-			newPosition.y = Integer.valueOf(shapePropertiesPanel.getTextFieldValue("positionY"));
-			try {
-				updatedShape = (Shape) selectedShape.clone();
-				Point position = updatedShape.getPosition();
-				updatedShape.setPosition(newPosition);
-				if(updatedShape instanceof Triangle){
-					Map<String, Double> lineMap = updatedShape.getProperties();
-					Double x2 = ((lineMap.get("x2") + (newPosition.x - position.x)));
-					int y2 = (int) (lineMap.get("y2") + (newPosition.y - position.y));
-					Double x3 = ((lineMap.get("x3") + (newPosition.x - position.x)));
-					int y3 = (int) (lineMap.get("y3") + (newPosition.y - position.y));
-					lineMap.put("x2", x2);
-					lineMap.put("y2", (double) y2);
-					lineMap.put("x3", x3);
-					lineMap.put("y3", (double) y3);
-					lineMap.put("x1", newPosition.getX());
-					lineMap.put("y1", newPosition.getY());
-					updatedShape.setProperties(lineMap);
-				}
-				else if(updatedShape instanceof LineSegment){
-					Map<String, Double> lineMap = updatedShape.getProperties();
-					Double x1 = ((lineMap.get("x1") + (newPosition.x - position.x)));
-					int y1 = (int) (lineMap.get("y1") + (newPosition.y - position.y));
-					lineMap.put("x1", x1);
-					lineMap.put("y1", (double) y1);
-					lineMap.put("x2", newPosition.getX());
-					lineMap.put("y2", newPosition.getY());
-					updatedShape.setProperties(lineMap);
-				}
-			} catch (CloneNotSupportedException e1) {
-				e1.printStackTrace();
-			}
-			engine.updateShape(selectedShape, updatedShape);
-			selectedShape = updatedShape;
-			shapePropertiesPanel.updateShapePropertiesPanel(selectedShape);
-			shapePropertiesPanel.addPositionSetterButtonListener(new positionSetterButtonListner());
-			shapePropertiesPanel.addPropSetterButtonListeners(new probSetterButtonListner());
-			namesList.updateShapeNameList(engine.getShapes());
-			surface.repaint();
-		}
-	}
-
-}
-
-public class moveLestener implements ActionListener {
-
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		if (!(surface.getMouseListeners()[0] == moveAdapter)) {
-			if (surface.getMouseListeners().length != 0) {
-				if (surface.getMouseListeners()[0] == createAdapter) {
-					surface.removeMouseListener(createAdapter);
-					surface.removeMouseMotionListener(createMotion);
-				}
-			}
-			if (surface.getMouseListeners().length != 0) {
-				if (surface.getMouseListeners()[0] == resizeAdapter) {
-					surface.removeMouseListener(resizeAdapter);
-					surface.removeMouseMotionListener(resizeMotion);
-				}
-			}
-
-			surface.addMouseListener(moveAdapter);
-			surface.addMouseMotionListener(moveMotion);
-		}
-	}
-
-}
-
-public class resizeLestener implements ActionListener {
-
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		if (!(surface.getMouseListeners()[0] == resizeAdapter)) {
-			if (surface.getMouseListeners().length != 0) {
-				if (surface.getMouseListeners()[0] == moveAdapter) {
-					surface.removeMouseListener(moveAdapter);
-					surface.removeMouseMotionListener(moveMotion);
-				}
-			}
-			if (surface.getMouseListeners().length != 0) {
-				if (surface.getMouseListeners()[0] == createAdapter) {
-					surface.removeMouseListener(createAdapter);
-					surface.removeMouseMotionListener(createMotion);
-				}
-			}
-
-			surface.addMouseListener(resizeAdapter);
-			surface.addMouseMotionListener(resizeMotion);
-		}
-	}
-
-}
-
-class addPluginListener implements ActionListener {
-
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		String filename = File.separator + "tmp";
-		JFileChooser fc = new JFileChooser(new File(filename));
-		int result = fc.showOpenDialog(null);
-		String selectedFilePath = fc.getSelectedFile().getPath().toString();
-		if (result == JFileChooser.APPROVE_OPTION) {
-			try {
-				JarInputStream jarFile = new JarInputStream(new FileInputStream(selectedFilePath));
-				JarEntry jarEntry;
-				ArrayList<String> names = new ArrayList<>();
-				while (true) {
-					jarEntry = jarFile.getNextJarEntry();
-					if (jarEntry == null) {
-						break;
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if (selectedShape != null) {
+				Point newPosition = new Point();
+				newPosition.x = Integer.valueOf(shapePropertiesPanel.getTextFieldValue("positionX"));
+				newPosition.y = Integer.valueOf(shapePropertiesPanel.getTextFieldValue("positionY"));
+				try {
+					updatedShape = (Shape) selectedShape.clone();
+					Point position = updatedShape.getPosition();
+					updatedShape.setPosition(newPosition);
+					if (updatedShape instanceof Triangle) {
+						Map<String, Double> lineMap = updatedShape.getProperties();
+						Double x2 = ((lineMap.get("x2") + (newPosition.x - position.x)));
+						int y2 = (int) (lineMap.get("y2") + (newPosition.y - position.y));
+						Double x3 = ((lineMap.get("x3") + (newPosition.x - position.x)));
+						int y3 = (int) (lineMap.get("y3") + (newPosition.y - position.y));
+						lineMap.put("x2", x2);
+						lineMap.put("y2", (double) y2);
+						lineMap.put("x3", x3);
+						lineMap.put("y3", (double) y3);
+						lineMap.put("x1", newPosition.getX());
+						lineMap.put("y1", newPosition.getY());
+						updatedShape.setProperties(lineMap);
+					} else if (updatedShape instanceof LineSegment) {
+						Map<String, Double> lineMap = updatedShape.getProperties();
+						Double x1 = ((lineMap.get("x1") + (newPosition.x - position.x)));
+						int y1 = (int) (lineMap.get("y1") + (newPosition.y - position.y));
+						lineMap.put("x1", x1);
+						lineMap.put("y1", (double) y1);
+						lineMap.put("x2", newPosition.getX());
+						lineMap.put("y2", newPosition.getY());
+						updatedShape.setProperties(lineMap);
 					}
-					if (jarEntry.getName().endsWith(".class")) {
-						String classBinName = jarEntry.getName().replaceAll("/", "\\.");
-						classBinName = classBinName.substring(0, classBinName.length() - 6);
-						names.add(classBinName);
+				} catch (CloneNotSupportedException e1) {
+					e1.printStackTrace();
+				}
+				engine.updateShape(selectedShape, updatedShape);
+				selectedShape = updatedShape;
+				shapePropertiesPanel.updateShapePropertiesPanel(selectedShape);
+				shapePropertiesPanel.addPositionSetterButtonListener(new positionSetterButtonListner());
+				shapePropertiesPanel.addPropSetterButtonListeners(new probSetterButtonListner());
+				namesList.updateShapeNameList(engine.getShapes());
+				surface.repaint();
+			}
+		}
+
+	}
+
+	public class moveLestener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if (!(surface.getMouseListeners()[0] == moveAdapter)) {
+				if (surface.getMouseListeners().length != 0) {
+					if (surface.getMouseListeners()[0] == createAdapter) {
+						surface.removeMouseListener(createAdapter);
+						surface.removeMouseMotionListener(createMotion);
 					}
 				}
-				ClassLoader mainLoader = getClass().getClassLoader();
-				ClassLoader loader = URLClassLoader
-						.newInstance(new URL[] { new File(selectedFilePath).toURI().toURL() }, mainLoader);
-				Class<? extends Shape> cl = (Class<? extends Shape>) loader.getClass().forName(names.get(0), true,
-						loader);
-				if (cl.newInstance() instanceof Shape) {
-					System.out.println(cl.getSimpleName());
-					engine.addPlugin(cl);
+				if (surface.getMouseListeners().length != 0) {
+					if (surface.getMouseListeners()[0] == resizeAdapter) {
+						surface.removeMouseListener(resizeAdapter);
+						surface.removeMouseMotionListener(resizeMotion);
+					}
 				}
-				jarFile.close();
-			} catch (Exception e1) {
-				e1.printStackTrace();
-			}
 
-		}
-		shapesCreationPanel.updateShapeCreationButtonsPanel(engine.getSupportedShapes());
-		shapesCreationPanel.addButtonsListeners(new ShapeCreationBtnListner());
-	}
-}
-
-class snapshotListener implements ActionListener {
-
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		selectedShape = null;
-		surface.repaint();
-		BufferedImage image = new BufferedImage(surface.getWidth(), surface.getHeight(), BufferedImage.TYPE_INT_RGB);
-		surface.paint(image.getGraphics());
-		Graphics2D g = image.createGraphics();
-		g.setBackground(Color.WHITE);
-		g.clearRect(0, 0, surface.getWidth(), surface.getHeight());
-		surface.printAll(g);
-		JFileChooser chooser = new JFileChooser("");
-		int retrival = chooser.showSaveDialog(null);
-		if (retrival == JFileChooser.APPROVE_OPTION) {
-			Path path = Paths.get(chooser.getCurrentDirectory() + "/" + chooser.getSelectedFile().getName());
-			try {
-				ImageIO.write(image, "png", new File(path.toString().concat(".png")));
-			} catch (IOException e1) {
-				e1.printStackTrace();
+				surface.addMouseListener(moveAdapter);
+				surface.addMouseMotionListener(moveMotion);
 			}
 		}
+
 	}
+
+	public class resizeLestener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if (!(surface.getMouseListeners()[0] == resizeAdapter)) {
+				if (surface.getMouseListeners().length != 0) {
+					if (surface.getMouseListeners()[0] == moveAdapter) {
+						surface.removeMouseListener(moveAdapter);
+						surface.removeMouseMotionListener(moveMotion);
+					}
+				}
+				if (surface.getMouseListeners().length != 0) {
+					if (surface.getMouseListeners()[0] == createAdapter) {
+						surface.removeMouseListener(createAdapter);
+						surface.removeMouseMotionListener(createMotion);
+					}
+				}
+
+				surface.addMouseListener(resizeAdapter);
+				surface.addMouseMotionListener(resizeMotion);
+			}
+		}
+
+	}
+
+	class addPluginListener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			String filename = File.separator + "tmp";
+			JFileChooser fc = new JFileChooser(new File(filename));
+			int result = fc.showOpenDialog(null);
+			String selectedFilePath = fc.getSelectedFile().getPath().toString();
+			if (result == JFileChooser.APPROVE_OPTION) {
+				try {
+					JarInputStream jarFile = new JarInputStream(new FileInputStream(selectedFilePath));
+					JarEntry jarEntry;
+					ArrayList<String> names = new ArrayList<>();
+					while (true) {
+						jarEntry = jarFile.getNextJarEntry();
+						if (jarEntry == null) {
+							break;
+						}
+						if (jarEntry.getName().endsWith(".class")) {
+							String classBinName = jarEntry.getName().replaceAll("/", "\\.");
+							classBinName = classBinName.substring(0, classBinName.length() - 6);
+							names.add(classBinName);
+						}
+					}
+					ClassLoader mainLoader = getClass().getClassLoader();
+					ClassLoader loader = URLClassLoader
+							.newInstance(new URL[] { new File(selectedFilePath).toURI().toURL() }, mainLoader);
+					Class<? extends Shape> cl = (Class<? extends Shape>) loader.getClass().forName(names.get(0), true,
+							loader);
+					if (cl.newInstance() instanceof Shape) {
+						System.out.println(cl.getSimpleName());
+						engine.addPlugin(cl);
+					}
+					jarFile.close();
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+
+			}
+			shapesCreationPanel.updateShapeCreationButtonsPanel(engine.getSupportedShapes());
+			shapesCreationPanel.addButtonsListeners(new ShapeCreationBtnListner());
+		}
+	}
+
+	class snapshotListener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			selectedShape = null;
+			surface.repaint();
+			BufferedImage image = new BufferedImage(surface.getWidth(), surface.getHeight(),
+					BufferedImage.TYPE_INT_RGB);
+			surface.paint(image.getGraphics());
+			Graphics2D g = image.createGraphics();
+			g.setBackground(Color.WHITE);
+			g.clearRect(0, 0, surface.getWidth(), surface.getHeight());
+			surface.printAll(g);
+			JFileChooser chooser = new JFileChooser("");
+			int retrival = chooser.showSaveDialog(null);
+			if (retrival == JFileChooser.APPROVE_OPTION) {
+				Path path = Paths.get(chooser.getCurrentDirectory() + "/" + chooser.getSelectedFile().getName());
+				try {
+					ImageIO.write(image, "png", new File(path.toString().concat(".png")));
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+			}
+		}
 
 	}
 
@@ -1293,18 +1294,19 @@ class snapshotListener implements ActionListener {
 		r.grow(PROX_DIST, PROX_DIST);
 		return r.contains(p);
 	}
-	public class strokeListener implements ActionListener{
+
+	public class strokeListener implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			if(stroke == 3.0f){
+			if (stroke == 3.0f) {
 				stroke = 6.0f;
-			}else if(stroke == 6.0f){
+			} else if (stroke == 6.0f) {
 				stroke = 9.0f;
-			}else{
+			} else {
 				stroke = 3.0f;
 			}
-			if(selectedShape != null){
+			if (selectedShape != null) {
 				try {
 					updatedShape = (Shape) selectedShape.clone();
 				} catch (CloneNotSupportedException e1) {
@@ -1318,8 +1320,18 @@ class snapshotListener implements ActionListener {
 				shapePropertiesPanel.updateShapePropertiesPanel(selectedShape);
 			}
 		}
-		
+
 	}
-	
+
+	class UserGuideListener implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			try {
+			    Desktop.getDesktop().browse(new URL("https://goo.gl/v4M4xK").toURI());
+			} catch (Exception e1) {System.out.println("error");}
+
+		}
+
+	}
 
 }

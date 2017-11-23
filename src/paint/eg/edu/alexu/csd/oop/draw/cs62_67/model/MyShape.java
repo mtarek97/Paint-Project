@@ -5,8 +5,6 @@ import java.awt.Point;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.sun.xml.internal.fastinfoset.sax.Properties;
-
 import paint.eg.edu.alexu.csd.oop.draw.Shape;
 
 //An abstract class that implement the common methods between all shapes

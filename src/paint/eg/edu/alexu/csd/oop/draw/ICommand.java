@@ -1,7 +1,5 @@
 package paint.eg.edu.alexu.csd.oop.draw;
 
-import paint.eg.edu.alexu.csd.oop.draw.Shape;
-
 public interface ICommand {
 	
 	public void execute();

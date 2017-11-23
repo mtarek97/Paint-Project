@@ -2,14 +2,12 @@ package paint.eg.edu.alexu.csd.oop.draw.cs62_67.view;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Font;
 import java.awt.SystemColor;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
@@ -23,7 +21,6 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
 import javax.swing.JSeparator;
 import javax.swing.KeyStroke;
 import javax.swing.LayoutStyle.ComponentPlacement;
@@ -505,12 +502,6 @@ public class GUI extends JFrame {
 		menuBar.add(mnPlugins);
 
 		mnPlugins.add(mntmAddPlugin);
-
-		JSeparator separator = new JSeparator();
-		mnPlugins.add(separator);
-
-		JMenuItem mntmAboutPlugins = new JMenuItem("About Plugins");
-		mnPlugins.add(mntmAboutPlugins);
 		
 		menuBar.add(mnHelp);
 		
@@ -639,7 +630,10 @@ public class GUI extends JFrame {
 		this.mntmRedo.setEnabled(true);
 		this.btnRedo.setIcon(new ImageIcon(GUI.class.getResource("/assets/redo.png")));
 	}
-
+	
+	public void userGuideListener(ActionListener listenForUserGuide) {
+		mntmUserGuide.addActionListener(listenForUserGuide);
+	}
 	class buttonHover implements MouseListener {
 
 		@Override
@@ -669,26 +663,5 @@ public class GUI extends JFrame {
 			// TODO Auto-generated method stub
 
 		}
-	}
-	
-	
-	private static void addPopup(Component component, final JPopupMenu popup) {
-		component.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mousePressed(MouseEvent e) {
-				if (e.isPopupTrigger()) {
-					showMenu(e);
-				}
-			}
-			@Override
-			public void mouseReleased(MouseEvent e) {
-				if (e.isPopupTrigger()) {
-					showMenu(e);
-				}
-			}
-			private void showMenu(MouseEvent e) {
-				popup.show(e.getComponent(), e.getX(), e.getY());
-			}
-		});
 	}
 }
