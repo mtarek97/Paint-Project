@@ -1,4 +1,4 @@
-# Paint-Project
+# Paint Project
 
 A Vector Based Drawing Application that allows the user to draw different shapes and manipulate them.
 * has a user-friendly interface
